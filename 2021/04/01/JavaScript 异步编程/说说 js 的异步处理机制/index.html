@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" type="image/png" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  <title>说说 js 的异步处理机制 - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              首页</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              归档</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              分类</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              标签</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/docsmall/article.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+                说说 js 的异步处理机制
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2021-04-01 00:00">
+                    2021年4月1日 凌晨
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.6k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    20
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h4 id="什么是异步"><a href="#什么是异步" class="headerlink" title="什么是异步"></a>什么是异步</h4><p>在 js 中和生活中都会有异步任务的存在，而异步的产生是有前提条件的，那就是这个任务可以被拆解成两部分。</p>
+<p>举个简单的例子。周末我想喝点排骨汤，把所有步骤都准备好后开火炖。正常来说，这锅汤需要3小时才能煲好，很显然我不会傻傻守在这儿等它3小时，因为我还有别的事要做，比如说看电视，嗑瓜子等等。而是3小时后汤煲好了，我才回去盛起来喝。</p>
+<p>所以这个喝汤任务由两个步骤组成：煲汤 + 喝汤；这个喝汤步骤就是异步的</p>
+<h4 id="设计成异步的原因"><a href="#设计成异步的原因" class="headerlink" title="设计成异步的原因"></a>设计成异步的原因</h4><p>从上面可以知道，如果我傻傻的在锅前等3个小时，那么我看电视、嗑瓜子等事情就得向后延3小时，到最后我这一天做不了什么，所以傻等3小时完全是浪费时间。</p>
+<p>js 是单线程，同一时间只能做一件事，长时间的等待势必会造成资源的浪费</p>
+<h4 id="异步实现方案"><a href="#异步实现方案" class="headerlink" title="异步实现方案"></a>异步实现方案</h4><ul>
+<li>回调函数</li>
+</ul>
+<p>回调函数在 js 代码里随处可见，如给 DOM 添加点击事件</p>
+<pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> d = document.get<span class="hljs-constructor">ElementId('<span class="hljs-params">test</span>')</span>;
+d.add<span class="hljs-constructor">EventListener('<span class="hljs-params">click</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback</span>(<span class="hljs-params">e</span>)</span> &#123;
+    <span class="hljs-comment">// do something</span>
+&#125;)
+<span class="hljs-comment">// callback 就是回调函数</span></code></pre>
+
+<p>node 里去读取一份文件</p>
+<pre><code class="hljs reasonml">fs.read<span class="hljs-constructor">File('.<span class="hljs-operator">/</span><span class="hljs-params">test</span>.<span class="hljs-params">text</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback</span>(<span class="hljs-params">err</span>, <span class="hljs-params">data</span>)</span>&#123;
+    <span class="hljs-comment">// do something</span>
+&#125;)</code></pre>
+
+<p>但是有时候的需求会比较复杂，加入多个任务存在依赖性，就会写出如下代码：</p>
+<pre><code class="hljs reasonml">fs.read<span class="hljs-constructor">File('.<span class="hljs-operator">/</span><span class="hljs-params">test</span>.<span class="hljs-params">text</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback</span>(<span class="hljs-params">err</span>, <span class="hljs-params">data</span>)</span>&#123;
+    fs.read<span class="hljs-constructor">File('.<span class="hljs-operator">/</span><span class="hljs-params">test1</span>.<span class="hljs-params">text</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback1</span>(<span class="hljs-params">err</span>, <span class="hljs-params">data</span>)</span>&#123;
+        fs.read<span class="hljs-constructor">File('.<span class="hljs-operator">/</span><span class="hljs-params">test2</span>.<span class="hljs-params">text</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback2</span>(<span class="hljs-params">err</span>, <span class="hljs-params">data</span>)</span>&#123;
+            <span class="hljs-comment">// ...</span>
+        &#125;)
+    &#125;)
+&#125;)</code></pre>
+
+<p>深层嵌套让我们很是绝望！</p>
+<ul>
+<li>promise</li>
+</ul>
+<p>幸运的是后来有了 promise，带我们逃离了“回调地狱”，来到新世界：</p>
+<pre><code class="hljs reasonml"><span class="hljs-keyword">new</span> <span class="hljs-constructor">Promise((<span class="hljs-params">resolve</span>, <span class="hljs-params">reject</span>)</span> =&gt; &#123;
+    fs.read<span class="hljs-constructor">File('.<span class="hljs-operator">/</span><span class="hljs-params">test</span>.<span class="hljs-params">text</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback</span>(<span class="hljs-params">err</span>, <span class="hljs-params">data</span>)</span>&#123;
+        resolve(data);
+    &#125;)
+&#125;)
+.<span class="hljs-keyword">then</span>(data =&gt; &#123;
+    fs.read<span class="hljs-constructor">File('.<span class="hljs-operator">/</span><span class="hljs-params">test</span>.<span class="hljs-params">text1</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback1</span>(<span class="hljs-params">err</span>, <span class="hljs-params">data1</span>)</span>&#123;
+        <span class="hljs-comment">// do something</span>
+        resolve(data1);
+    &#125;)
+&#125;)
+.<span class="hljs-keyword">then</span>(data =&gt; &#123;
+    fs.read<span class="hljs-constructor">File('.<span class="hljs-operator">/</span><span class="hljs-params">test</span>.<span class="hljs-params">text1</span>', <span class="hljs-params">function</span> <span class="hljs-params">callback2</span>(<span class="hljs-params">err</span>, <span class="hljs-params">data2</span>)</span>&#123;
+        <span class="hljs-comment">// do something</span>
+        resolve(data2);
+    &#125;)
+&#125;)</code></pre>
+
+<p>这样写之后是不是看起来清爽了，瞬间头也不晕了，promise 让流程执行的过程更清晰！</p>
+<p>但是你一定见过这样的代码：</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+    fs.readFile(<span class="hljs-string">'./test.text'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callback</span>(<span class="hljs-params">err, data</span>)</span>&#123;
+        resolve(data);
+    &#125;)
+&#125;)
+.then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> &#123;
+    <span class="hljs-comment">// do something</span>
+&#125;)
+.then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> &#123;
+    <span class="hljs-comment">// do something</span>
+&#125;)
+.then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> &#123;
+    <span class="hljs-comment">// do something</span>
+&#125;)
+.then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> &#123;
+    <span class="hljs-comment">// do something</span>
+&#125;)
+...</code></pre>
+
+<p>真的是链式调用一时爽，一直链式调用… 就有点难受了。 promise 抑制了回调地狱的横向扩张，却发现自己的纵向扩张也很厉害。</p>
+<ul>
+<li>generator</li>
+</ul>
+<p>generator 函数与普通的函数不同，函数内的代码可以分段执行，也就是说可以暂停执行，凡是需要暂停的地方用 yield 关键字注明。具体用法参考阮老师文章的介绍 <a href="http://www.ruanyifeng.com/blog/2015/04/generator.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2015/04/generator.html</a></p>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">genFn</span>(<span class="hljs-params"></span>) </span>&#123;
+    <span class="hljs-keyword">let</span> x = <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">let</span> y = <span class="hljs-keyword">yield</span> x * <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">return</span> y;
+&#125;
+<span class="hljs-keyword">let</span> gen = genFn();
+gen.next() <span class="hljs-comment">// &#123;value: 2, done: false&#125;</span>
+gen.next() <span class="hljs-comment">// &#123;value: NaN, done: false&#125;</span>
+gen.next() <span class="hljs-comment">// &#123;value: undefined, done: true&#125;</span></code></pre>
+
+<p>于是对于上面依次读取文件的例子可以改写成如下形式：</p>
+<pre><code class="hljs reasonml"><span class="hljs-comment">// 模拟文件请求</span>
+<span class="hljs-keyword">function</span> fake<span class="hljs-constructor">ReadFile(<span class="hljs-params">filename</span>, <span class="hljs-params">duration</span>)</span> &#123;
+    set<span class="hljs-constructor">Timeout(()</span> =&gt; &#123;
+        console.log(filename)
+        <span class="hljs-comment">// 这里需要主动调用迭代器对象的 next 方法</span>
+        gen.next(filename)
+    &#125;, duration)
+&#125;
+
+<span class="hljs-keyword">function</span>* gen<span class="hljs-constructor">Fn()</span> &#123;
+    <span class="hljs-comment">// 顺序请求三个文件，期望的是顺序打印出结果</span>
+    yield fake<span class="hljs-constructor">ReadFile('<span class="hljs-params">a</span>.<span class="hljs-params">txt</span>', 5000)</span>;
+    yield fake<span class="hljs-constructor">ReadFile('<span class="hljs-params">b</span>.<span class="hljs-params">txt</span>', 3000)</span>;
+    yield fake<span class="hljs-constructor">ReadFile('<span class="hljs-params">c</span>.<span class="hljs-params">txt</span>', 1000)</span>;
+&#125;
+
+const gen = gen<span class="hljs-constructor">Fn()</span>;
+gen.next<span class="hljs-literal">()</span>;
+
+<span class="hljs-comment">// a.txt   5秒后打印</span>
+<span class="hljs-comment">// b.txt   8秒后打印</span>
+<span class="hljs-comment">// c.txt   9秒后打印</span></code></pre>
+
+<p>虽然获取文件所需时长 a &gt; b &gt; c, 但是打印的结果却是 a，b，c，也就是说在 generator 函数内，yield 是按上到下执行的，使得代码依赖顺序更清晰明了。</p>
+<p>可以看到我需要在文件请求完成之后手动调用 next 方法，因此在实际工作中，我们通常需要将 generator 函数包裹在一个函数内：</p>
+<pre><code class="hljs reasonml"><span class="hljs-keyword">function</span> call<span class="hljs-constructor">Gen()</span> &#123;
+    <span class="hljs-keyword">function</span>* gen<span class="hljs-constructor">Fn()</span> &#123;
+        yield fake<span class="hljs-constructor">ReadFile('<span class="hljs-params">a</span>.<span class="hljs-params">txt</span>', 5000, <span class="hljs-params">gen</span>)</span>;
+        yield fake<span class="hljs-constructor">ReadFile('<span class="hljs-params">b</span>.<span class="hljs-params">txt</span>', 3000, <span class="hljs-params">gen</span>)</span>;
+        yield fake<span class="hljs-constructor">ReadFile('<span class="hljs-params">c</span>.<span class="hljs-params">txt</span>', 1000, <span class="hljs-params">gen</span>)</span>;
+    &#125;
+    const gen = gen<span class="hljs-constructor">Fn()</span>;
+    gen.next<span class="hljs-literal">()</span>;
+&#125;
+
+<span class="hljs-keyword">function</span> fake<span class="hljs-constructor">ReadFile(<span class="hljs-params">filename</span>, <span class="hljs-params">duration</span>, <span class="hljs-params">g</span>)</span> &#123;
+    set<span class="hljs-constructor">Timeout(()</span> =&gt; &#123;
+        console.log(filename)
+        <span class="hljs-comment">// 这里需要主动调用迭代器对象的 next 方法</span>
+        g.next(filename)
+    &#125;, duration)
+&#125;
+
+call<span class="hljs-constructor">Gen()</span>;</code></pre>
+
+<p>总的来说，generator 函数改善了 promise 的 then “链条”过长的缺点，但是需要额外创建一个函数来包装。</p>
+<ul>
+<li>async await</li>
+</ul>
+<p>作为 ES7 提出的 async 函数，在 generator 基础上进行优化，是目前 js 处理异步操作的最优解决方案，让异步处理代码可读性更强，流程控制更方便。</p>
+<p>我们按照 async 方法的用法来继续优化上面的例子：</p>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fakeReadFile</span>(<span class="hljs-params">filename, duration, g</span>) </span>&#123;
+    <span class="hljs-comment">// 因为 await 关键字后面需要接收一个 promise</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;
+            resolve(filename)
+        &#125;, duration)
+    &#125;)
+&#125;
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">asyncFn</span>(<span class="hljs-params"></span>) </span>&#123;
+    <span class="hljs-keyword">let</span> a = <span class="hljs-keyword">await</span> fakeReadFile(<span class="hljs-string">'a.txt'</span>, <span class="hljs-number">5000</span>);
+    <span class="hljs-keyword">let</span> b = <span class="hljs-keyword">await</span> fakeReadFile(<span class="hljs-string">'b.txt'</span>, <span class="hljs-number">3000</span>);
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">await</span> fakeReadFile(<span class="hljs-string">'c.txt'</span>, <span class="hljs-number">1000</span>);
+    <span class="hljs-built_in">console</span>.log(a)
+    <span class="hljs-built_in">console</span>.log(b)
+    <span class="hljs-built_in">console</span>.log(c)
+&#125;
+
+asyncFn();
+
+<span class="hljs-comment">// 9秒后一次性打印</span>
+<span class="hljs-comment">// a.txt </span>
+<span class="hljs-comment">// b.txt </span>
+<span class="hljs-comment">// c.txt</span></code></pre>
+
+<p>需要注意的是如果 await 后面表达式里包含异步操作但返回的不是 promise，那么就就不会等待到结果返回，比如这样修改：</p>
+<pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fakeReadFile</span>(<span class="hljs-params">filename, duration, g</span>) </span>&#123;
+    <span class="hljs-keyword">if</span> (filename === <span class="hljs-string">'a.txt'</span>) &#123;
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;
+            <span class="hljs-keyword">return</span> filename
+        &#125;, duration)
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+            setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;
+                resolve(filename)
+            &#125;, duration)
+        &#125;)
+    &#125;
+&#125;
+
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">asyncFn</span>(<span class="hljs-params"></span>) </span>&#123;
+    <span class="hljs-keyword">let</span> a = <span class="hljs-keyword">await</span> fakeReadFile(<span class="hljs-string">'a.txt'</span>, <span class="hljs-number">5000</span>);
+    <span class="hljs-built_in">console</span>.log(a)
+    <span class="hljs-keyword">let</span> b = <span class="hljs-keyword">await</span> fakeReadFile(<span class="hljs-string">'b.txt'</span>, <span class="hljs-number">3000</span>);
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">await</span> fakeReadFile(<span class="hljs-string">'c.txt'</span>, <span class="hljs-number">1000</span>);
+    <span class="hljs-built_in">console</span>.log(b)
+    <span class="hljs-built_in">console</span>.log(c)
+&#125;
+asyncFn();
+
+<span class="hljs-comment">// undefined 立刻输出</span>
+<span class="hljs-comment">// b.txt     4秒之后输出</span>
+<span class="hljs-comment">// c.txt     4秒之后输出</span></code></pre>
+
+<p>也就是说第一个 await 没有阻塞 console.log(a) 的执行。因此 async 对 await 后面的表达式又两种处理方式：</p>
+<pre><code class="hljs javascript"><span class="hljs-number">1.</span> promise
+   <span class="hljs-keyword">async</span> 会执行表达式并等待有返回值才会继续往下执行代码
+<span class="hljs-number">2.</span> 非 promise
+   <span class="hljs-keyword">async</span> 执行表达式并立刻获取返回值，如果没有则为 <span class="hljs-literal">undefined</span></code></pre>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>js 处理异步的方法经历了 回调函数、promise、generator、async 这四个阶段，每一种新方法都是对前方法的改善，主要处理的点有两点：</p>
+<ol>
+<li>可读性更强</li>
+<li>流程控制更清晰</li>
+</ol>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">异步编程</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JS/">JS</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">跟着规范实现一个功能完备的Promise</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+	<div id="vcomments"></div>
+	<script defer src="https://cdn.staticfile.org/valine/1.4.14/Valine.min.js" ></script>
+
+		<script type="text/javascript">
+			var oldLoadVa = window.onload;
+			window.onload = function () {
+				oldLoadVa && oldLoadVa();
+
+				new Valine({
+					el: "#vcomments",
+					app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+					app_key: "uSkOsleUpcvIJyb31MudM4dS",
+					placeholder: "留下点脚印吧~",
+					path: window.location.pathname,
+					avatar: "retro",
+					meta: ["nick","mail","link"],
+					pageSize: "10",
+					lang: "zh-CN",
+					highlight: false,
+					recordIP: false,
+					serverURLs: "",
+					avatar:'robohash'
+				});
+			};
+		</script>
+		<noscript>Please enable JavaScript to view the <a href="https://valine.js.org" target="_blank" rel="nofollow noopener noopener">comments
+				powered by Valine.</a></noscript>
+		
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <!--
+ * @Author: your name
+ * @Date: 2020-08-20 09:16:45
+ * @LastEditTime: 2021-04-29 15:24:37
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \blog\themes\fluid\layout\_partial\footer.ejs
+-->
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <span>DJA</span>
+      <i class="iconfont icon-love"></i>
+      <span>YZT</span>
+    </div>
+    
+  <div>
+    
+      <!-- 不蒜子统计PV -->
+      
+      <span id="busuanzi_container_site_pv" style="display: none">
+      总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    </span>
+    
+    
+      <!-- 不蒜子统计UV -->
+      
+      <span id="busuanzi_container_site_uv" style="display: none">
+      总访客数 <span id="busuanzi_value_site_uv"></span> 人
+    </span>
+    
+  </div>
+
+
+      
+
+        
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+<!-- Plugins -->
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/mermaid/8.5.0/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
+
+
+
+
+</body>
+<div id="dark" onclick="switchDarkMode()"></div>
+<script>
+  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
+  // 依次判断 系统暗黑模式 指定时间 缓存 dark
+  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
+    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
+      document.body.classList.add('dark');
+    }
+  }
+  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
+
+  function switchDarkMode() {
+	if ($('body').hasClass('dark')) {
+		$("#dark").html("🌞");
+		document.body.classList.remove('dark');
+		localStorage.setItem('noDark', '1');
+		localStorage.setItem('dark', '0');
+	} else {
+		$("#dark").html("🌙"); 
+		document.body.classList.add('dark');
+		localStorage.setItem('dark', '1');
+		localStorage.setItem('noDark', '0');
+	}
+}
+</script>
+</html>
