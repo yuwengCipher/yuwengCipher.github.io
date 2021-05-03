@@ -1,14 +1,14 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
-  <link rel="icon" type="image/png" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -17,24 +17,20 @@
   <meta name="description" content="">
   <meta name="author" content="cipher">
   <meta name="keywords" content="">
+  
   <title>Cipher</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
-
-
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -42,6 +38,12 @@
 <!-- 自定义样式保持在最底部 -->
 
 
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -65,52 +67,73 @@
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/">
-              <i class="iconfont icon-home-fill"></i>
-              首页</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/archives/">
-              <i class="iconfont icon-archive-fill"></i>
-              归档</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/categories/">
-              <i class="iconfont icon-category-fill"></i>
-              分类</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/tags/">
-              <i class="iconfont icon-tags-fill"></i>
-              标签</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/about/">
-              <i class="iconfont icon-user-fill"></i>
-              关于</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -118,13 +141,13 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner" id="banner" parallax=true
          style="background: url('/img/docsmall/index.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
-          <div class="container text-center white-text fadeInUp">
-            <span class="h2" id="subtitle">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="">
               
                 
               
@@ -141,7 +164,7 @@
 
   <main>
     
-      <div class="container nopadding-md">
+      <div class="container nopadding-x-md">
         <div class="py-5" id="board"
           >
           
@@ -155,137 +178,214 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/30/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="http 协议笔记/一个简单的网络请求过程">
+        <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="一个简单的网络请求过程">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/30/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">http 协议笔记/一个简单的网络请求过程</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/" target="_self">
+          一个简单的网络请求过程
+        </a>
+      </h1>
 
-      <a href="/2021/04/30/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/" target="_self">
           
-        
-        <div></div>
-      </a>
+          
+            
+          
+          
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-30
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-10 00:00" pubdate>
+              2021-04-10
+            </time>
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/HTTP/">HTTP</a>
+            
+              <a href="/tags/TCP/">TCP</a>
+            
+              <a href="/tags/DNS/">DNS</a>
+            
+          </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="带着问题读源码/vue2/compiler">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-compiler">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/">带着问题读源码/vue2/compiler</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
+          Vue2-compiler
+        </a>
+      </h1>
 
-      <a href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
           
-        
-        <div></div>
-      </a>
+          
+            
+          
+          
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-30
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-06 00:00" pubdate>
+              2021-04-06
+            </time>
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Vue/">Vue</a>
+            
+          </div>
+        
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="带着问题读源码/vue2/总体结构">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-总体结构">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/">带着问题读源码/vue2/总体结构</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
+          Vue2-总体结构
+        </a>
+      </h1>
 
-      <a href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
           
-        
-        <div></div>
-      </a>
+          
+            
+          
+          
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-30
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-06 00:00" pubdate>
+              2021-04-06
+            </time>
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Vue/">Vue</a>
+            
+          </div>
+        
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="带着问题读源码/axios/总体结构">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="axios-总体结构">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/">带着问题读源码/axios/总体结构</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
+          axios-总体结构
+        </a>
+      </h1>
 
-      <a href="/2021/04/30/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
           
-        
-        <div>本文基于 axios 版本 0.21.1
+          
+            
+          
+          本文基于 axios 版本 0.21.1
 入口在根目录下找到 index.js，里面只有一句代码，将 axios 进行导出。
-module.exports = require('./lib/axios');
+1module.exports = require('./lib/axios');
 
 找到 lib 下的 axios.js 文件
 
 首先引入了相关文件
-// 工具函数库
-var utils = require('./utils');
-// bind 方法，返回 functio</div>
-      </a>
+12345678910// 工具函数库var utils = require('./utils');// bind 方法，
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-30
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-06 00:00" pubdate>
+              2021-04-06
+            </time>
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Axios/">Axios</a>
+            
+          </div>
+        
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -293,31 +393,40 @@ var utils = require('./utils');
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/04/04/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E6%B5%85%E6%9E%90%20generator%20%E4%B8%8E%20async%20%E5%8E%9F%E7%90%86/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="浅析 generator 与 async 原理">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="浅析 generator 与 async 原理">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/04/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E6%B5%85%E6%9E%90%20generator%20%E4%B8%8E%20async%20%E5%8E%9F%E7%90%86/">浅析 generator 与 async 原理</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/04/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E6%B5%85%E6%9E%90%20generator%20%E4%B8%8E%20async%20%E5%8E%9F%E7%90%86/" target="_self">
+          浅析 generator 与 async 原理
+        </a>
+      </h1>
 
-      <a href="/2021/04/04/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E6%B5%85%E6%9E%90%20generator%20%E4%B8%8E%20async%20%E5%8E%9F%E7%90%86/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/04/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E6%B5%85%E6%9E%90%20generator%20%E4%B8%8E%20async%20%E5%8E%9F%E7%90%86/" target="_self">
           
-        
-        <div>序言geneartor 和 async 都是 js 处理异步操作发展历程的产物，它们让异步编程越来越像同步编程。但是由于采用新的语法、关键字，它们是如何做到“类同步”操作的，我们不得而知，因此这篇文章将会窥探内部的秘密。
+          
+            
+          
+          序言geneartor 和 async 都是 js 处理异步操作发展历程的产物，它们让异步编程越来越像同步编程。但是由于采用新的语法、关键字，它们是如何做到“类同步”操作的，我们不得而知，因此这篇文章将会窥探内部的秘密。
 下面将借助 babel 本地编译示例代码来进行分析。
 准备步骤 一、全局安装 regenerator
-npm i regenerator -g
+1npm i regenerator -g
 
  二、编译 generator
-</div>
-      </a>
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-04
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-04 00:00" pubdate>
+              2021-04-04
+            </time>
           </div>
         
         
@@ -339,7 +448,7 @@ npm i regenerator -g
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -347,27 +456,37 @@ npm i regenerator -g
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/04/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="弄懂 event loop">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="弄懂 event loop">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/">弄懂 event loop</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" target="_self">
+          弄懂 event loop
+        </a>
+      </h1>
 
-      <a href="/2021/04/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" target="_self">
           
-        
-        <div>什么是 event loop简单来说，event loop 就是 js 处理事件执行的一种机制。
+          
+            
+          
+          什么是 event loop简单来说，event loop 就是 js 处理事件执行的一种机制。
 js 以前是专门用来处理浏览器交互的，比如说 DOM 点击事件等，因此被设计成单线程，所谓单线程，就是同一时间只能处理一件事情，这也就保证了页面中一次只能处理一个事件，避免造成交互混乱的问题。
-开始之前，需要明确的是 javascript 引擎是单线程的，但是 js 运行环境是多线程。因为浏览器是多线</div>
-      </a>
+开始之前，需要明确的是 javascript 引擎是单线程的，但是 js 运行环境是多线程。因为浏览器是多线
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-03
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-03 00:00" pubdate>
+              2021-04-03
+            </time>
           </div>
         
         
@@ -387,7 +506,7 @@ js 以前是专门用来处理浏览器交互的，比如说 DOM 点击事件等
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -395,31 +514,40 @@ js 以前是专门用来处理浏览器交互的，比如说 DOM 点击事件等
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="跟着规范实现一个功能完备的Promise">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="跟着规范实现一个功能完备的Promise">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/">跟着规范实现一个功能完备的Promise</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/" target="_self">
+          跟着规范实现一个功能完备的Promise
+        </a>
+      </h1>
 
-      <a href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/" target="_self">
           
-        
-        <div>一直以来，对于 promise，只知道如何使用，其内部的运作机制却一直不得而知。为了让自己用得安心，决定跟着规范去了解底层的原理，并手写一个功能完备的 MyPromise.
-
+          
+            
+          
+          一直以来，对于 promise，只知道如何使用，其内部的运作机制却不得而知。本着知其然，知其所以然（为了让自己用得安心）的理念，决定跟着规范去了解底层的原理，并手写一个功能完备的 MyPromise.
 术语
 promise 是一个对象或者函数，拥有 then 方法
 thenable 可以理解为一个拥有 then 方法的对象或函数
 value 是一个合法的 JavaScript值
-reason 用来表示 promise 拒绝</div>
-      </a>
+reason 用来
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-02
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-02 00:00" pubdate>
+              2021-04-02
+            </time>
           </div>
         
         
@@ -439,7 +567,7 @@ reason 用来表示 promise 拒绝</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -447,27 +575,37 @@ reason 用来表示 promise 拒绝</div>
     
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/04/01/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%AF%B4%E8%AF%B4%20js%20%E7%9A%84%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" alt="说说 js 的异步处理机制">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="说说 js 的异步处理机制">
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2021/04/01/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%AF%B4%E8%AF%B4%20js%20%E7%9A%84%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/">说说 js 的异步处理机制</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/04/01/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%AF%B4%E8%AF%B4%20js%20%E7%9A%84%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" target="_self">
+          说说 js 的异步处理机制
+        </a>
+      </h1>
 
-      <a href="/2021/04/01/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%AF%B4%E8%AF%B4%20js%20%E7%9A%84%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2021/04/01/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%AF%B4%E8%AF%B4%20js%20%E7%9A%84%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" target="_self">
           
-        
-        <div>什么是异步在 js 中和生活中都会有异步任务的存在，而异步的产生是有前提条件的，那就是这个任务可以被拆解成两部分。
+          
+            
+          
+          什么是异步在 js 中和生活中都会有异步任务的存在，而异步的产生是有前提条件的，那就是这个任务可以被拆解成两部分。
 举个简单的例子。周末我想喝点排骨汤，把所有步骤都准备好后开火炖。正常来说，这锅汤需要3小时才能煲好，很显然我不会傻傻守在这儿等它3小时，因为我还有别的事要做，比如说看电视，嗑瓜子等等。而是3小时后汤煲好了，我才回去盛起来喝。
-所以这个喝汤任务由两个步骤组成：煲汤 + 喝汤；这个喝汤步</div>
-      </a>
+所以这个喝汤任务由两个步骤组成：煲汤 + 喝汤；这个喝汤步
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2021-04-01
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-01 00:00" pubdate>
+              2021-04-01
+            </time>
           </div>
         
         
@@ -487,7 +625,7 @@ reason 用来表示 promise 拒绝</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
 
@@ -500,16 +638,15 @@ reason 用来表示 promise 拒绝</div>
         </div>
       </div>
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -530,66 +667,86 @@ reason 用来表示 promise 拒绝</div>
     </div>
   </div>
 </div>
-  
-
-  
-
-  
-
-  <!--
- * @Author: your name
- * @Date: 2020-08-20 09:16:45
- * @LastEditTime: 2021-04-29 15:24:37
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \blog\themes\fluid\layout\_partial\footer.ejs
--->
-<footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <span>DJA</span>
-      <i class="iconfont icon-love"></i>
-      <span>YZT</span>
-    </div>
     
-  <div>
+
     
-      <!-- 不蒜子统计PV -->
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
       
-      <span id="busuanzi_container_site_pv" style="display: none">
-      总访问量 <span id="busuanzi_value_site_pv"></span> 次
-    </span>
-    
-    
-      <!-- 不蒜子统计UV -->
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
       
-      <span id="busuanzi_container_site_uv" style="display: none">
-      总访客数 <span id="busuanzi_value_site_uv"></span> 人
-    </span>
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
     
   </div>
 
 
-      
+  
 
-        
-  </div>
+  
 </footer>
 
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/main.js" ></script>
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
 
 
-  <script  src="/js/lazyload.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
 
 
 
 
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
 
 
 
@@ -598,50 +755,19 @@ reason 用来表示 promise 拒绝</div>
 
 
 
-<!-- Plugins -->
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
 
 
   <script  src="/js/local-search.js" ></script>
   <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
   </script>
 
 
@@ -658,34 +784,9 @@ reason 用来表示 promise 拒绝</div>
 
 
 
-
-
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 </body>
-<div id="dark" onclick="switchDarkMode()"></div>
-<script>
-  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
-  // 依次判断 系统暗黑模式 指定时间 缓存 dark
-  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
-    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
-      document.body.classList.add('dark');
-    }
-  }
-  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
-
-  function switchDarkMode() {
-	if ($('body').hasClass('dark')) {
-		$("#dark").html("🌞");
-		document.body.classList.remove('dark');
-		localStorage.setItem('noDark', '1');
-		localStorage.setItem('dark', '0');
-	} else {
-		$("#dark").html("🌙"); 
-		document.body.classList.add('dark');
-		localStorage.setItem('dark', '1');
-		localStorage.setItem('noDark', '0');
-	}
-}
-</script>
 </html>

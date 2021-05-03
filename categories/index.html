@@ -1,14 +1,14 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
-  <link rel="icon" type="image/png" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -17,24 +17,20 @@
   <meta name="description" content="">
   <meta name="author" content="cipher">
   <meta name="keywords" content="">
+  
   <title>分类 - Cipher</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
-
-
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -42,6 +38,12 @@
 <!-- 自定义样式保持在最底部 -->
 
 
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -65,52 +67,73 @@
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/">
-              <i class="iconfont icon-home-fill"></i>
-              首页</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/archives/">
-              <i class="iconfont icon-archive-fill"></i>
-              归档</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/categories/">
-              <i class="iconfont icon-category-fill"></i>
-              分类</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/tags/">
-              <i class="iconfont icon-tags-fill"></i>
-              标签</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
         
           
           
           
-          <li class="nav-item">
-            <a class="nav-link" href="/about/">
-              <i class="iconfont icon-user-fill"></i>
-              关于</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -118,13 +141,13 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner" id="banner" parallax=true
          style="background: url('/img/category.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
-          <div class="container text-center white-text fadeInUp">
-            <span class="h2" id="subtitle">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="分类">
               
                 分类
               
@@ -141,7 +164,7 @@
 
   <main>
     
-      <div class="container nopadding-md">
+      <div class="container nopadding-x-md">
         <div class="py-5" id="board"
           >
           
@@ -150,7 +173,190 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
-<ul class="category-tree-list"><li class="category-tree-list-item"><a class="category-tree-list-link" href="/categories/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">异步编程</a><span class="category-tree-list-count">4</span></li></ul>
+
+
+
+
+
+
+<div class="category-list">
+  
+  
+  
+  
+    
+    
+    <div class="category row">
+      <a
+        class="category-item collapsed list-group-item category-item-action col-10 col-md-11"
+        id="heading-fb6d78f11adcee47d22c2d618694e152" role="tab" data-toggle="collapse" href="#collapse-fb6d78f11adcee47d22c2d618694e152"
+        aria-expanded="false"
+      >
+        异步编程
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      <a href="/categories/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" class="category-count col-2 col-md-1">
+        <i class="iconfont icon-articles"></i>
+        <span>4</span>
+      </a>
+      <div class="category-collapse">
+        
+        
+          
+  <div id="collapse-fb6d78f11adcee47d22c2d618694e152" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-fb6d78f11adcee47d22c2d618694e152">
+    
+    
+      
+      
+        <a href="/2021/04/04/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E6%B5%85%E6%9E%90%20generator%20%E4%B8%8E%20async%20%E5%8E%9F%E7%90%86/" class="list-group-item list-group-item-action">
+          <span class="category-post">浅析 generator 与 async 原理</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2021/04/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" class="list-group-item list-group-item-action">
+          <span class="category-post">弄懂 event loop</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/" class="list-group-item list-group-item-action">
+          <span class="category-post">跟着规范实现一个功能完备的Promise</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2021/04/01/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%AF%B4%E8%AF%B4%20js%20%E7%9A%84%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="list-group-item list-group-item-action">
+          <span class="category-post">说说 js 的异步处理机制</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    <div class="category row">
+      <a
+        class="category-item collapsed list-group-item category-item-action col-10 col-md-11"
+        id="heading-2d8ec58babcec05d3fe8f712968de749" role="tab" data-toggle="collapse" href="#collapse-2d8ec58babcec05d3fe8f712968de749"
+        aria-expanded="false"
+      >
+        Vue
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      <a href="/categories/Vue/" class="category-count col-2 col-md-1">
+        <i class="iconfont icon-articles"></i>
+        <span>2</span>
+      </a>
+      <div class="category-collapse">
+        
+        
+          
+  <div id="collapse-2d8ec58babcec05d3fe8f712968de749" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-2d8ec58babcec05d3fe8f712968de749">
+    
+    
+      
+      
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" class="list-group-item list-group-item-action">
+          <span class="category-post">Vue2-compiler</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" class="list-group-item list-group-item-action">
+          <span class="category-post">Vue2-总体结构</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    <div class="category row">
+      <a
+        class="category-item collapsed list-group-item category-item-action col-10 col-md-11"
+        id="heading-7ddbe15c845fa27a2bab496183042ca6" role="tab" data-toggle="collapse" href="#collapse-7ddbe15c845fa27a2bab496183042ca6"
+        aria-expanded="false"
+      >
+        网络
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      <a href="/categories/%E7%BD%91%E7%BB%9C/" class="category-count col-2 col-md-1">
+        <i class="iconfont icon-articles"></i>
+        <span>1</span>
+      </a>
+      <div class="category-collapse">
+        
+        
+          
+  <div id="collapse-7ddbe15c845fa27a2bab496183042ca6" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-7ddbe15c845fa27a2bab496183042ca6">
+    
+    
+      
+      
+        <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/" class="list-group-item list-group-item-action">
+          <span class="category-post">一个简单的网络请求过程</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    <div class="category row">
+      <a
+        class="category-item collapsed list-group-item category-item-action col-10 col-md-11"
+        id="heading-d3e28535c74ccee29182aeb3cf837e98" role="tab" data-toggle="collapse" href="#collapse-d3e28535c74ccee29182aeb3cf837e98"
+        aria-expanded="false"
+      >
+        Axios
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      <a href="/categories/Axios/" class="category-count col-2 col-md-1">
+        <i class="iconfont icon-articles"></i>
+        <span>1</span>
+      </a>
+      <div class="category-collapse">
+        
+        
+          
+  <div id="collapse-d3e28535c74ccee29182aeb3cf837e98" class="collapse in" role="tabpanel"
+       aria-labelledby="heading-d3e28535c74ccee29182aeb3cf837e98">
+    
+    
+      
+      
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" class="list-group-item list-group-item-action">
+          <span class="category-post">axios-总体结构</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
 
               </div>
             </div>
@@ -158,16 +364,15 @@
         </div>
       </div>
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -188,66 +393,86 @@
     </div>
   </div>
 </div>
-  
-
-  
-
-  
-
-  <!--
- * @Author: your name
- * @Date: 2020-08-20 09:16:45
- * @LastEditTime: 2021-04-29 15:24:37
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \blog\themes\fluid\layout\_partial\footer.ejs
--->
-<footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <span>DJA</span>
-      <i class="iconfont icon-love"></i>
-      <span>YZT</span>
-    </div>
     
-  <div>
+
     
-      <!-- 不蒜子统计PV -->
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
       
-      <span id="busuanzi_container_site_pv" style="display: none">
-      总访问量 <span id="busuanzi_value_site_pv"></span> 次
-    </span>
-    
-    
-      <!-- 不蒜子统计UV -->
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
       
-      <span id="busuanzi_container_site_uv" style="display: none">
-      总访客数 <span id="busuanzi_value_site_uv"></span> 人
-    </span>
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
     
   </div>
 
 
-      
+  
 
-        
-  </div>
+  
 </footer>
 
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/main.js" ></script>
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
 
 
-  <script  src="/js/lazyload.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
 
 
 
 
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
 
 
 
@@ -256,50 +481,19 @@
 
 
 
-<!-- Plugins -->
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
 
 
   <script  src="/js/local-search.js" ></script>
   <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
   </script>
 
 
@@ -316,34 +510,9 @@
 
 
 
-
-
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
 
 
 </body>
-<div id="dark" onclick="switchDarkMode()"></div>
-<script>
-  var isNight = new Date().getHours() >= 22 || new Date().getHours() < 7; // 指定时间
-  // 依次判断 系统暗黑模式 指定时间 缓存 dark
-  if( matchMedia('(prefers-color-scheme: dark)').matches || isNight || localStorage.getItem('dark') === '1') {
-    if(!(isNight&&localStorage.getItem('noDark') === '1')) {
-      document.body.classList.add('dark');
-    }
-  }
-  document.getElementById('dark').innerHTML = document.querySelector("body").classList.contains("dark")?"🌙":"🌞";
-
-  function switchDarkMode() {
-	if ($('body').hasClass('dark')) {
-		$("#dark").html("🌞");
-		document.body.classList.remove('dark');
-		localStorage.setItem('noDark', '1');
-		localStorage.setItem('dark', '0');
-	} else {
-		$("#dark").html("🌙"); 
-		document.body.classList.add('dark');
-		localStorage.setItem('dark', '1');
-		localStorage.setItem('noDark', '0');
-	}
-}
-</script>
 </html>
