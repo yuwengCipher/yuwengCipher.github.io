@@ -158,7 +158,7 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/docsmall/article.jpg') no-repeat center center;
+         style="background: url('/img/docsmall/wallhaven-md6q29.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -239,29 +239,29 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年4月30日 下午
+                  本文最后更新于：2021年5月4日 上午
                 
               </p>
             
             <div class="markdown-body">
-              <h4 id="什么是-event-loop"><a href="#什么是-event-loop" class="headerlink" title="什么是 event loop"></a>什么是 event loop</h4><p>简单来说，event loop 就是 js 处理事件执行的一种机制。</p>
+              <h4 id="什么是-event-loop"><a href="#什么是-event-loop" class="headerlink" title="什么是 event loop"></a>什么是 event loop</h4><p>简单来说，event loop 就是 JavaScript 宿主处理事件执行的一种机制。</p>
 <p>js 以前是专门用来处理浏览器交互的，比如说 DOM 点击事件等，因此被设计成单线程，所谓单线程，就是同一时间只能处理一件事情，这也就保证了页面中一次只能处理一个事件，避免造成交互混乱的问题。</p>
-<p><strong>开始之前，需要明确的是 javascript 引擎是单线程的，但是 js 运行环境是多线程。因为浏览器是多线程的，除了 js 引擎线程，还包括 GUI 渲染线程、定时器触发线程、http请求线程以及 DOM 事件触发线程；node也可以使用 child_process 创建多个子线程。</strong></p>
+<p><strong>开始之前，需要明确的是 JavaScript引擎是单线程的，但是 js 运行环境是多线程。因为浏览器是多线程的，除了 js 引擎线程，还包括 GUI 渲染线程、定时器触发线程、HTTP 请求线程以及 DOM 事件触发线程；node也可以使用 child_process 创建多个子线程。</strong></p>
 <p>现在有事件 A 和 B，如下：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> A = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">A</span>(<span class="hljs-params"></span>) </span>&#123;<br>    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am A'</span>);<br>    &#125;, <span class="hljs-number">2000</span>)<br>&#125;<br><br><span class="hljs-keyword">const</span> B = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">B</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am B'</span>);<br>&#125;<br><br>A();<br>B();<br></code></pre></td></tr></table></figure>
 <p>按照单线程的要求，需要等到 A 执行完毕，才会执行 B，那么打印顺序会是如下所示：</p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs 1c">console.<span class="hljs-built_in">log</span>('i am A');<br>console.<span class="hljs-built_in">log</span>('i am B');<br></code></pre></td></tr></table></figure>
 <p>但实际上的顺序是：</p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs 1c">console.<span class="hljs-built_in">log</span>('i am B');<br>console.<span class="hljs-built_in">log</span>('i am A');<br></code></pre></td></tr></table></figure>
-<p>这就是 event loop 机制在起作用，因为 console.log(‘i am B’) 是同步任务，而 setTimeout 是异步任务。</p>
+<p>这就是 event loop 机制在起作用，因为 console.log(‘i am B’) 是同步任务，而 setTimeout 是异步任务，同步任务执行完才会去执行异步任务</p>
 <h4 id="宏任务和微任务"><a href="#宏任务和微任务" class="headerlink" title="宏任务和微任务"></a>宏任务和微任务</h4><ul>
 <li>什么是宏任务和微任务？</li>
 </ul>
-<p>这里有几个概念容易混淆，那就是同步任务和异步任务，宏任务和微任务。js 的代码执行 遵循在代码块内从上往下执行的规则，同步任务会依次执行；而异步任务则会分为宏任务和微任务，比如说 setTimeout 的第一个参数是宏任务，promise.then 中注册的方法是微任务，会按照宏任务和微任务的执行规则进行执行。</p>
+<p>这里有几个概念容易混淆，那就是同步任务和异步任务，宏任务和微任务。js 的代码执行遵循在代码块内从上往下执行的规则，同步任务会依次执行；而异步任务则会分为宏任务和微任务，比如 setTimeout 的第一个参数是宏任务，promise.then 中注册的方法是微任务，会按照宏任务和微任务的执行规则进行执行。</p>
 <ul>
 <li>宏任务和微任务有哪些？</li>
 </ul>
-<p>js 代码执行分为宏任务和微任务，那宏任务和微任务分别由哪些呢？看下表：</p>
+<p>js 执行的宿主环境有浏览器和 Node,  所以我们通过宿主环境的不同来整理这些异步任务：</p>
 <table>
 <thead>
 <tr>
@@ -325,7 +325,7 @@
 </ul>
 <p>要点一：一个宏任务里可能会包含多个微任务</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是 promise 里的 同步任务'</span>)<br>    resolve(<span class="hljs-string">'success'</span>)<br>&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是微任务1'</span>)<br>&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是微任务2'</span>)<br>&#125;)<br><br>setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是 setTimeout 里的 宏任务'</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
-<p>我们来分析下这段代码里的宏任务和微任务有哪些：<br>宏任务：整体代码，setTimeout 的回调<br>微任务：两个 then 方法的回调</p>
+<p>我们来分析下这段代码里的宏任务和微任务有哪些：<br>宏任务：setTimeout 的回调<br>微任务：两个 then 方法的回调</p>
 <p>要点二：宏任务是一个一个执行的，而微任务是批量执行的，当前批次微任务没有完成之前，下一个宏任务不会执行</p>
 <p>因此执行顺序是:</p>
 <ol>
@@ -338,11 +338,11 @@
 <h4 id="浏览器下的-event-loop"><a href="#浏览器下的-event-loop" class="headerlink" title="浏览器下的 event loop"></a>浏览器下的 event loop</h4><p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/%E6%B5%8F%E8%A7%88%E5%99%A8_event_loop.png" srcset="/img/loading.gif" lazyload alt="浏览器 event loop"></p>
 <p>如图所示，代码执行步骤如下：</p>
 <ol>
-<li>js 在执行代码时，会将代码放入执行栈中，遇到同步任务，会依次执行；遇到如 DOM 点击事件、ajax 以及 定时器等异步任务，浏览器会交给其他辅线程进行处理。</li>
+<li>js 在执行代码时，会将代码放入执行栈中，遇到同步任务，会依次执行；遇到如 DOM 点击事件、ajax 以及 定时器等异步任务，浏览器会交给其他辅线程调用 WebApis  进行处理。</li>
 <li>如果 WebApis 处理的异步任务有了结果，就会将该任务推入到回调队列（callback queue）中，回调队列分为宏任务队列和微任务队列。</li>
 <li>一旦执行栈内（stack）的任务执行完成，就会将回调队列里的任务放入执行栈中执行，顺序如下：<ol>
+<li>如果微任务队列中存在任务，则一次性执行所有微任务</li>
 <li>将宏任务队列的第一个任务放入执行栈中执行</li>
-<li>一个宏任务执行完之后，如果微任务队列中存在任务，则一次性执行所有微任务</li>
 </ol>
 </li>
 </ol>
@@ -369,7 +369,7 @@
 </ul>
 <p>下面主要对 timers、poll、check 三个阶段进行解析：</p>
 <h5 id="一、timers"><a href="#一、timers" class="headerlink" title="一、timers"></a>一、timers</h5><p>timers 阶段的回调函数可能并不会按照设定的时间延迟去执行，因为 event loop 初始化或者其他阶段回调函数的长时间执行会延迟它们的执行。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someAsyncOperation</span>(<span class="hljs-params">callback</span>) </span>&#123;<br>    <span class="hljs-comment">// 假设读取文件需耗时 95ms</span><br>    fs.readFile(<span class="hljs-string">'./a.txt'</span>, callback)<br>&#125;<br><br>cosnt timeoutScheduled = <span class="hljs-built_in">Date</span>.now();<br><br>setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> delay = <span class="hljs-built_in">Date</span>.now() - timeoutScheduled;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;delay&#125;</span>ms have passed since I was scheduled`</span>);<br>&#125;, <span class="hljs-number">100</span>)<br><br>someAsyncOperation(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> startCallbackTime = <span class="hljs-built_in">Date</span>.now();<br>    <span class="hljs-keyword">while</span>   (<span class="hljs-built_in">Date</span>.now() - startCallbackTime &lt; <span class="hljs-number">10</span>) &#123;<br>        <span class="hljs-comment">// do something</span><br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someAsyncOperation</span>(<span class="hljs-params">callback</span>) </span>&#123;<br>    <span class="hljs-comment">// 假设读取文件需耗时 95ms</span><br>    fs.readFile(<span class="hljs-string">'./a.txt'</span>, callback)<br>&#125;<br><br>cosnt timeoutScheduled = <span class="hljs-built_in">Date</span>.now();<br><br>setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> delay = <span class="hljs-built_in">Date</span>.now() - timeoutScheduled;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;delay&#125;</span>ms have passed since I was scheduled`</span>);<br>&#125;, <span class="hljs-number">100</span>)<br><br>someAsyncOperation(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> startCallbackTime = <span class="hljs-built_in">Date</span>.now();<br>    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">Date</span>.now() - startCallbackTime &lt; <span class="hljs-number">10</span>) &#123;<br>        <span class="hljs-comment">// do something</span><br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
 <p>上方示例在 node 里的大致执行步骤如下：</p>
 <ol>
 <li>timer 阶段：因为需要延迟 100ms，所以当前没有 callback 需要执行，进入 pending callback 阶段</li>
@@ -382,7 +382,7 @@
 <p>2.处理该阶段事件</p>
 <p>当 event loop 进入 poll 阶段并且未设定定时器，会出现下面中的某个情况：</p>
 <ul>
-<li>如果 poll 的队列不为空，那么就会遍历队列，并异步执行完所有回调函数，或者达到系统设定的最大时间</li>
+<li>如果 poll 的队列不为空，那么就会遍历队列，并异步执行完所有回调函数，或者执行耗时达到系统设定的最大时间</li>
 <li>如果 poll 队列为空，那以下情况中的一个会出现：<ol>
 <li>如果代码设定了 setImmediate 方法，event loop 会结束 poll 阶段，进入 check 阶段去执行 check 队列</li>
 <li>如果没有设定 setImmediate 方法，就会阻塞在 poll 阶段，直到有 poll callback 添加到队列中，然后立刻执行。</li>
@@ -391,7 +391,7 @@
 </ul>
 <p>如果 event loop 进入 poll 阶段并且设定了定时器：</p>
 <ul>
-<li>一旦 poll 队列处于空闲状态，event loop 会查看 timers 里的回调函数，如果至少有一个 回调函数的时间到了，event loop 会按循环顺序进入 timers 阶段去执行这些回调函数。</li>
+<li>一旦 poll 队列处于空闲状态，event loop 会查看 timers 里的回调函数，如果至少有一个回调函数的时间到了，event loop 会按循环顺序进入 timers 阶段去执行这些回调函数。</li>
 <li>按循环顺序说的是 event loop 不会直接进入 timers 阶段，而是要先进入 check、close callback 之后，再进入 timers 阶段。</li>
 </ul>
 <h5 id="三、check"><a href="#三、check" class="headerlink" title="三、check"></a>三、check</h5><ul>

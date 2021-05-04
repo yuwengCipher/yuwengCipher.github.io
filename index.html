@@ -238,26 +238,33 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-compiler">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="axios-总体结构">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
-          Vue2-compiler
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
+          axios-总体结构
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
           
           
             
           
-          
+          本文基于 axios 版本 0.21.1
+入口在根目录下找到 index.js，里面只有一句代码，将 axios 进行导出。
+1module.exports = require('./lib/axios');
+
+找到 lib 下的 axios.js 文件
+
+首先引入了相关文件
+12345678910// 工具函数库var utils = require('./utils');// bind 方法，
         </a>
       </p>
 
@@ -274,7 +281,7 @@
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/Vue/">Vue</a>
+              <a href="/categories/Axios/">Axios</a>
             
           </div>
         
@@ -336,33 +343,26 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="axios-总体结构">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-compiler">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
-          axios-总体结构
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
+          Vue2-compiler
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
+        <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/compiler/" target="_self">
           
           
             
           
-          本文基于 axios 版本 0.21.1
-入口在根目录下找到 index.js，里面只有一句代码，将 axios 进行导出。
-1module.exports = require('./lib/axios');
-
-找到 lib 下的 axios.js 文件
-
-首先引入了相关文件
-12345678910// 工具函数库var utils = require('./utils');// bind 方法，
+          
         </a>
       </p>
 
@@ -379,7 +379,7 @@
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/Axios/">Axios</a>
+              <a href="/categories/Vue/">Vue</a>
             
           </div>
         
@@ -474,9 +474,9 @@
           
             
           
-          什么是 event loop简单来说，event loop 就是 js 处理事件执行的一种机制。
+          什么是 event loop简单来说，event loop 就是 JavaScript 宿主处理事件执行的一种机制。
 js 以前是专门用来处理浏览器交互的，比如说 DOM 点击事件等，因此被设计成单线程，所谓单线程，就是同一时间只能处理一件事情，这也就保证了页面中一次只能处理一个事件，避免造成交互混乱的问题。
-开始之前，需要明确的是 javascript 引擎是单线程的，但是 js 运行环境是多线程。因为浏览器是多线
+开始之前，需要明确的是 JavaScript引擎是单线程的，但是 js 运行环境是多线程
         </a>
       </p>
 
@@ -593,9 +593,9 @@ reason 用来
           
             
           
-          什么是异步在 js 中和生活中都会有异步任务的存在，而异步的产生是有前提条件的，那就是这个任务可以被拆解成两部分。
+          什么是异步在 JavaScript 中和生活中都会有异步任务的存在，而异步的产生是有前提条件的，那就是这个任务可以被拆解成两部分。
 举个简单的例子。周末我想喝点排骨汤，把所有步骤都准备好后开火炖。正常来说，这锅汤需要3小时才能煲好，很显然我不会傻傻守在这儿等它3小时，因为我还有别的事要做，比如说看电视，嗑瓜子等等。而是3小时后汤煲好了，我才回去盛起来喝。
-所以这个喝汤任务由两个步骤组成：煲汤 + 喝汤；这个喝汤步
+所以这个喝汤任务由两个步骤组成：煲汤 + 
         </a>
       </p>
 

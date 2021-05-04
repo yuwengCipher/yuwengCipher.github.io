@@ -343,6 +343,30 @@ img[lazyload] {
 *[align="right"] {
   text-align: right;
 }
+body::-webkit-scrollbar {
+  width: 8px;
+}
+body::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #c37c6c;
+  border-radius: 5px;
+}
+body::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #e09876;
+}
+@media (min-width: 992px) {
+  figure.highlight > table::-webkit-scrollbar {
+    height: 8px;
+  }
+  figure.highlight > table::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px #c37c6c;
+    border-radius: 5px;
+  }
+  figure.highlight > table::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #e09876;
+  }
+}
 :root {
   --color-mode: 'light';
   --body-bg-color: #eee;
