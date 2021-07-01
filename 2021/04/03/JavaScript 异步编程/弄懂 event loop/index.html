@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  
+  <title>弄懂 event loop - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/docsmall/wallhaven-md6q29.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="弄懂 event loop">
+              
+                弄懂 event loop
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-03 00:00" pubdate>
+        2021年4月3日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      28
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">弄懂 event loop</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年7月1日 上午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="什么是-event-loop"><a href="#什么是-event-loop" class="headerlink" title="什么是 event loop"></a>什么是 event loop</h2><p>简单来说，event loop 就是 JavaScript 宿主处理事件执行的一种机制。</p>
+<p>js 以前是专门用来处理浏览器交互的，比如说 DOM 点击事件等，因此被设计成单线程，所谓单线程，就是同一时间只能处理一件事情，这也就保证了页面中一次只能处理一个事件，避免造成交互混乱的问题。</p>
+<p><strong>开始之前，需要明确的是 JavaScript引擎是单线程的，但是 js 运行环境是多线程。因为浏览器是多线程的，除了 js 引擎线程，还包括 GUI 渲染线程、定时器触发线程、HTTP 请求线程以及 DOM 事件触发线程；node也可以使用 child_process 创建多个子线程。</strong></p>
+<p>现在有事件 A 和 B，如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> A = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">A</span>(<span class="hljs-params"></span>) </span>&#123;<br>    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am A'</span>);<br>    &#125;, <span class="hljs-number">2000</span>)<br>&#125;<br><br><span class="hljs-keyword">const</span> B = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">B</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am B'</span>);<br>&#125;<br><br>A();<br>B();<br></code></pre></td></tr></table></figure>
+
+<p>按照单线程的要求，需要等到 A 执行完毕，才会执行 B，那么打印顺序会是如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am A'</span>);<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am B'</span>);<br></code></pre></td></tr></table></figure>
+
+<p>但实际上的顺序是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am B'</span>);<br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'i am A'</span>);<br></code></pre></td></tr></table></figure>
+
+<p>这就是 event loop 机制在起作用，因为 console.log(‘i am B’) 是同步任务，而 setTimeout 是异步任务，同步任务执行完才会去执行异步任务</p>
+<h2 id="宏任务和微任务"><a href="#宏任务和微任务" class="headerlink" title="宏任务和微任务"></a>宏任务和微任务</h2><ul>
+<li>什么是宏任务和微任务？</li>
+</ul>
+<p>这里有几个概念容易混淆，那就是同步任务和异步任务，宏任务和微任务。js 的代码执行遵循在代码块内从上往下执行的规则，同步任务会依次执行；而异步任务则会分为宏任务和微任务，比如 setTimeout 的第一个参数是宏任务，promise.then 中注册的方法是微任务，会按照宏任务和微任务的执行规则进行执行。</p>
+<ul>
+<li>宏任务和微任务有哪些？</li>
+</ul>
+<p>js 执行的宿主环境有浏览器和 Node,  所以我们通过宿主环境的不同来整理这些异步任务：</p>
+<table>
+<thead>
+<tr>
+<th>宏任务</th>
+<th>浏览器</th>
+<th>node</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>setInterval</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>setImmediate</td>
+<td>x</td>
+<td>√</td>
+</tr>
+<tr>
+<td>I/O</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>requestAnimationFrame</td>
+<td>√</td>
+<td>x</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>微任务</th>
+<th>浏览器</th>
+<th>node</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mutationObserver</td>
+<td>√</td>
+<td>x</td>
+</tr>
+<tr>
+<td>promise</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>process.nextTick</td>
+<td>x</td>
+<td>√</td>
+</tr>
+</tbody></table>
+<ul>
+<li>宏任务和微任务的执行顺序</li>
+</ul>
+<p>要点一：一个宏任务里可能会包含多个微任务</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是 promise 里的 同步任务'</span>)<br>    resolve(<span class="hljs-string">'success'</span>)<br>&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是微任务1'</span>)<br>&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是微任务2'</span>)<br>&#125;)<br><br>setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'我是 setTimeout 里的 宏任务'</span>)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>我们来分析下这段代码里的宏任务和微任务有哪些：<br>宏任务：setTimeout 的回调<br>微任务：两个 then 方法的回调</p>
+<p>要点二：宏任务是一个一个执行的，而微任务是批量执行的，当前批次微任务没有完成之前，下一个宏任务不会执行</p>
+<p>因此执行顺序是:</p>
+<ol>
+<li>遇到 promise，参数里面的代码是同步的，所有会先执行 console.log(‘我是 promise 里的 同步任务’)</li>
+<li>执行两个 then 方法的回调</li>
+<li>执行 setTimeout 的回调</li>
+</ol>
+<p>即：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// console.log('我是 promise 里的 同步任务')</span><br><span class="hljs-comment">// console.log('我是微任务1')</span><br><span class="hljs-comment">// console.log('我是微任务2')</span><br><span class="hljs-comment">// console.log('我是 setTimeout 里的 宏任务')</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="浏览器下的-event-loop"><a href="#浏览器下的-event-loop" class="headerlink" title="浏览器下的 event loop"></a>浏览器下的 event loop</h2><p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/%E6%B5%8F%E8%A7%88%E5%99%A8_event_loop.png" srcset="/img/loading.gif" lazyload alt="浏览器 event loop"></p>
+<p>如图所示，代码执行步骤如下：</p>
+<ol>
+<li>js 在执行代码时，会将代码放入执行栈中，遇到同步任务，会依次执行；遇到如 DOM 点击事件、ajax 以及 定时器等异步任务，浏览器会交给其他辅线程调用 WebApis  进行处理。</li>
+<li>如果 WebApis 处理的异步任务有了结果，就会将该任务推入到回调队列（callback queue）中，回调队列分为宏任务队列和微任务队列。</li>
+<li>一旦执行栈内（stack）的任务执行完成，就会将回调队列里的任务放入执行栈中执行，顺序如下：<ol>
+<li>如果微任务队列中存在任务，则一次性执行所有微任务</li>
+<li>将宏任务队列的第一个任务放入执行栈中执行</li>
+</ol>
+</li>
+</ol>
+<p>以上步骤的循环就是浏览器中的 event loop。</p>
+<p>看一个简单例子感受下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callback1</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)&#125;)<br><br><span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'success'</span>)<br>.then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callback2</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>);<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>&#125;)<br>.then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callback3</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>);<span class="hljs-keyword">return</span> <span class="hljs-number">2</span>&#125;)<br><br><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'start'</span>)<br><span class="hljs-comment">// start</span><br><span class="hljs-comment">// 1</span><br><span class="hljs-comment">// 2</span><br><span class="hljs-comment">// 3</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>遇到 setTimeout，等待时间到达后将 callback1 放入宏任务队列</li>
+<li>遇到 promise.then，等待时间到达后将 callback2 与 callback3  按顺序放入微任务队列</li>
+<li>执行同步任务 console.log。</li>
+<li>执行完同步任务，将微任务队列里的任务一次性执行</li>
+<li>微任务执行完之后，执行宏任务队列的第一个任务</li>
+</ol>
+<h2 id="node-下的-event-loop"><a href="#node-下的-event-loop" class="headerlink" title="node 下的 event loop"></a>node 下的 event loop</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js">   ┌───────────────────────────┐                             <br>┌─&gt;│           timers          │<br>│  └─────────────┬─────────────┘<br>│  ┌─────────────┴─────────────┐                                    <br>│  │     pending callbacks     │                             <br>│  └─────────────┬─────────────┘<br>│  ┌─────────────┴─────────────┐<br>│  │       idle, prepare       │<br>│  └─────────────┬─────────────┘      ┌───────────────┐<br>│  ┌─────────────┴─────────────┐      │   incoming:   │<br>│  │           poll            │&lt;─────┤ connections,  │<br>│  └─────────────┬─────────────┘      │   data, etc.  │<br>│  ┌─────────────┴─────────────┐      └───────────────┘<br>│  │           check           │<br>│  └─────────────┬─────────────┘<br>│  ┌─────────────┴─────────────┐<br>└──┤      close callbacks      │<br>   └───────────────────────────┘<br></code></pre></td></tr></table></figure>
+
+<p>如上图所示，node 中的 event loop 分为6个循环阶段，当 node.js 启动的时候，会初始化 event loop</p>
+<ul>
+<li>timers： 这个阶段执行 setTimeout 和 setInterval 的回调函数</li>
+<li>pending callbacks：在下一个循环中执行 I/O 回调函数</li>
+<li>idle, prepare：只在 node 内部触发</li>
+<li>poll：获取新的 I/O 事件，在适当的时候阻塞在这里</li>
+<li>check：执行 setImmediate 的回调函数</li>
+<li>close callbacks：执行关闭事件的回调函数，如 socket.on(‘close’, … )</li>
+</ul>
+<p>下面主要对 timers、poll、check 三个阶段进行解析：</p>
+<h3 id="一、timers"><a href="#一、timers" class="headerlink" title="一、timers"></a>一、timers</h3><p>timers 阶段的回调函数可能并不会按照设定的时间延迟去执行，因为 event loop 初始化或者其他阶段回调函数的长时间执行会延迟它们的执行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">someAsyncOperation</span>(<span class="hljs-params">callback</span>) </span>&#123;<br>    <span class="hljs-comment">// 假设读取文件需耗时 95ms</span><br>    fs.readFile(<span class="hljs-string">'./a.txt'</span>, callback)<br>&#125;<br><br>cosnt timeoutScheduled = <span class="hljs-built_in">Date</span>.now();<br><br>setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> delay = <span class="hljs-built_in">Date</span>.now() - timeoutScheduled;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;delay&#125;</span>ms have passed since I was scheduled`</span>);<br>&#125;, <span class="hljs-number">100</span>)<br><br>someAsyncOperation(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> startCallbackTime = <span class="hljs-built_in">Date</span>.now();<br>    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">Date</span>.now() - startCallbackTime &lt; <span class="hljs-number">10</span>) &#123;<br>        <span class="hljs-comment">// do something</span><br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>上方示例在 node 里的大致执行步骤如下：</p>
+<ol>
+<li>timer 阶段：因为需要延迟 100ms，所以当前没有 callback 需要执行，进入 pending callback 阶段</li>
+<li>pending callback阶段：没有 I/O 回调需要执行，进入 idle，</li>
+<li>idle 忽略</li>
+<li>poll 阶段：因为此时有 I/O 操作，因此会阻塞在这里，等待95ms至文件读取结束，然后将 callback 放入队列进行执行，耗时10ms。调用结束后，当前队列为空，检查 timers，发现设定时间为95ms，当前运行时间超时了，因此进入 timer 阶段执行回调，所以会打印出”105ms has passed since I was scheduled”</li>
+</ol>
+<h3 id="二、poll"><a href="#二、poll" class="headerlink" title="二、poll"></a>二、poll</h3><p>poll 阶段主要有两个功能：</p>
+<p>1.计算它应该阻塞和轮询 I/O 多长时间</p>
+<p>2.处理该阶段事件</p>
+<p>当 event loop 进入 poll 阶段并且未设定定时器，会出现下面中的某个情况：</p>
+<ul>
+<li>如果 poll 的队列不为空，那么就会遍历队列，并异步执行完所有回调函数，或者执行耗时达到系统设定的最大时间</li>
+<li>如果 poll 队列为空，那以下情况中的一个会出现：<ol>
+<li>如果代码设定了 setImmediate 方法，event loop 会结束 poll 阶段，进入 check 阶段去执行 check 队列</li>
+<li>如果没有设定 setImmediate 方法，就会阻塞在 poll 阶段，直到有 poll callback 添加到队列中，然后立刻执行。</li>
+</ol>
+</li>
+</ul>
+<p>如果 event loop 进入 poll 阶段并且设定了定时器：</p>
+<ul>
+<li>一旦 poll 队列处于空闲状态，event loop 会查看 timers 里的回调函数，如果至少有一个回调函数的时间到了，event loop 会按循环顺序进入 timers 阶段去执行这些回调函数。</li>
+<li>按循环顺序说的是 event loop 不会直接进入 timers 阶段，而是要先进入 check、close callback 之后，再进入 timers 阶段。</li>
+</ul>
+<h3 id="三、check"><a href="#三、check" class="headerlink" title="三、check"></a>三、check</h3><ul>
+<li>这个阶段用来存放 setImmediate 回调函数，如果代码中设定了，那么 event loop 不会阻塞等待在 poll 阶段，而是会进入 check 阶段。</li>
+<li>当 poll 阶段结束，进入check 阶段后，会调用 libuv api 去执行回调函数</li>
+</ul>
+<h3 id="四、API-比较"><a href="#四、API-比较" class="headerlink" title="四、API 比较"></a>四、API 比较</h3><ul>
+<li><p>setTimeout 和 setImmediate</p>
+<ol>
+<li>setTimeout 设定一个任务在等待指定时间后去执行</li>
+<li>setImmediate 在 poll 阶段完成后立即去调用它设定的代码</li>
+<li>它们回调函数执行的顺序依据它们执行的方式会有不同：如果它们的执行不在 I/O 操作里，那么顺序时不定的，如果在 I/O 中，永远都是 setImmediate 最先执行</li>
+</ol>
+</li>
+<li><p>process.nextTick</p>
+</li>
+</ul>
+<p>在技术上来说，nextTick 不属于 event loop 的一部分，凡是放进 nextTick 队列的回调函数会在下一次 event loop 循环开始前执行。需要注意的是，正是因为这个特性，如果递归调用 nextTick，会导致下一次 event loop 无法开始。</p>
+<h3 id="node-中宏任务和微任务"><a href="#node-中宏任务和微任务" class="headerlink" title="node 中宏任务和微任务"></a>node 中宏任务和微任务</h3><p>因为 node 中的 宏任务分处于不同的阶段，并且微任务中的 process.nextTick 都是先于其它微任务执行，所以可以理解为 有4个宏任务队列以及2个微任务队列。</p>
+<p>这里为了便于理解，借用一张图：</p>
+<img src="https://user-gold-cdn.xitu.io/2018/9/5/165a8667e6b79cc8?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" srcset="/img/loading.gif" lazyload alt="node-eventloop" style="zoom:80%;;margin-left:0" />
+
+<p>这里的宏任务和微任务流程模型与浏览器的相同，区别在于：</p>
+<ol>
+<li>node 中的宏任务队列执行顺序取决于 event loop 所处的阶段</li>
+<li>微任务中，process.nextTick 独处一个队列，比其他微任务要早执行</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>event loop 相当于一个总指挥，负责 js 任务的协调与调度。</p>
+<p>参考文献 <a href="https://juejin.cn/post/6844903670291628046#heading-5" target="_blank" rel="noopener">https://juejin.cn/post/6844903670291628046#heading-5</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JS/">JS</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Event-Loop/">Event Loop</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/04/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E6%B5%85%E6%9E%90%20generator%20%E4%B8%8E%20async%20%E5%8E%9F%E7%90%86/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">浅析 generator 与 async 原理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/02/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%B7%9F%E7%9D%80%E8%A7%84%E8%8C%83%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8A%9F%E8%83%BD%E5%AE%8C%E5%A4%87%E7%9A%84Promise/">
+                        <span class="hidden-mobile">跟着规范实现一个功能完备的Promise</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+          app_key: "uSkOsleUpcvIJyb31MudM4dS",
+          placeholder: "说点啥吧~",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
