@@ -398,29 +398,27 @@ Vue.js 的核心是一个允许采用简洁的模板语法来声明式地将数�
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-总体结构(二)">
+        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-总体结构(一)">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/" target="_self">
-          Vue2-总体结构(二)
+        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/" target="_self">
+          Vue2-总体结构(一)
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/" target="_self">
+        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/" target="_self">
           
           
             
           
-          前言前一小节，我们整理了 Vue 相关的属性，这一小节则通过框架自带的 demo 来梳理一下 Vue 整体的一个运行流程。
-正文首先我们找到本节 demo 目录，路径为 ‘/examples/commits’。将 index.html 中 vue 的引用路径改成 ‘‘, 方便调试。
-app.js 里调用了 Vue 构造函数，所以从这里开始吧。
-12345678910111213new Vue(&#
+          问题为什么要读 VueVue 是目前项目正在使用的框架，阅读学习源码能让我更好的使用框架所提供的功能，也可以解答使用过程中所产生的困惑。有人可能会问，Vue2 相关的源码解析文章在网上一大堆，何必要自己去写呢？我只想说，纸上得来终觉浅，绝知此事要躬行。
+Vue3 已经出来了，为什么依然读 Vue2原因一是很久以前就读过 Vue2 的源码，理解了基本的原理，但是后来没有坚持去深入，也就荒废了，心里多
         </a>
       </p>
 
@@ -450,27 +448,29 @@ app.js 里调用了 Vue 构造函数，所以从这里开始吧。
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-总体结构(一)">
+        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="Vue2-总体结构(二)">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/" target="_self">
-          Vue2-总体结构(一)
+        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/" target="_self">
+          Vue2-总体结构(二)
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/" target="_self">
+        <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/" target="_self">
           
           
             
           
-          问题为什么要读 VueVue 是目前项目正在使用的框架，阅读学习源码能让我更好的使用框架所提供的功能，也可以解答使用过程中所产生的困惑。有人可能会问，Vue2 相关的源码解析文章在网上一大堆，何必要自己去写呢？我只想说，纸上得来终觉浅，绝知此事要躬行。
-Vue3 已经出来了，为什么依然读 Vue2原因一是很久以前就读过 Vue2 的源码，理解了基本的原理，但是后来没有坚持去深入，也就荒废了，心里多
+          前言前一小节，我们整理了 Vue 相关的属性，这一小节则通过框架自带的 demo 来梳理一下 Vue 整体的一个运行流程。
+正文首先我们找到本节 demo 目录，路径为 ‘/examples/commits’。将 index.html 中 vue 的引用路径改成 ‘‘, 方便调试。
+app.js 里调用了 Vue 构造函数，所以从这里开始吧。
+12345678910111213new Vue(&#
         </a>
       </p>
 
