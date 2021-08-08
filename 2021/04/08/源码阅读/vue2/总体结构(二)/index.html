@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年7月1日 上午
+                  本文最后更新于：2021年7月2日 上午
                 
               </p>
             
@@ -262,7 +262,7 @@
 
 </li>
 </ol>
-<h3 id="new-Vue-做了什么"><a href="#new-Vue-做了什么" class="headerlink" title="new Vue() 做了什么"></a>new Vue() 做了什么</h3><p>new Vue() 实际上调用了自身的 _init 方法，从字典可知， _init 方法 在 ‘/src/core/instance/init.js’ 中的 initMixin 方法里。<br>忽略部分代码后是这样的：</p>
+<h3 id="new-Vue-做了什么"><a href="#new-Vue-做了什么" class="headerlink" title="new Vue() 做了什么"></a>new Vue() 做了什么</h3><p>new Vue() 实际上调用了自身的 _init 方法，从字典可知，_init 方法 在 ‘/src/core/instance/init.js’ 中的 initMixin 方法里。<br>忽略部分代码后是这样的：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> uid = <span class="hljs-number">0</span>;<br>Vue.prototype._init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options?: Object</span>) </span>&#123;<br>  <span class="hljs-keyword">const</span> vm: Component = <span class="hljs-keyword">this</span>;<br>  <span class="hljs-comment">// a uid</span><br>  vm._uid = uid++;<br><br>  <span class="hljs-comment">// 这个标识可以避免 vm 被观察系统观察</span><br>  vm._isVue = <span class="hljs-literal">true</span>;<br>  <span class="hljs-comment">// 将通过自定义策略合并配置项后的值赋值给 $options</span><br>  vm.$options = mergeOptions(<br>    resolveConstructorOptions(vm.constructor),<br>    options || &#123;&#125;,<br>    vm<br>  );<br><br>  <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">"production"</span>) &#123;<br>    <span class="hljs-comment">// 如果不是生产环境就初始化代理相关操作</span><br>    initProxy(vm);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    vm._renderProxy = vm;<br>  &#125;<br><br>  vm._self = vm;<br>  <span class="hljs-comment">// 初始化声明周期</span><br>  initLifecycle(vm);<br>  <span class="hljs-comment">// 初始化事件机制</span><br>  initEvents(vm);<br>  <span class="hljs-comment">// 初始化渲染相关</span><br>  initRender(vm);<br>  <span class="hljs-comment">// 调用 beforeCreate 钩子</span><br>  callHook(vm, <span class="hljs-string">"beforeCreate"</span>);<br>  <span class="hljs-comment">// 在 data 或 props 被处理前初始化注入</span><br>  initInjections(vm); <span class="hljs-comment">// resolve injections before data/props</span><br>  <span class="hljs-comment">// 初始化对 data 和 props 相关操作</span><br>  initState(vm);<br>  <span class="hljs-comment">// 在 data 或 props 被处理后初始化注入</span><br>  initProvide(vm); <span class="hljs-comment">// resolve provide after data/props</span><br>  <span class="hljs-comment">// 调用 created 钩子</span><br>  callHook(vm, <span class="hljs-string">"created"</span>);<br><br>  <span class="hljs-comment">// 如果存在 el 属性，则进行挂载操作</span><br>  <span class="hljs-keyword">if</span> (vm.$options.el) &#123;<br>    vm.$mount(vm.$options.el);<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <p>从上可知，_init 方法主要做了如下几件事：</p>
@@ -333,7 +333,7 @@
 <p>watch 合并后的对象 ret 的值是数组，保证每一个 key 可以包含多个 watcher，而且 watcher 不能被覆盖，因此这里不会有去重操作</p>
 <h4 id="6、props，methods，inject"><a href="#6、props，methods，inject" class="headerlink" title="6、props，methods，inject"></a>6、props，methods，inject</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.props =<br>strats.methods =<br>strats.inject =<br>strats.computed =<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>		<span class="hljs-comment">// ...</span><br>		<span class="hljs-comment">// 如果 parentVal 不存在，直接返回 childVal</span><br>		<span class="hljs-keyword">if</span> (!parentVal) &#123;<br>			<span class="hljs-keyword">return</span> childVal;<br>		&#125;<br>		<span class="hljs-keyword">var</span> ret = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);<br>		<span class="hljs-comment">// 将 parentVal 的属性存入 ret 中</span><br>		extend(ret, parentVal);<br>		<span class="hljs-comment">// 如果 childVal 存在，将 childVal 的属性存入 ret 中</span><br>		<span class="hljs-keyword">if</span> (childVal) &#123;<br>			extend(ret, childVal);<br>		&#125;<br>		<span class="hljs-comment">// 返回 ret</span><br>		<span class="hljs-keyword">return</span> ret;<br>	&#125;;<br></code></pre></td></tr></table></figure>
 
-<h4 id="7、provide-采用-mergeDataOrFn"><a href="#7、provide-采用-mergeDataOrFn" class="headerlink" title="7、provide 采用 mergeDataOrFn"></a>7、provide 采用 mergeDataOrFn</h4><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上，我们梳理了在使用 Vue 时，它自身都做了哪些工作。并且着重解析了 options 合并策略，简单总结一下：</p>
+<h4 id="7、provide-采用-mergeDataOrFn"><a href="#7、provide-采用-mergeDataOrFn" class="headerlink" title="7、provide 采用 mergeDataOrFn"></a>7、provide 采用 mergeDataOrFn</h4><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上，我们梳理了在使用 Vue 时，它自身都做了哪些工作。并且着重解析了 options 中属性合并策略，简单总结一下：</p>
 <p>1、el、propsData</p>
 <ul>
 <li>如果 child 不存在，返回 parent，否则返回 child</li>
@@ -343,15 +343,15 @@
 <li>如果 child 不存在，返回 parent</li>
 <li>如果 parent 存在，遍历 child 的属性，<ul>
 <li>如果 parent 不存在该属性，则将属性赋予 parent</li>
-<li>如果 parent 存在该属性，并且 parentVal 与 childVal 同为对象不相等，则递归合并 parentVal 与 childVal</li>
+<li>如果 parent 存在该属性，并且 parentVal 与 childVal 同为对象且不相等，则递归合并 parentVal 与 childVal</li>
 </ul>
 </li>
 </ul>
-<p>3、components, directives, filters<br>如果 child 存在，合并 child 属性，否则返回空对象</p>
-<p>4、props，methods，inject</p>
+<p>3、components, directives, filters<br>如果 child 存在，合并 child 属性至新对象中，否则返回空对象</p>
+<p>4、props，methods，inject，computed</p>
 <ul>
 <li>如果 parent 不存在，返回 child</li>
-<li>如果 parent 存在或 child 存在，将各自的属性赋予返回的对象中</li>
+<li>如果 parent 存在或 child 存在，将各自的属性赋予返回的新对象中</li>
 </ul>
 <p>5、watch 和 LIFECYCLE_HOOKS<br>相同点：如果 parent 和 child 存在，保证它们都是数组形式，将 child 并入 到 parent 中<br>不同点：LIFECYCLE_HOOKS 最后的结果需要去重，而 watch 不用</p>
 
@@ -381,9 +381,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/08/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/">
+                      <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Vue2-总体结构(一)</span>
+                        <span class="hidden-mobile">一个简单的网络请求过程</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -391,8 +391,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/04/06/%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E8%AF%BB%E6%BA%90%E7%A0%81/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/">
-                        <span class="hidden-mobile">axios-总体结构</span>
+                      <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/">
+                        <span class="hidden-mobile">Vue2-总体结构(一)</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
