@@ -343,7 +343,7 @@
 <li>watcher.deep = true</li>
 </ol>
 <p>因为当前的 watcher 是 vm，并且是 render watcher，所以新值和旧值都是 ‘undefined’、watcehr.deep = false，因此不会执行下面的逻辑。</p>
-<p>vnode 的所有 props、directives、events 等都存储在 data 中，那么这个 invokeCreateHooks 就是给我们的 dom 润色。</p>
+<p>到这里，computed 所涉及到的方法都有说到，我将他们整理成一张流程图，如下：</p>
 <p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/computed%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="computed执行流程图"></p>
 <h3 id="为什么-computed-拥有缓存功能"><a href="#为什么-computed-拥有缓存功能" class="headerlink" title="为什么 computed 拥有缓存功能"></a>为什么 computed 拥有缓存功能</h3><p>这个问题其实跟 “如果依赖项不是响应式的，即使改变，computed 为什么不会重新求值” 这个是一样的。</p>
 <p>我在 demo 中增加一个使用 reversedMessage 的代码</p>
