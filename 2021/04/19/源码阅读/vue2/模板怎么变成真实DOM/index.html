@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7k 字
+      7.1k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      99
+      100
        分钟
     </span>
   
@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年8月7日 下午
+                  本文最后更新于：2021年8月12日 下午
                 
               </p>
             
@@ -300,6 +300,8 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> match = &#123;<br>	<span class="hljs-comment">// 一个二维数组，内部每一个数组保存开始标签上的一个属性</span><br>	<span class="hljs-comment">// 内数组形如 [" id=\"demo\"", "id", "=", "demo", start: 4, end: 14]</span><br>	<span class="hljs-comment">// start 为属性开始下标，end 为属性结束下标</span><br>	attrs: <span class="hljs-built_in">Array</span>,<br>	<span class="hljs-comment">// 标签结束下标</span><br>	end: <span class="hljs-built_in">Number</span>,<br>	<span class="hljs-comment">// 标签开始下标</span><br>	start: <span class="hljs-built_in">Number</span>,<br>	<span class="hljs-comment">// 标签名称</span><br>	tagName: <span class="hljs-built_in">String</span>,<br>	<span class="hljs-comment">// 单标签斜线</span><br>	unarySlash: <span class="hljs-built_in">String</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>弄清楚了 match 的内容，就可以继续去看看 handleStartTag 方法了。我们主要看后半部分的逻辑。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; l; i++) &#123;<br>	<span class="hljs-keyword">var</span> args = match.attrs[i];<br>	<span class="hljs-keyword">var</span> value = args[<span class="hljs-number">3</span>] || args[<span class="hljs-number">4</span>] || args[<span class="hljs-number">5</span>] || <span class="hljs-string">''</span>;<br>	<span class="hljs-keyword">var</span> shouldDecodeNewlines = tagName === <span class="hljs-string">'a'</span> &amp;&amp; args[<span class="hljs-number">1</span>] === <span class="hljs-string">'href'</span><br>		? options.shouldDecodeNewlinesForHref<br>		: options.shouldDecodeNewlines;<br>	attrs[i] = &#123;<br>		name: args[<span class="hljs-number">1</span>],<br>		value: decodeAttr(value, shouldDecodeNewlines)<br>	&#125;;<br>	<span class="hljs-keyword">if</span> (options.outputSourceRange) &#123;<br>		attrs[i].start = args.start + args[<span class="hljs-number">0</span>].match(<span class="hljs-regexp">/^\s*/</span>).length;<br>		attrs[i].end = args.end;<br>	&#125;<br>&#125;<br><br><span class="hljs-keyword">if</span> (!unary) &#123;<br>	stack.push(&#123; <span class="hljs-attr">tag</span>: tagName, <span class="hljs-attr">lowerCasedTag</span>: tagName.toLowerCase(), <span class="hljs-attr">attrs</span>: attrs, <span class="hljs-attr">start</span>: match.start, <span class="hljs-attr">end</span>: match.end &#125;);<br>	lastTag = tagName;<br>&#125;<br><br><span class="hljs-keyword">if</span> (options.start) &#123;<br>	options.start(tagName, attrs, unary, match.start, match.end);<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>声明一个与 match.attrs 长度相同的数组 attrs，通过遍历 attrs，创建一个新对象，对每一项做如下处理：</p>
 <ul>
 <li>将属性名赋值给 name 属性，属性值赋值给 value</li>
@@ -311,17 +313,17 @@
 <p>接着，会调用 options.start(tagName, attrs, unary, match.start, match.end), 我们找到 start 方法：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">start: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">start</span> (<span class="hljs-params">tag, attrs, unary, start$<span class="hljs-number">1</span>, end</span>) </span>&#123;&#125;<br></code></pre></td></tr></table></figure>
 
-<p>在源码中可以看到，最开始调用 createASTElement(tag, attrs, currentParent) 创建 element 对象，后面就是对 element 的一些处理:</p>
+<p>在源码中可以看到，最开始调用 createASTElement(tag, attrs, currentParent) 创建 AST 对象，后面就是对 element 的一些处理:</p>
 <ol>
 <li>添加相关属性、</li>
 <li>处理 v-for, v-if, v-once 指令、</li>
 <li>是否需要将 element 赋值给 root、</li>
 <li>如果不是单标签，将 element 赋值给 currentParent，并且将 element 存入 stack(parse 方法下的 stack)，反之则调用 closeElement 方法结束标签处理操作。</li>
 </ol>
-<p>后面的一些处理细节暂不做探究，主要看看 createASTElement 创建了一个什么样的对象。</p>
+<p>后面的一些处理细节暂不做探究，主要看看 AST 的数据结构。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createASTElement</span> (<span class="hljs-params">tag, attrs, parent</span>) </span>&#123;<br>	<span class="hljs-keyword">return</span> &#123;<br>		type: <span class="hljs-number">1</span>,<br>		tag: tag,<br>		attrsList: attrs,<br>		attrsMap: makeAttrsMap(attrs),<br>		rawAttrsMap: &#123;&#125;,<br>		parent: parent,<br>		children: []<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>这个方法很简单, 就是返回了一个对象，就是 AST 对象。parent 与 父标签建立联系，children 可以用来存储多个子标签或子元素。其中 type 的值是1，也就是说标签的类型都是1，那文本或者其他类型呢？我们在源码中找到 options.chars 方法。</p>
+<p>parent 与 父标签建立联系，children 可以用来存储多个子标签或子元素。其中 type 的值是1，也就是说标签的类型都是1，那文本或者其他类型呢？我们在源码中找到 options.chars 方法。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (!inVPre &amp;&amp; text !== <span class="hljs-string">' '</span> &amp;&amp; (res = parseText(text, delimiters))) &#123;<br>	child = &#123;<br>		type: <span class="hljs-number">2</span>,<br>		expression: res.expression,<br>		tokens: res.tokens,<br>		text: text<br>	&#125;;<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (text !== <span class="hljs-string">' '</span> || !children.length || children[children.length - <span class="hljs-number">1</span>].text !== <span class="hljs-string">' '</span>) &#123;<br>	child = &#123;<br>		type: <span class="hljs-number">3</span>,<br>		text: text<br>	&#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>上面代码表示出了 text 字符串最终有可能转换成 type 为2和3的 AST：<br>type 为2的情况（同时满足）：</p>
@@ -363,7 +365,7 @@
 <p>v-once: var once = getAndRemoveAttr(el, ‘v-once’)。 如果 once 存在，为 el 添加 once 属性，值为 true</p>
 <p>也就是说，指令的处理其实是将指令对应的属性添加到 AST 对象中。到这里，parse 转换生成的 AST 雏形已经出来了，root 对象一旦确定，后面的子标签对象都会存入 children，而子标签也会存在 children，因此 AST 就是这样一棵树。</p>
 <p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/AST.png" srcset="/img/loading.gif" lazyload alt="AST"></p>
-<h3 id="transform"><a href="#transform" class="headerlink" title="transform"></a>transform</h3><p>在明白 template 到 AST 的变化步骤之后，就可以继续探索 AST 是如何生成 render 函数方法。<br>其实这一步主要是将 AST 转换成 render str 函数字符串，然后再通过 new Function(render str) 生成函数方法。由于函数字符串的转换涉及到的情况很多，过程非常复杂，因此这里只是解析一个整体的步骤。</p>
+<h3 id="transform"><a href="#transform" class="headerlink" title="transform"></a>transform</h3><p>在明白 template 到 AST 的变化步骤之后，就可以继续探索 AST 是如何生成 render 函数方法。<br>其实这一步主要是将 AST 转换成 render str 函数字符串，然后再通过 new Function(render str) 生成函数方法。由于函数字符串的转换涉及到的情况很多，过程非常复杂，因此这里只是解析 render 字符串形成的原理。</p>
 <blockquote>
 <p>compiled.render = generate(ast, options).render</p>
 </blockquote>
@@ -398,7 +400,7 @@
 <h3 id="generate"><a href="#generate" class="headerlink" title="generate"></a>generate</h3><p>上一步我们拿到了 render 函数，那这一步就是了解如何使用这个函数。前言罗列的最后一步是调用 mount 方法，最终指向 mountComponent 方法。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mountComponent</span>(<span class="hljs-params">vm, el, hydrating</span>) </span>&#123;<br>	updateComponent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>		vm._update(vm._render(), hydrating);<br>	&#125;;<br><br>	<span class="hljs-keyword">new</span> Watcher(vm, updateComponent, noop, &#123;<br>		before: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">before</span> (<span class="hljs-params"></span>) </span>&#123;<br>			<span class="hljs-keyword">if</span> (vm._isMounted &amp;&amp; !vm._isDestroyed) &#123;<br>				callHook(vm, <span class="hljs-string">'beforeUpdate'</span>);<br>			&#125;<br>		&#125;<br>	&#125;, <span class="hljs-literal">true</span> <span class="hljs-comment">/* isRenderWatcher */</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>将 updateComponent 设定为订阅者的 getter，而 vm 在前置操作时已经绑定了响应式属性，每次 vm 发生改变就会执行 updateComponent 获取最新的值。并且在初始时就调用 updateCompoennt，触发页面第一次渲染更新。这里需要注意的是，订阅者的 cb 是 noop，因为只执行 updateComponent 就能实现页面的更新（后面会讲到），因此不需要额外的回调函数。</p>
+<p>将 updateComponent 设定为订阅者的 getter，在初始时就会调用 updateCompoennt，触发页面第一次渲染更新。这里需要注意的是，订阅者的 cb 是 noop，因为只执行 updateComponent 就能实现页面的更新（后面会讲到），因此不需要额外的回调函数。</p>
 <p>vm._update 方法接受的第一个参是 vnode，也就是说 vm._render() 返回的是一个 vnode，找到 _render 方法，关键的就是三行代码：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> ref = vm.$options;<br><span class="hljs-keyword">var</span> render = ref.render;<br>vnode = render.call(vm._renderProxy, vm.$createElement);<br></code></pre></td></tr></table></figure>
 
@@ -418,10 +420,10 @@
 <p>执行完毕最终会生成这样一个嵌套的对象：</p>
 <p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/vnode.png" srcset="/img/loading.gif" lazyload alt="vnode"></p>
 <p>但是有一点需要注意的是，初始时如果不满足条件的不会创建成 vnode，比如，v-if=”commits.length &gt; 0” 才会显示的 div，则没有生成对应的 vnode 存入 父元素的 children 中。</p>
-<h3 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h3><p>vnode 创建完成后，就可以执行 _update 方法了，实际上就是执行 patch 操作，只是初始渲染时不需比较操作，因此初始渲染和后续更新传入的参不一样。在浏览器端就是调用 createPatchFunction({ nodeOps: nodeOps, modules: modules }) 创建的，接下来看看 patch 的魔力吧。注意一点，我们这里只是探究 vnode 是如何变成 dom，不是探究 patch 过程，这两个目的的重心不一样 :)。</p>
+<h3 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h3><p>vnode 创建完成后，就可以执行 _update 方法了，实际上就是执行 patch 操作，只是初始渲染时不需比较操作，因此初始渲染和后续更新传入的参不一样。在浏览器端就是调用 createPatchFunction({ nodeOps: nodeOps, modules: modules }) 创建的，接下来看看 patch 的魔力吧。注意一点，我们这里只是探究 vnode 是如何变成 dom，不是探究 patch 过程，这两个方向不一样 :)。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs js">Vue.prototype._update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">vnode, hydrating</span>) </span>&#123;<br>	<span class="hljs-comment">// initial render</span><br>	vm.$el = vm.__patch__(vm.$el, vnode, hydrating, <span class="hljs-literal">false</span> <span class="hljs-comment">/* removeOnly */</span>);<br>&#125;<br><span class="hljs-comment">// patch</span><br><span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">patch</span> (<span class="hljs-params">oldVnode, vnode, hydrating, removeOnly</span>) </span>&#123;<br>	<span class="hljs-comment">// 省略</span><br>	<span class="hljs-keyword">var</span> isRealElement = isDef(oldVnode.nodeType);<br>	<span class="hljs-keyword">if</span> (!isRealElement &amp;&amp; sameVnode(oldVnode, vnode)) &#123;<br>		<span class="hljs-comment">// patch existing root node</span><br>		patchVnode(oldVnode, vnode, insertedVnodeQueue, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, removeOnly);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-comment">// initrender</span><br>		<span class="hljs-keyword">if</span> (isRealElement) &#123;<br>			<span class="hljs-comment">// 省略</span><br>			oldVnode = emptyNodeAt(oldVnode);<br>		&#125;<br><br>		<span class="hljs-comment">// replacing existing element</span><br>		<span class="hljs-keyword">var</span> oldElm = oldVnode.elm;<br>		<span class="hljs-keyword">var</span> parentElm = nodeOps.parentNode(oldElm);<br><br>		<span class="hljs-comment">// create new node</span><br>		createElm(<br>			vnode,<br>			insertedVnodeQueue,<br>			<span class="hljs-comment">// extremely rare edge case: do not insert if old element is in a</span><br>			<span class="hljs-comment">// leaving transition. Only happens when combining transition +</span><br>			<span class="hljs-comment">// keep-alive + HOCs. (#4590)</span><br>			oldElm._leaveCb ? <span class="hljs-literal">null</span> : parentElm,<br>			nodeOps.nextSibling(oldElm)<br>		);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>很清晰的逻辑，我们传入的是 vm.$el，所以走第二个分支，依据 $el 创建一个空 vnode。紧接着是声明 oldElm 和 parentElm，分别是 #demo 和 body，用作后面方法的入参部分。最后就开始执行创建 elment 步骤了。</p>
+<p>逻辑很清晰，我们传入的是 vm.$el，所以走第二个分支，依据 $el 创建一个空 vnode。紧接着是声明 oldElm 和 parentElm，分别是 #demo 和 body，用作后面方法的入参部分。最后就开始执行创建 elment 步骤了。</p>
 <p>createElm 方法里主要是分成三类进行创建，对于标签，使用 createElement，另外还会使用 createChildren 创建子元素对应的 dom，注释使用 createComment，其他的使用 createTextNode。创建结束后执行 insert(parentElm, vnode.elm, refElm), 将创建的 dom 插入到指定的位置。</p>
 <p>createElement 其实就是调用 document.createElement(tagName)，createComment 是 document.createComment(text)，同样的，createTextNode 是调用 document.createTextNode(text)。那子元素是怎么创建的呢？我们主要来看看 createChildren 方法。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createChildren</span> (<span class="hljs-params">vnode, children, insertedVnodeQueue</span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children)) &#123;<br>		&#123;<br>			checkDuplicateKeys(children);<br>		&#125;<br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; children.length; ++i) &#123;<br>			createElm(children[i], insertedVnodeQueue, vnode.elm, <span class="hljs-literal">null</span>, <span class="hljs-literal">true</span>, children, i);<br>		&#125;<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isPrimitive(vnode.text)) &#123;<br>		nodeOps.appendChild(vnode.elm, nodeOps.createTextNode(<span class="hljs-built_in">String</span>(vnode.text)));<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -508,6 +510,13 @@
                     
                   </div>
                 
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                  </div>
                 
               </div>
               
