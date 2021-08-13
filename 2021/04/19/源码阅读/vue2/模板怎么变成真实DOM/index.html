@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年8月12日 下午
+                  本文最后更新于：2021年8月14日 凌晨
                 
               </p>
             
@@ -400,7 +400,7 @@
 <h3 id="generate"><a href="#generate" class="headerlink" title="generate"></a>generate</h3><p>上一步我们拿到了 render 函数，那这一步就是了解如何使用这个函数。前言罗列的最后一步是调用 mount 方法，最终指向 mountComponent 方法。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mountComponent</span>(<span class="hljs-params">vm, el, hydrating</span>) </span>&#123;<br>	updateComponent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>		vm._update(vm._render(), hydrating);<br>	&#125;;<br><br>	<span class="hljs-keyword">new</span> Watcher(vm, updateComponent, noop, &#123;<br>		before: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">before</span> (<span class="hljs-params"></span>) </span>&#123;<br>			<span class="hljs-keyword">if</span> (vm._isMounted &amp;&amp; !vm._isDestroyed) &#123;<br>				callHook(vm, <span class="hljs-string">'beforeUpdate'</span>);<br>			&#125;<br>		&#125;<br>	&#125;, <span class="hljs-literal">true</span> <span class="hljs-comment">/* isRenderWatcher */</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>将 updateComponent 设定为订阅者的 getter，在初始时就会调用 updateCompoennt，触发页面第一次渲染更新。这里需要注意的是，订阅者的 cb 是 noop，因为只执行 updateComponent 就能实现页面的更新（后面会讲到），因此不需要额外的回调函数。</p>
+<p>这里就是创建组件的 Render Watcher。将 updateComponent 设定为 watcher 的 getter，在初始时就会调用 updateCompoennt，触发页面第一次渲染更新。这里需要注意的是，订阅者的 cb 是 noop，因为只执行 updateComponent 就能实现页面的更新（后面会讲到），因此不需要额外的回调函数。</p>
 <p>vm._update 方法接受的第一个参是 vnode，也就是说 vm._render() 返回的是一个 vnode，找到 _render 方法，关键的就是三行代码：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> ref = vm.$options;<br><span class="hljs-keyword">var</span> render = ref.render;<br>vnode = render.call(vm._renderProxy, vm.$createElement);<br></code></pre></td></tr></table></figure>
 
