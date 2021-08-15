@@ -18,7 +18,7 @@
   <meta name="author" content="cipher">
   <meta name="keywords" content="">
   
-  <title>一个简单的网络请求过程 - Cipher</title>
+  <title>Vue检测变化的限制及相应处理办法 - Cipher</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,9 +163,9 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="一个简单的网络请求过程">
+            <span class="h2" id="subtitle" title="Vue检测变化的限制及相应处理办法">
               
-                一个简单的网络请求过程
+                Vue检测变化的限制及相应处理办法
               
             </span>
 
@@ -175,8 +175,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-10 00:00" pubdate>
-        2021年4月10日 凌晨
+      <time datetime="2021-05-03 00:00" pubdate>
+        2021年5月3日 凌晨
       </time>
     </span>
   
@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      0 字
+      1.4k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      16
        分钟
     </span>
   
@@ -235,16 +235,45 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">一个简单的网络请求过程</h1>
+            <h1 style="display: none">Vue检测变化的限制及相应处理办法</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年7月1日 下午
+                  本文最后更新于：2021年8月15日 下午
                 
               </p>
             
             <div class="markdown-body">
-              
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>官方文档说：由于 JavaScript 的限制，Vue 不能检测数组和对象的变化。然后分别列出了对象及数组中存在的限制情况和解决办法。由于它只说明是 JavaScript 的限制，具体原因没有提及，这难免会让人感到些许疑惑。因此本篇就是专门记录这个限制的原因及解决办法的原理。</p>
+<h2 id="限制的真正原因"><a href="#限制的真正原因" class="headerlink" title="限制的真正原因"></a>限制的真正原因</h2><p>大家都知道，Vue 使用 Object.defineProperty 去对 data 中的数据增加数据劫持，然后这些数据就拥有了响应式属性。那会是 Object.defineProperty 的限制吗？先看数组方面的限制，我们写一个小 demo 测试一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]<br><span class="hljs-built_in">Object</span>.defineProperty(arr, <span class="hljs-number">0</span>, &#123;<br>    <span class="hljs-keyword">get</span>: function() &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>    &#125;,<br>    <span class="hljs-keyword">set</span>: function(newVal) &#123;<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'set value: '</span> + newVal)<br>    &#125;<br>&#125;)<br>arr[<span class="hljs-number">0</span>] = <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<p>将数组下标 0 位置做了数据劫持，然后执行 arr[0] = 3，发现控制台打印除了 set value: 3。也就是说对数组做数据劫持是没有问题的。那 Vue 是怎么处理数组的呢？我们来看下官方 demo，修改如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// html</span><br>&lt;div id=<span class="hljs-string">"demo"</span>&gt;<br>	&#123;&#123; <span class="hljs-built_in">JSON</span>.stringify(branches) &#125;&#125;<br>&lt;<span class="hljs-regexp">/div&gt;</span><br><span class="hljs-regexp"></span><br><span class="hljs-regexp">/</span><span class="hljs-regexp">/ js</span><br><span class="hljs-regexp">data: &#123;</span><br><span class="hljs-regexp">	branches: ['master', 'dev', &#123; testArray: 'tag_0' &#125;],</span><br><span class="hljs-regexp">&#125;</span><br><span class="hljs-regexp">mounted () &#123;</span><br><span class="hljs-regexp">	setTimeout(() =&gt; &#123;</span><br><span class="hljs-regexp">		this.branches[0] = 'tag_1'</span><br><span class="hljs-regexp">	&#125;, 1000)</span><br><span class="hljs-regexp">&#125;,</span><br></code></pre></td></tr></table></figure>
+
+<p>1秒之后将 branches.master 赋值为 ‘tag_1’, 但是页面依然显示的是 [“master”,”dev”,{“testArray”:”tag_0”}]，跟官方描述的一样，这样的设置是不会更新页面的。</p>
+<p>我们找到源码中的 initData 方法。它最终会执行 observe(data, true /* asRootData */)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">observe</span> (<span class="hljs-params">value, asRootData</span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (!isObject(value) || value <span class="hljs-keyword">instanceof</span> VNode) &#123;<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-keyword">var</span> ob;<br>	<span class="hljs-keyword">if</span> (hasOwn(value, <span class="hljs-string">'__ob__'</span>) &amp;&amp; value.__ob__ <span class="hljs-keyword">instanceof</span> Observer) &#123;<br>		ob = value.__ob__;<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<br>		shouldObserve &amp;&amp;<br>		!isServerRendering() &amp;&amp;<br>		(<span class="hljs-built_in">Array</span>.isArray(value) || isPlainObject(value)) &amp;&amp;<br>		<span class="hljs-built_in">Object</span>.isExtensible(value) &amp;&amp;<br>		!value._isVue<br>	) &#123;<br>		ob = <span class="hljs-keyword">new</span> Observer(value);<br>	&#125;<br>	<span class="hljs-keyword">if</span> (asRootData &amp;&amp; ob) &#123;<br>		ob.vmCount++;<br>	&#125;<br>	<span class="hljs-keyword">return</span> ob<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>想要真正的拥有响应式属性，必须得执行 ob = new Observer(value) 这一段代码，但是由于我们所修改的第一项 ‘master’ 并不是对象，因此不会执行到下面，也就是说 master 属性不是响应式的，那么当修改它时，Vue 就无法检测了。</p>
+<p>那只要是数组里的属性都无法通过下标修改吗？我们试着修改一下数组中第三项的属性:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">mounted () &#123;<br>	setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>		<span class="hljs-keyword">this</span>.branches[<span class="hljs-number">2</span>].testArray = <span class="hljs-string">'tag_1'</span><br>	&#125;, <span class="hljs-number">1000</span>)<br>&#125;,<br></code></pre></td></tr></table></figure>
+
+<p>可以看到页面在1秒之后显示为 [“master”,”dev”,{“testArray”:”tag_1”}]。说明 Vue 是可以监测到数组属性的修改。因为 this.branches[2] 是一个对象，通过了第一层判断，会执行添加响应式属性的代码，所以 Vue 能检测到变动。</p>
+<p>总结起来，原因是 Vue 对数组中的非对象属性不会添加响应式属性，所以通过下标修改的属性如果不是对象，Vue 是检测不到的，而如果是对象则能正常响应。</p>
+<p>至于为什么这样设计，尤大大解释是对性能及用户体验性价比的考量。</p>
+<p>那对于对象而言，假如现在根对象有一个对象 anotherBranch: {}, 当我们使用 this.anotherBranch.tag = ‘tag_3’，那么这个 tag 属性也不是响应式的。了解生命周期的应该知道，当我们添加属性时，添加响应式属性过程已经执行完毕了。</p>
+<h2 id="如何回避限制"><a href="#如何回避限制" class="headerlink" title="如何回避限制"></a>如何回避限制</h2><p>有了这样的设计，官方也给出了如何去回避这些限制的解决办法。对象和数组的解决办法中有一个相同点，那就是使用 $set 方法。比如说我想修改 master 的值，那我可以这样用：</p>
+<blockquote>
+<p>this.$set(this.branches, 0, ‘tag_1’)</p>
+</blockquote>
+<p>1秒之后页面显示的是  [“tag_1”,”dev”,{“testArray”:”tag_0”}]，符合预期！那接下来我们就来看看这个方法的奥秘。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs js">Vue.prototype.$<span class="hljs-keyword">set</span> = <span class="hljs-keyword">set</span>;<br><br>function <span class="hljs-keyword">set</span> (target, key, val) &#123;<br>	<span class="hljs-comment">// 省略</span><br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(target) &amp;&amp; isValidArrayIndex(key)) &#123;<br>		target.length = <span class="hljs-built_in">Math</span>.max(target.length, key);<br>		target.splice(key, <span class="hljs-number">1</span>, val);<br>		<span class="hljs-keyword">return</span> val<br>	&#125;<br>	<span class="hljs-comment">// 省略</span><br>	defineReactive(ob.value, key, val);<br>	ob.dep.notify();<br>	<span class="hljs-keyword">return</span> val<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对于数组，就是执行 Array.splice() 方法修改了数组的值，也就是修改了 currentBranch 的值。由于 currentBranch 是 data 对象中的一个属性，拥有响应式属性，现在发生了改变，就会触发它的 set 方法，那么就会触发页面的重新渲染。而在这次渲染之前，master 变成了 tag_1，所以页面中 master 变成了 tag_1。其实不仅仅是 splice 方法可以实现，只要是能修改数组的方法就可以回避这个限制。这个回避策略也可以理解成将数组属性的变化转给数组的变化。</p>
+<p>对于对象，就是在我们手动添加属性后，重新执行 Object.defineProperty 为该属性增加响应式属性，并执行 dep.notify() 重新收集依赖，然后就可以在后期检测到变化并且能通知订阅者更新。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>总结起来，Vue 检测变化的限制实际上是这些变动的属性没有响应式属性。其中，数组属性是官方基于性能方面的考虑没有添加响应式属性，而对象是因为错过了添加响应是属性的时机。对应的解决办法就是：数组属性的变化转接给数组的变化、对象属性重新添加响应式属性并重新收集依赖。</p>
+
             </div>
             <hr>
             <div>
@@ -253,7 +282,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
                     
                   </div>
                 
@@ -261,11 +290,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/HTTP/">HTTP</a>
-                    
-                      <a class="hover-with-bg" href="/tags/TCP/">TCP</a>
-                    
-                      <a class="hover-with-bg" href="/tags/DNS/">DNS</a>
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
                     
                   </div>
                 
@@ -282,18 +307,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%90%E4%BD%9C%E7%9A%84/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">响应式系统是如何运作的</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/04/06/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/">
-                        <span class="hidden-mobile">axios-总体结构</span>
+                      <a href="/2021/05/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/props%E6%98%AF%E5%A6%82%E4%BD%95%E4%BC%A0%E9%80%92%E7%9A%84/">
+                        <span class="hidden-mobile">props是如何传递的</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

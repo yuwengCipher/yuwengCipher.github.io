@@ -175,8 +175,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-08 00:00" pubdate>
-        2021年4月8日 凌晨
+      <time datetime="2020-11-08 00:00" pubdate>
+        2020年11月8日 凌晨
       </time>
     </span>
   
@@ -187,7 +187,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      1.5k 字
     </span>
   
 
@@ -197,7 +197,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21
+      22
        分钟
     </span>
   
@@ -239,13 +239,13 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年8月12日 下午
+                  本文最后更新于：2021年8月14日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="为什么要读-Vue"><a href="#为什么要读-Vue" class="headerlink" title="为什么要读 Vue"></a>为什么要读 Vue</h3><p>Vue 是目前项目正在使用的框架，阅读学习源码能让我更好的使用框架所提供的功能，也可以解答使用过程中所产生的困惑。有人可能会问，Vue2 相关的源码解析文章在网上一大堆，何必要自己去写呢？我只想说，纸上得来终觉浅，绝知此事要躬行。</p>
-<h3 id="Vue3-已经出来了，为什么依然读-Vue2"><a href="#Vue3-已经出来了，为什么依然读-Vue2" class="headerlink" title="Vue3 已经出来了，为什么依然读 Vue2"></a>Vue3 已经出来了，为什么依然读 Vue2</h3><p>原因一是很久以前就读过 Vue2 的源码，理解了基本的原理，但是后来没有坚持去深入，也就荒废了，心里多少还是有点不甘。因此这次相当于从新来过，也是准备出一个系列，既是读源码的记录整理，也是日后问题查询之处。原因二是虽然新版本的语法形式与旧版不同，但最核心的思想是没变的，吃透旧版之后，有机会也会去读读 Vue3，而这也是必须的。活到老，学到老。</p>
+              <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="为什么要读-Vue"><a href="#为什么要读-Vue" class="headerlink" title="为什么要读 Vue"></a>为什么要读 Vue</h3><p>Vue 是目前项目正在使用的框架，阅读学习源码能让我更好的使用框架所提供的功能，也可以解答使用过程中所产生的困惑。有人可能会问，Vue2 相关的源码解析文章在网上一大堆，何必要自己去写呢？我只想说，纸上得来终觉浅，绝知此事要躬行。通过看别人的文章确实能在短期去记住，但是时间久了就会忘了，而如果是自己根据问题疑惑去调试 demo，然后去理解原理，最后总结成文章表达出来，那种记忆是最深的。</p>
+<h3 id="Vue3-已经出来了，为什么依然读-Vue2"><a href="#Vue3-已经出来了，为什么依然读-Vue2" class="headerlink" title="Vue3 已经出来了，为什么依然读 Vue2"></a>Vue3 已经出来了，为什么依然读 Vue2</h3><p>原因一是很久以前就读过一点点 Vue2 的源码，理解了基本的原理，但是后来没有坚持去深入，也就荒废了，心里多少还是有点不甘。因此这次相当于从新来过，也是准备出一个系列，既是读源码的记录整理，也是日后问题查询之处。原因二是虽然新版本的语法形式与旧版不同，但最核心的思想是没变的，吃透旧版之后，有机会也会去读读 Vue3，而这也是必须的。活到老，学到老。</p>
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>源码基于 version 2.6.14 of Vue</p>
 <p>本系列暂分为8章，当前章节主要是对后续章节做辅助准备。<br>初次阅读源码时，我就时常陷入各种属性方法名之中，我不知道这个属性是在哪儿声明的，它的作用是什么。虽然说读源码最忌讳深入细枝末节，但无穷的属性让我很恐惧，所以本章会理清楚整体的一个逻辑走向，而第一部分主要是罗列跟 Vue 相关的属性和方法。</p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h3><p>Vue 这种框架核心文件都是在 src 文件里，但是入口在 package.json 中可以找到。</p>
@@ -254,16 +254,16 @@
 <p>通过上述指令，打开 scripts/config.js</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> aliases = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./alias'</span>)<br><span class="hljs-keyword">const</span> resolve = <span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> &#123;<br>	<span class="hljs-keyword">const</span> base = p.split(<span class="hljs-string">'/'</span>)[<span class="hljs-number">0</span>]<br>	<span class="hljs-keyword">if</span> (aliases[base]) &#123;<br>		<span class="hljs-keyword">return</span> path.resolve(aliases[base], p.slice(base.length + <span class="hljs-number">1</span>))<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-keyword">return</span> path.resolve(__dirname, <span class="hljs-string">'../'</span>, p)<br>	&#125;<br>&#125;<br><br><span class="hljs-keyword">const</span> builds = &#123;<br>	<span class="hljs-comment">// Runtime only (CommonJS). Used by bundlers e.g. Webpack &amp; Browserify</span><br>	<span class="hljs-string">'web-runtime-cjs-dev'</span>: &#123;<br>		entry: resolve(<span class="hljs-string">'web/entry-runtime.js'</span>),<br>		dest: resolve(<span class="hljs-string">'dist/vue.runtime.common.dev.js'</span>),<br>		format: <span class="hljs-string">'cjs'</span>,<br>		env: <span class="hljs-string">'development'</span>,<br>		banner<br>	&#125;,<br>	...<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>aliases 对象即</p>
+<p>这里是配置入口文件的路径。aliases 对象即</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">module</span>.exports = &#123;<br>	vue: resolve(<span class="hljs-string">'src/platforms/web/entry-runtime-with-compiler'</span>),<br>	compiler: resolve(<span class="hljs-string">'src/compiler'</span>),<br>	core: resolve(<span class="hljs-string">'src/core'</span>),<br>	shared: resolve(<span class="hljs-string">'src/shared'</span>),<br>	web: resolve(<span class="hljs-string">'src/platforms/web'</span>),<br>	weex: resolve(<span class="hljs-string">'src/platforms/weex'</span>),<br>	server: resolve(<span class="hljs-string">'src/server'</span>),<br>	sfc: resolve(<span class="hljs-string">'src/sfc'</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>结合上面两部分代码可以知道，入口在 ‘src/platforms/web/entry-runtime.js’ 中, 即</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'./runtime/index'</span><br></code></pre></td></tr></table></figure>
 
 <p>继续打开 src/platforms/web/runtime/index</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 这里指明了 Vue 的来源</span><br><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'core/index'</span><br><br><span class="hljs-comment">// 如下为 Vue 添加了相关属性，</span><br>Vue.config.mustUseProp = mustUseProp<br>Vue.config.isReservedTag = isReservedTag<br>Vue.config.isReservedAttr = isReservedAttr<br>Vue.config.getTagNamespace = getTagNamespace<br>Vue.config.isUnknownElement = isUnknownElement<br><br>Vue.prototype.__patch__ = inBrowser ? patch : noop<br><br><span class="hljs-comment">// public mount method</span><br>Vue.prototype.$mount = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params">	el?: string | Element,</span></span><br><span class="hljs-function"><span class="hljs-params">	hydrating?: boolean</span></span><br><span class="hljs-function"><span class="hljs-params"></span>): <span class="hljs-title">Component</span> </span>&#123;<br>	el = el &amp;&amp; inBrowser ? query(el) : <span class="hljs-literal">undefined</span><br>	<span class="hljs-keyword">return</span> mountComponent(<span class="hljs-keyword">this</span>, el, hydrating)<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 这里指明了 Vue 的来源</span><br><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'core/index'</span><br><br><span class="hljs-comment">// 如下为 Vue 添加了相关属性，</span><br>Vue.config.mustUseProp = mustUseProp<br>Vue.config.isReservedTag = isReservedTag<br>Vue.config.isReservedAttr = isReservedAttr<br>Vue.config.getTagNamespace = getTagNamespace<br>Vue.config.isUnknownElement = isUnknownElement<br><br><span class="hljs-comment">// 只有浏览器环境才需要 patch 方法</span><br>Vue.prototype.__patch__ = inBrowser ? patch : noop<br><br><span class="hljs-comment">// public mount method</span><br>Vue.prototype.$mount = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params">	el?: string | Element,</span></span><br><span class="hljs-function"><span class="hljs-params">	hydrating?: boolean</span></span><br><span class="hljs-function"><span class="hljs-params"></span>): <span class="hljs-title">Component</span> </span>&#123;<br>	el = el &amp;&amp; inBrowser ? query(el) : <span class="hljs-literal">undefined</span><br>	<span class="hljs-keyword">return</span> mountComponent(<span class="hljs-keyword">this</span>, el, hydrating)<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>从上可知， Vue 其实来源于我们之前说的 src 文件中，并且为 Vue 原型上添加了 $mount 和 <strong>patch</strong> 方法。</p>
+<p>从上可知， Vue 其实来源于我们之前说的 src 文件中，并且这里为 Vue 原型上添加了 $mount 和 <strong>patch</strong> 方法。</p>
 <h3 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h3><p>从这里开始将会沿着寻找 Vue 构造函数的源头，走马观花式的记录与 Vue 相关的属性及方法。</p>
 <ol>
 <li><p>/src/core/index.js</p>
@@ -360,21 +360,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">
+                      <a href="/2020/11/10/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">一个简单的网络请求过程</span>
+                        <span class="hidden-mobile">Vue2-总体结构(二)</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/">
-                        <span class="hidden-mobile">Vue2-总体结构(二)</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>

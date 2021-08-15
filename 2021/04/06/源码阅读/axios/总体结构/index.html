@@ -239,12 +239,14 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年8月12日 下午
+                  本文最后更新于：2021年8月14日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <p><strong>本文基于 axios 版本 0.21.1</strong></p>
+              <blockquote>
+<p>本文基于 axios 版本 0.21.1</p>
+</blockquote>
 <h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>在根目录下找到 index.js，里面只有一句代码，将 axios 进行导出。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">module</span>.exports = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/axios'</span>);<br></code></pre></td></tr></table></figure>
 
@@ -267,7 +269,9 @@
 </ul>
 <p>到这里，我们明白了 axios 是什么以及如何创建它的实例。</p>
 <h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p>前面的处理将 Axios 相关属性赋予给了 wrap 函数，那到底是哪些属性呢？该小节将会详细了解下构造函数 Axios。</p>
-<p><strong>文件位于  axios/core/Axios</strong></p>
+<blockquote>
+<p>文件位于 axios/core/Axios</p>
+</blockquote>
 <p>首先引入所需依赖，大概知道是干什么的就行。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 对请求路径进行一些格式化</span><br><span class="hljs-keyword">var</span> buildURL = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../helpers/buildURL'</span>);<br><span class="hljs-comment">// 拦截器构造函数</span><br><span class="hljs-keyword">var</span> InterceptorManager = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./InterceptorManager'</span>);<br><span class="hljs-comment">// 发起 request 请求</span><br><span class="hljs-keyword">var</span> dispatchRequest = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./dispatchRequest'</span>);<br></code></pre></td></tr></table></figure>
 
@@ -372,9 +376,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%BA%8C)/">
+                      <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Vue2-总体结构(二)</span>
+                        <span class="hidden-mobile">一个简单的网络请求过程</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

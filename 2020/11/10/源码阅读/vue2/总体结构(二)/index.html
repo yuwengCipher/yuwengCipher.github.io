@@ -175,8 +175,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-08 00:00" pubdate>
-        2021年4月8日 凌晨
+      <time datetime="2020-11-10 00:00" pubdate>
+        2020年11月10日 凌晨
       </time>
     </span>
   
@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年8月12日 下午
+                  本文最后更新于：2021年8月14日 下午
                 
               </p>
             
@@ -276,7 +276,7 @@
 <h3 id="options-合并策略"><a href="#options-合并策略" class="headerlink" title="options 合并策略"></a>options 合并策略</h3><p>我们使用 Vue 构造函数时传入的 options 会经过一系列的合并，合并之后的 options 会被赋值给实例的 $options 属性</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// merge options</span><br><span class="hljs-keyword">if</span> (options &amp;&amp; options._isComponent) &#123;<br>  initInternalComponent(vm, options);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  vm.$options = mergeOptions(<br>    resolveConstructorOptions(vm.constructor),<br>    options || &#123;&#125;,<br>    vm<br>  );<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>因为动态 options 的合并耗时较长，因此只对外部组件采取动态合并的方式。</p>
+<p>因为动态 options 的合并耗时较长，因此只对主组件采取动态合并的方式。</p>
 <p>先看看 resolveConstructorOptions 方法，vm 是 Vue 实例，vm.constructor 指的是 Vue，代码简化后如下所示：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> options = Ctor.options;<br><span class="hljs-keyword">if</span> (Ctor.super) &#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br><span class="hljs-keyword">return</span> options;<br></code></pre></td></tr></table></figure>
 
@@ -284,7 +284,7 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">Vue.options = &#123;<br>  components: &#123;&#125;,<br>  directives: &#123;&#125;,<br>  filters: &#123;&#125;,<br>  _base: Vue,<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <p>示例中 options 并没有指定 super 属性，因此该方法直接 return options</p>
-<p>回到 mergeOptions, 一个参 parent 即 Vue.options, 第二个参 child 是构造函数的入参，第三个是 Vue 实例。</p>
+<p>回到 mergeOptions, 第一个参 parent 即 Vue.options, 第二个参 child 是构造函数的入参，第三个是 Vue 实例。</p>
 <p>首先是调用 checkComponents(child)，对 components 中声明的名称做格式上的校验，必须符合 html5 标准，并且不能使用内置的 html 标签</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkComponents</span>(<span class="hljs-params">options</span>) </span>&#123;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> options.components) &#123;<br>    validateComponentName(key);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -314,12 +314,12 @@
 
 <p>mergeHook 中 parentVal 和 childVal 处理后 res 情况如下：</p>
 <ul>
-<li>childVal 存在<ul>
-<li>parentVal 存在，将 childVal 合并进 parentVal 中</li>
-<li>parentVal 不存在，保证 childVal 为数组或处于数组中</li>
+<li>如果 childVal 存在<ul>
+<li>如果 parentVal 存在，将 childVal 合并进 parentVal 中</li>
+<li>如果 parentVal 不存在，保证 childVal 为数组或处于数组中</li>
 </ul>
 </li>
-<li>childVal 不存在，则返回 parentVal</li>
+<li>如果 childVal 不存在，则返回 parentVal</li>
 </ul>
 <p>res 可能存在重复的 hook，所以 dedupeHooks 坐了一个去重<br>mergeHook 最后返回的值就是一个包含合并后生命周期钩子的数组</p>
 <h4 id="4、components-directives-filters"><a href="#4、components-directives-filters" class="headerlink" title="4、components, directives, filters"></a>4、components, directives, filters</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">ASSET_TYPES.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">type</span>) </span>&#123;<br>  strats[type + <span class="hljs-string">"s"</span>] = mergeAssets;<br>&#125;);<br></code></pre></td></tr></table></figure>
@@ -328,10 +328,10 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeAssets</span>(<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> res = <span class="hljs-built_in">Object</span>.create(parentVal || <span class="hljs-literal">null</span>);<br>  <span class="hljs-keyword">if</span> (childVal) &#123;<br>    assertObjectType(key, childVal, vm);<br>    <span class="hljs-keyword">return</span> extend(res, childVal);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">return</span> res;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>只有 childVal 存在时，才会执行合并(覆盖)操作，否则只返回 parentVal 原型链下级对象</p>
-<h4 id="5、watch"><a href="#5、watch" class="headerlink" title="5、watch"></a>5、watch</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.watch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-keyword">if</span> (!childVal) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.create(parentVal || <span class="hljs-literal">null</span>);<br>  &#125;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-keyword">if</span> (!parentVal) &#123;<br>    <span class="hljs-keyword">return</span> childVal;<br>  &#125;<br>  <span class="hljs-keyword">var</span> ret = &#123;&#125;;<br>  extend(ret, parentVal);<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key$<span class="hljs-number">1</span> <span class="hljs-keyword">in</span> childVal) &#123;<br>    <span class="hljs-keyword">var</span> parent = ret[key$<span class="hljs-number">1</span>];<br>    <span class="hljs-keyword">var</span> child = childVal[key$<span class="hljs-number">1</span>];<br>    <span class="hljs-keyword">if</span> (parent &amp;&amp; !<span class="hljs-built_in">Array</span>.isArray(parent)) &#123;<br>      parent = [parent];<br>    &#125;<br>    ret[key$<span class="hljs-number">1</span>] = parent<br>      ? parent.concat(child)<br>      : <span class="hljs-built_in">Array</span>.isArray(child)<br>      ? child<br>      : [child];<br>  &#125;<br>  <span class="hljs-keyword">return</span> ret;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<h4 id="5、watch"><a href="#5、watch" class="headerlink" title="5、watch"></a>5、watch</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.watch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-keyword">if</span> (!childVal) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.create(parentVal || <span class="hljs-literal">null</span>);<br>  &#125;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-keyword">if</span> (!parentVal) &#123;<br>    <span class="hljs-keyword">return</span> childVal;<br>  &#125;<br>  <span class="hljs-keyword">var</span> ret = &#123;&#125;;<br>  extend(ret, parentVal);<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> childVal) &#123;<br>    <span class="hljs-keyword">var</span> parent = ret[key];<br>    <span class="hljs-keyword">var</span> child = childVal[key];<br>    <span class="hljs-keyword">if</span> (parent &amp;&amp; !<span class="hljs-built_in">Array</span>.isArray(parent)) &#123;<br>      parent = [parent];<br>    &#125;<br>    ret[key] = parent<br>      ? parent.concat(child)<br>      : <span class="hljs-built_in">Array</span>.isArray(child)<br>      ? child<br>      : [child];<br>  &#125;<br>  <span class="hljs-keyword">return</span> ret;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <p>watch 合并后的对象 ret 的值是数组，保证每一个 key 可以包含多个 watcher，而且 watcher 不能被覆盖，因此这里不会有去重操作</p>
-<h4 id="6、props，methods，inject"><a href="#6、props，methods，inject" class="headerlink" title="6、props，methods，inject"></a>6、props，methods，inject</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.props =<br>strats.methods =<br>strats.inject =<br>strats.computed =<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>		<span class="hljs-comment">// ...</span><br>		<span class="hljs-comment">// 如果 parentVal 不存在，直接返回 childVal</span><br>		<span class="hljs-keyword">if</span> (!parentVal) &#123;<br>			<span class="hljs-keyword">return</span> childVal;<br>		&#125;<br>		<span class="hljs-keyword">var</span> ret = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);<br>		<span class="hljs-comment">// 将 parentVal 的属性存入 ret 中</span><br>		extend(ret, parentVal);<br>		<span class="hljs-comment">// 如果 childVal 存在，将 childVal 的属性存入 ret 中</span><br>		<span class="hljs-keyword">if</span> (childVal) &#123;<br>			extend(ret, childVal);<br>		&#125;<br>		<span class="hljs-comment">// 返回 ret</span><br>		<span class="hljs-keyword">return</span> ret;<br>	&#125;;<br></code></pre></td></tr></table></figure>
+<h4 id="6、props，methods，inject、computed"><a href="#6、props，methods，inject、computed" class="headerlink" title="6、props，methods，inject、computed"></a>6、props，methods，inject、computed</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.props =<br>strats.methods =<br>strats.inject =<br>strats.computed =<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>		<span class="hljs-comment">// ...</span><br>		<span class="hljs-comment">// 如果 parentVal 不存在，直接返回 childVal</span><br>		<span class="hljs-keyword">if</span> (!parentVal) &#123;<br>			<span class="hljs-keyword">return</span> childVal;<br>		&#125;<br>		<span class="hljs-keyword">var</span> ret = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);<br>		<span class="hljs-comment">// 将 parentVal 的属性存入 ret 中</span><br>		extend(ret, parentVal);<br>		<span class="hljs-comment">// 如果 childVal 存在，将 childVal 的属性存入 ret 中</span><br>		<span class="hljs-keyword">if</span> (childVal) &#123;<br>			extend(ret, childVal);<br>		&#125;<br>		<span class="hljs-comment">// 返回 ret</span><br>		<span class="hljs-keyword">return</span> ret;<br>	&#125;;<br></code></pre></td></tr></table></figure>
 
 <h4 id="7、provide-采用-mergeDataOrFn"><a href="#7、provide-采用-mergeDataOrFn" class="headerlink" title="7、provide 采用 mergeDataOrFn"></a>7、provide 采用 mergeDataOrFn</h4><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上，我们梳理了在使用 Vue 时，它自身都做了哪些工作。并且着重解析了 options 中属性合并策略，简单总结一下：</p>
 <p>1、el、propsData</p>
@@ -388,9 +388,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/">
+                      <a href="/2021/04/01/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E8%AF%B4%E8%AF%B4%20js%20%E7%9A%84%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Vue2-总体结构(一)</span>
+                        <span class="hidden-mobile">说说 js 的异步处理机制</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -398,8 +398,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/04/06/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/">
-                        <span class="hidden-mobile">axios-总体结构</span>
+                      <a href="/2020/11/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/">
+                        <span class="hidden-mobile">Vue2-总体结构(一)</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
