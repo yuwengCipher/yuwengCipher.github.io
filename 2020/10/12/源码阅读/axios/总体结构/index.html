@@ -1,0 +1,610 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  
+  <title>axios-总体结构 - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/docsmall/wallhaven-md6q29.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="axios-总体结构">
+              
+                axios-总体结构
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-10-12 00:00" pubdate>
+        2020年10月12日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      24
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">axios-总体结构</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年8月17日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <blockquote>
+<p>本文基于 axios 版本 0.21.1</p>
+</blockquote>
+<h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>在根目录下找到 index.js，里面只有一句代码，将 axios 进行导出。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">module</span>.exports = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/axios'</span>);<br></code></pre></td></tr></table></figure>
+
+<p>找到 lib 下的 axios.js 文件</p>
+<ul>
+<li><p>首先引入了相关文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 工具函数库</span><br><span class="hljs-keyword">var</span> utils = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./utils'</span>);<br><span class="hljs-comment">// bind 方法，返回 function wrap</span><br><span class="hljs-keyword">var</span> bind = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./helpers/bind'</span>);<br><span class="hljs-comment">// Axios 构造函数</span><br><span class="hljs-keyword">var</span> Axios = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./core/Axios'</span>);<br><span class="hljs-comment">// 合并参数</span><br><span class="hljs-keyword">var</span> mergeConfig = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./core/mergeConfig'</span>);<br><span class="hljs-comment">// 默认设置和属性</span><br><span class="hljs-keyword">var</span> defaults = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./defaults'</span>);<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>创建 axios 实例的方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createInstance</span> (<span class="hljs-params">defaultConfig</span>) </span>&#123;<br>	<span class="hljs-comment">// 创建 Axios 实例</span><br>	<span class="hljs-keyword">var</span> context = <span class="hljs-keyword">new</span> Axios(defaultConfig);<br>	<br>	<span class="hljs-keyword">var</span> instance = bind(Axios.prototype.request, context);<br>	utils.extend(instance, Axios.prototype, context);<br>	utils.extend(instance, context);<br><br>	<span class="hljs-keyword">return</span> instance;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​bind 方法代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bind</span> (<span class="hljs-params">fn, thisArg</span>) </span>&#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrap</span> (<span class="hljs-params"></span>) </span>&#123;<br>		<span class="hljs-keyword">var</span> args = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-built_in">arguments</span>.length);<br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; args.length; i++) &#123;<br>			args[i] = <span class="hljs-built_in">arguments</span>[i];<br>		&#125;<br>		<span class="hljs-keyword">return</span> fn.apply(thisArg, args);<br>	&#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>  bind 方法的逻辑很简单，就是返回 一个wrap 函数，函数内部会使用 context 调用 Axios.prototype.request。bind执行完后就将 Axios.prototype 和 context 的属性赋值给 wrap 函数。<br>  在该文件后续部分我们可以看到以下两行代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// ...</span><br><span class="hljs-keyword">var</span> axios = createInstance(defaults);<br><span class="hljs-built_in">module</span>.exports = axios;<br></code></pre></td></tr></table></figure>
+
+<p>执行 createInstance 方法返回的 instance 赋值给了 axios，那么 axios 的值就是 wrap 函数，这也就是为什么我们使用 axios 时，既可以调用它的方法，也可以直接执行它的原因。</p>
+</li>
+</ul>
+<p>到这里，我们明白了 axios 是什么以及如何创建它的实例。</p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p>前面的处理将 Axios 相关属性赋予给了 wrap 函数，那到底是哪些属性呢？该小节将会详细了解下构造函数 Axios。</p>
+<blockquote>
+<p>文件位于 axios/core/Axios</p>
+</blockquote>
+<p>首先引入所需依赖，大概知道是干什么的就行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 对请求路径进行一些格式化</span><br><span class="hljs-keyword">var</span> buildURL = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../helpers/buildURL'</span>);<br><span class="hljs-comment">// 拦截器构造函数</span><br><span class="hljs-keyword">var</span> InterceptorManager = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./InterceptorManager'</span>);<br><span class="hljs-comment">// 发起 request 请求</span><br><span class="hljs-keyword">var</span> dispatchRequest = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./dispatchRequest'</span>);<br></code></pre></td></tr></table></figure>
+
+<p>接着往下看</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Axios</span> (<span class="hljs-params">instanceConfig</span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.defaults = instanceConfig;<br>	<span class="hljs-comment">// 拦截器对象</span><br>	<span class="hljs-keyword">this</span>.interceptors = &#123;<br>		request: <span class="hljs-keyword">new</span> InterceptorManager(),<br>		response: <span class="hljs-keyword">new</span> InterceptorManager()<br>	&#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在创建实例时可接收一个配置参数</li>
+<li>将接收的配置赋值给自身的 defaults 属性</li>
+<li>拥有一个 拦截器对象，该对象包括请求拦截器和相应拦截器</li>
+<li>拦截器实例是在创建 Axios 实例时才会创建</li>
+</ul>
+<h3 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h3><p>在日常使用中，拦截器的配置是最重要的一部分。我们通过上方路径找到拦截器构造函数文件。</p>
+<p>​        构造函数拥有一个 handlers 数组，用来存储拦截器。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InterceptorManager</span> (<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.handlers = [];	<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>​然后给构造函数原型添加方法函数</p>
+<ol>
+<li><p>使用 use 方法添加一个新的拦截器，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js">InterceptorManager.prototype.use = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">use</span> (<span class="hljs-params">fulfilled, rejected, options</span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.handlers.push(&#123;<br>		fulfilled: fulfilled,<br>		rejected: rejected,<br>		synchronous: options ? options.synchronous : <span class="hljs-literal">false</span>,<br>		runWhen: options ? options.runWhen : <span class="hljs-literal">null</span><br>	&#125;);<br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.handlers.length - <span class="hljs-number">1</span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>每个拦截器包括四个属性：<ol>
+<li>fulfilled：一个方法，在请求或相应被 then 处理前执行</li>
+<li>rejected：一个方法，在请求或相应被 reject 处理前执行</li>
+<li>synchronous：请求拦截器是否采用同步执行机制</li>
+<li>runwhen：表明请求拦截器什么情况下执行。默认为 null，也可以是一个函数。</li>
+</ol>
+</li>
+<li>use 方法返回当前拦截器在拦截器数组中的位置下标</li>
+</ol>
+</li>
+<li><p>使用 eject 方法清除一个拦截器。参数 id 就是拦截器在数组中的下标。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">InterceptorManager.prototype.eject = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">eject</span> (<span class="hljs-params">id</span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.handlers[id]) &#123;<br>		<span class="hljs-comment">// 将下标为 id 处的拦截器置为 null</span><br>		<span class="hljs-keyword">this</span>.handlers[id] = <span class="hljs-literal">null</span>;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用 forEach 方法执行符合条件的拦截器</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js">InterceptorManager.prototype.forEach = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forEach</span> (<span class="hljs-params">fn</span>) </span>&#123;<br>	<span class="hljs-comment">// 遍历拦截器存储数组，执行 fn 时会过滤掉数组中被置为 null 的值。</span><br>	utils.forEach(<span class="hljs-keyword">this</span>.handlers, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forEachHandler</span> (<span class="hljs-params">h</span>) </span>&#123;<br>		<span class="hljs-keyword">if</span> (h !== <span class="hljs-literal">null</span>) &#123;<br>			fn(h);<br>		&#125;<br>	&#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="挂载方法"><a href="#挂载方法" class="headerlink" title="挂载方法"></a>挂载方法</h3><p>构造函数内部添加完属性后，紧接着就是在构造函数原型上添加相应方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 为 Axios 原型挂载 request 和 getUri 方法</span><br>Axios.prototype.request = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">request</span> (<span class="hljs-params">config</span>) </span>&#123;...&#125;<br>Axios.prototype.getUri = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUri</span> (<span class="hljs-params">config</span>) </span>&#123;...&#125;<br><br><span class="hljs-comment">// 为 Axios 原型挂载支持的 method</span><br>utils.forEach([<span class="hljs-string">'delete'</span>, <span class="hljs-string">'get'</span>, <span class="hljs-string">'head'</span>, <span class="hljs-string">'options'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forEachMethodNoData</span> (<span class="hljs-params">method</span>) </span>&#123;<br>	Axios.prototype[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">url, config</span>) </span>&#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.request(mergeConfig(config || &#123;&#125;, &#123;<br>			method: method,<br>			url: url,<br>			<span class="hljs-comment">// 使用这些 method时，有可能不会传 data 属性，所以使用默认的 data</span><br>			data: (config || &#123;&#125;).data <br>		&#125;));<br>	&#125;;<br>&#125;);<br>utils.forEach([<span class="hljs-string">'post'</span>, <span class="hljs-string">'put'</span>, <span class="hljs-string">'patch'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forEachMethodWithData</span> (<span class="hljs-params">method</span>) </span>&#123;<br>	Axios.prototype[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">url, data, config</span>) </span>&#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.request(mergeConfig(config || &#123;&#125;, &#123;<br>			method: method,<br>			url: url,<br>			data: data<br>		&#125;));<br>	&#125;;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>其中包括 HTTP 请求同名的方法 。这些方法会被代理给原型的 request 方法，Axios 将支持的请求的 methods 按照是否需要默认 data 属性分为两类，现在来看看 request 方法的实现。</p>
+<h3 id="request"><a href="#request" class="headerlink" title="request"></a>request</h3><ul>
+<li><p>首先是基本参数的一个默认设置以及合并</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 兼容 axios('example/url'[, config]) 这种传参方式</span><br><span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> config === <span class="hljs-string">'string'</span>) &#123;<br>    config = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>] || &#123;&#125;;<br>    config.url = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>];<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    config = config || &#123;&#125;;<br>&#125;<br><br><span class="hljs-comment">// 合并 config</span><br>config = mergeConfig(<span class="hljs-keyword">this</span>.defaults, config);<br><br><span class="hljs-comment">// 设置 config.method， 默认小写，默认 get 方法</span><br><span class="hljs-keyword">if</span> (config.method) &#123;<br>    config.method = config.method.toLowerCase();<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.defaults.method) &#123;<br>    config.method = <span class="hljs-keyword">this</span>.defaults.method.toLowerCase();<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    config.method = <span class="hljs-string">'get'</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>对拦截器队列的处理</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 请求拦截器队列</span><br><span class="hljs-keyword">var</span> requestInterceptorChain = [];<br><span class="hljs-comment">// 请求拦截器是否同步执行</span><br><span class="hljs-keyword">var</span> synchronousRequestInterceptors = <span class="hljs-literal">true</span>;<br><br><span class="hljs-keyword">this</span>.interceptors.request.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unshiftRequestInterceptors</span> (<span class="hljs-params">interceptor</span>) </span>&#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> interceptor.runWhen === <span class="hljs-string">'function'</span> &amp;&amp; interceptor.runWhen(config) === <span class="hljs-literal">false</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 因为 interceptor.synchronous 默认为 false，所以 synchronousRequestInterceptors 默认为 false，</span><br>    synchronousRequestInterceptors = synchronousRequestInterceptors &amp;&amp; interceptor.synchronous;<br><br>    <span class="hljs-comment">// 每个拦截器由执行成功和执行失败处理方法组成</span><br>    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);<br>&#125;);<br><br><span class="hljs-comment">// 响应拦截器链</span><br><span class="hljs-keyword">var</span> responseInterceptorChain = [];<br><br><span class="hljs-keyword">this</span>.interceptors.response.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pushResponseInterceptors</span> (<span class="hljs-params">interceptor</span>) </span>&#123;<br>    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);<br>&#125;);<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>请求拦截器 执行机制的处理</p>
+<p>​        请求拦截器 执行机制由上面的 synchronousRequestInterceptors 决定，分为 异步和同步两种。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> promise;<br><br><span class="hljs-comment">// 异步执行</span><br><span class="hljs-keyword">if</span> (!synchronousRequestInterceptors) &#123;<br>	<span class="hljs-comment">// 调用处理方法队列</span><br>    <span class="hljs-keyword">var</span> chain = [dispatchRequest, <span class="hljs-literal">undefined</span>];<br>	<span class="hljs-comment">// 将请求拦截器处理方法和响应拦截器处理方法分别放入队列前后</span><br>    <span class="hljs-built_in">Array</span>.prototype.unshift.apply(chain, requestInterceptorChain);<br>    chain.concat(responseInterceptorChain);<br><br>    promise = <span class="hljs-built_in">Promise</span>.resolve(config);<br>    <span class="hljs-comment">// 将包含了请求拦截器的 chain 交给 promise 来处理  </span><br>    <span class="hljs-keyword">while</span> (chain.length) &#123;<br>        promise = promise.then(chain.shift(), chain.shift());<br>    &#125;<br>    <span class="hljs-keyword">return</span> promise;<br>&#125;<br><br><span class="hljs-comment">// 同步执行</span><br><span class="hljs-keyword">var</span> newConfig = config;<br><br><span class="hljs-comment">// 先一次性执行完请求拦截器</span><br><span class="hljs-keyword">while</span> (requestInterceptorChain.length) &#123;<br>    <span class="hljs-keyword">var</span> onFulfilled = requestInterceptorChain.shift();<br>    <span class="hljs-keyword">var</span> onRejected = requestInterceptorChain.shift();<br>    <span class="hljs-keyword">try</span> &#123;<br>        newConfig = onFulfilled(newConfig);<br>    &#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>        onRejected(error);<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>&#125;<br><span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-comment">// 再异步执行 dispatchRequest（如 XHR），</span><br>    promise = dispatchRequest(newConfig);<br>&#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(error);<br>&#125;<br><span class="hljs-comment">// 最后异步执行响应拦截器</span><br><span class="hljs-keyword">while</span> (responseInterceptorChain.length) &#123;<br>    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());<br>&#125;<br><br><span class="hljs-keyword">return</span> promise;<br></code></pre></td></tr></table></figure>
+
+<p>对拦截器处理的总结：</p>
+<ul>
+<li>存在三个 chain：请求拦截器 requestInterceptorChain 、响应拦截器 responseInterceptorChain、真正的 request 调用 originChain</li>
+<li>拦截器以成对的形式存在，放入对应的拦截器 chain 中</li>
+<li>请求拦截器对依次插入到 chain 头；相应拦截器对依次插入到 chain 尾</li>
+<li>请求拦截器可以同步执行也可以异步执行：<ul>
+<li>如果是异步执行，则会将requestInterceptorChain 插入到 originChain 队头，将 responseInterceptorChain 插入到 originChain 队尾；然后对 originChain 内的元素放入 promise.then 中执行</li>
+<li>如果是同步执行，则会将 requestInterceptorChain 内的元素以迭代的方式执行完毕，然后执行 originChain 内的 request，最后将 responseInterceptorChain 内的元素放入 promise.then 中执行</li>
+</ul>
+</li>
+</ul>
+<p>最后通过一张图来理解请求拦截器处理不同的机制</p>
+</li>
+</ul>
+<p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/axios_%E6%89%A7%E8%A1%8C%E5%9B%BE.jpg" srcset="/img/loading.gif" lazyload alt="axios 执行图"></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Axios/">Axios</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Axios/">Axios</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vue2-总体结构(一)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/">
+                        <span class="hidden-mobile">弄懂 event loop</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+          app_key: "uSkOsleUpcvIJyb31MudM4dS",
+          placeholder: "说点啥吧~",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

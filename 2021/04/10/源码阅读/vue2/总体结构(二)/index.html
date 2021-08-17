@@ -1,0 +1,622 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  
+  <title>Vue2-总体结构(二) - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/docsmall/wallhaven-md6q29.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vue2-总体结构(二)">
+              
+                Vue2-总体结构(二)
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-10 00:00" pubdate>
+        2021年4月10日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vue2-总体结构(二)</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年8月17日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前一小节，我们整理了 Vue 相关的属性，这一小节则通过框架自带的 demo 来梳理一下 Vue 整体的一个运行流程。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>首先我们找到本节 demo 目录，路径为 ‘/examples/commits’。将 index.html 中 vue 的引用路径改成 ‘<script src="../../dist/vue.js"></script>‘, 方便调试。</p>
+<p>app.js 里调用了 Vue 构造函数，所以从这里开始吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">new</span> Vue(&#123;<br>	el: <span class="hljs-string">'#demo'</span>,<br>	data: &#123;<br>		branches: [<span class="hljs-string">'master'</span>, <span class="hljs-string">'dev'</span>],<br>		currentBranch: <span class="hljs-string">'master'</span>,<br>		commits: <span class="hljs-literal">null</span><br>	&#125;,<br>	created: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>		<span class="hljs-keyword">this</span>.fetchData()<br>	&#125;,<br>	watch: &#123;<br>		currentBranch: <span class="hljs-string">'fetchData'</span><br>	&#125;,<br></code></pre></td></tr></table></figure>
+
+<h3 id="new-Vue-之前做了什么"><a href="#new-Vue-之前做了什么" class="headerlink" title="new Vue() 之前做了什么"></a>new Vue() 之前做了什么</h3><p>Vue 本身会进行一系列的初始化工作</p>
+<ol>
+<li><p>/src/core/instance/index.js</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">initMixin(Vue);<br>stateMixin(Vue);<br>eventsMixin(Vue);<br>lifecycleMixin(Vue);<br>renderMixin(Vue);<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>/src/core/index.js</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js">initGlobalAPI(Vue);<br><span class="hljs-built_in">Object</span>.defineProperty(Vue.prototype, <span class="hljs-string">"$isServer"</span>, &#123;<br>	<span class="hljs-keyword">get</span>: isServerRendering,<br>&#125;);<br><br>Object.defineProperty(Vue.prototype, "$ssrContext", &#123;<br>	<span class="hljs-keyword">get</span>() &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$vnode &amp;&amp; <span class="hljs-keyword">this</span>.$vnode.ssrContext;<br>	&#125;,<br>&#125;);<br><br><span class="hljs-built_in">Object</span>.defineProperty(Vue, <span class="hljs-string">"FunctionalRenderContext"</span>, &#123;<br>	value: FunctionalRenderContext,<br>&#125;);<br><br>Vue.version = <span class="hljs-string">"__VERSION__"</span>;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>/src/core/global-api.js</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">initUse(Vue);<br>initMixin(Vue);<br>initExtend(Vue);<br>initAssetRegisters(Vue);<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="new-Vue-做了什么"><a href="#new-Vue-做了什么" class="headerlink" title="new Vue() 做了什么"></a>new Vue() 做了什么</h3><p>new Vue() 实际上调用了自身的 _init 方法，从字典可知，_init 方法 在 ‘/src/core/instance/init.js’ 中的 initMixin 方法里。<br>忽略部分代码后是这样的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">let</span> uid = <span class="hljs-number">0</span>;<br>Vue.prototype._init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options?: Object</span>) </span>&#123;<br>  <span class="hljs-keyword">const</span> vm: Component = <span class="hljs-keyword">this</span>;<br>  <span class="hljs-comment">// a uid</span><br>  vm._uid = uid++;<br><br>  <span class="hljs-comment">// 这个标识可以避免 vm 被观察系统观察</span><br>  vm._isVue = <span class="hljs-literal">true</span>;<br>  <span class="hljs-comment">// 将通过自定义策略合并配置项后的值赋值给 $options</span><br>  vm.$options = mergeOptions(<br>    resolveConstructorOptions(vm.constructor),<br>    options || &#123;&#125;,<br>    vm<br>  );<br><br>  <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">"production"</span>) &#123;<br>    <span class="hljs-comment">// 如果不是生产环境就初始化代理相关操作</span><br>    initProxy(vm);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    vm._renderProxy = vm;<br>  &#125;<br><br>  vm._self = vm;<br>  <span class="hljs-comment">// 初始化声明周期</span><br>  initLifecycle(vm);<br>  <span class="hljs-comment">// 初始化事件机制</span><br>  initEvents(vm);<br>  <span class="hljs-comment">// 初始化渲染相关</span><br>  initRender(vm);<br>  <span class="hljs-comment">// 调用 beforeCreate 钩子</span><br>  callHook(vm, <span class="hljs-string">"beforeCreate"</span>);<br>  <span class="hljs-comment">// 在 data 或 props 被处理前初始化注入</span><br>  initInjections(vm); <span class="hljs-comment">// resolve injections before data/props</span><br>  <span class="hljs-comment">// 初始化对 data 和 props 相关操作</span><br>  initState(vm);<br>  <span class="hljs-comment">// 在 data 或 props 被处理后初始化注入</span><br>  initProvide(vm); <span class="hljs-comment">// resolve provide after data/props</span><br>  <span class="hljs-comment">// 调用 created 钩子</span><br>  callHook(vm, <span class="hljs-string">"created"</span>);<br><br>  <span class="hljs-comment">// 如果存在 el 属性，则进行挂载操作</span><br>  <span class="hljs-keyword">if</span> (vm.$options.el) &#123;<br>    vm.$mount(vm.$options.el);<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>从上可知，_init 方法主要做了如下几件事：</p>
+<ol>
+<li>为 Vue 实例添加 $options 属性</li>
+<li>初始化相关属性。</li>
+<li>在渲染操作相关初始化完成之后和属性注入相关初始化之前调用 beforeCreate 钩子</li>
+<li>在依赖相关初始化完成之后和 Dom 挂载之前调用 created 钩子</li>
+<li>挂载 Dom</li>
+</ol>
+<h3 id="options-合并策略"><a href="#options-合并策略" class="headerlink" title="options 合并策略"></a>options 合并策略</h3><p>我们使用 Vue 构造函数时传入的 options 会经过一系列的合并，合并之后的 options 会被赋值给实例的 $options 属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// merge options</span><br><span class="hljs-keyword">if</span> (options &amp;&amp; options._isComponent) &#123;<br>  initInternalComponent(vm, options);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  vm.$options = mergeOptions(<br>    resolveConstructorOptions(vm.constructor),<br>    options || &#123;&#125;,<br>    vm<br>  );<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>因为动态 options 的合并耗时较长，因此只对主组件采取动态合并的方式。</p>
+<p>先看看 resolveConstructorOptions 方法，vm 是 Vue 实例，vm.constructor 指的是 Vue，代码简化后如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> options = Ctor.options;<br><span class="hljs-keyword">if</span> (Ctor.super) &#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br><span class="hljs-keyword">return</span> options;<br></code></pre></td></tr></table></figure>
+
+<p>依据字典，我们可以知道，Vue.options 的值可以表示成这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">Vue.options = &#123;<br>  components: &#123;&#125;,<br>  directives: &#123;&#125;,<br>  filters: &#123;&#125;,<br>  _base: Vue,<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>示例中 options 并没有指定 super 属性，因此该方法直接 return options</p>
+<p>回到 mergeOptions, 第一个参 parent 即 Vue.options, 第二个参 child 是构造函数的入参，第三个是 Vue 实例。</p>
+<p>首先是调用 checkComponents(child)，对 components 中声明的名称做格式上的校验，必须符合 html5 标准，并且不能使用内置的 html 标签</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkComponents</span>(<span class="hljs-params">options</span>) </span>&#123;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> options.components) &#123;<br>    validateComponentName(key);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接着是对 props、inject、directives 这些参数进行格式化，最后都形成对象的形式。</p>
+<p>下面开始真正的合并。</p>
+<p>第一步，将尚未合并过的 child 中的 extend 和 mixins 属性合并到 parent 中。<br>第二步，按顺序将 parent 和 child 的属性存入到声明的空对象 options 中。</p>
+<p>需要注意的是在对 child 处理时，只对 parent 中不存在的属性做合并，可以避免对 Vue.options 属性的覆盖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">for</span> (key <span class="hljs-keyword">in</span> child) &#123;<br>  <span class="hljs-keyword">if</span> (!hasOwn(parent, key)) &#123;<br>    mergeField(key);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来重点看下 mergeField 方法，这个是整个合并策略的核心</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeField</span>(<span class="hljs-params">key</span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> strat = strats[key] || defaultStrat;<br>  options[key] = strat(parent[key], child[key], vm, key);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>总的来说，strats 就是一个对象，它的属性是一个个用来处理不同类型属性的策略方法。</p>
+<p>除了 strats，还有一个默认策略方法 defaultStrat</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> defaultStrat = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal</span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> childVal === <span class="hljs-literal">undefined</span> ? parentVal : childVal;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>逻辑很简单：如果 childVal 存在，返回 childVal，否则返回 parentVal。</p>
+<p>以下是 strats 的策略方法：</p>
+<h4 id="1、el，propsData"><a href="#1、el，propsData" class="headerlink" title="1、el，propsData"></a>1、el，propsData</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.el = strats.propsData = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parent, child, vm, key</span>) </span>&#123;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-comment">// 使用默认策略</span><br>  <span class="hljs-keyword">return</span> defaultStrat(parent, child);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h4 id="2、data"><a href="#2、data" class="headerlink" title="2、data"></a>2、data</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.data = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (!vm) &#123;<br>    <span class="hljs-keyword">if</span> (childVal &amp;&amp; <span class="hljs-keyword">typeof</span> childVal !== <span class="hljs-string">"function"</span>) &#123;<br>      warn(<br>        <span class="hljs-string">'The "data" option should be a function '</span> +<br>          <span class="hljs-string">"that returns a per-instance value in component "</span> +<br>          <span class="hljs-string">"definitions."</span>,<br>        vm<br>      );<br><br>      <span class="hljs-keyword">return</span> parentVal;<br>    &#125;<br>    <span class="hljs-keyword">return</span> mergeDataOrFn(parentVal, childVal);<br>  &#125;<br>  <span class="hljs-keyword">return</span> mergeDataOrFn(parentVal, childVal, vm);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>mergeDataOrFn 返回的方法里会调用 mergeData 方法，我们跳过直接看 mergeData</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeData</span>(<span class="hljs-params">to, from</span>) </span>&#123;<br>  <span class="hljs-comment">// 如果不存在子项，直接返回父项</span><br>  <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">from</span>) &#123;<br>    <span class="hljs-keyword">return</span> to;<br>  &#125;<br>  <span class="hljs-keyword">var</span> key, toVal, fromVal;<br><br>  <span class="hljs-keyword">var</span> keys = hasSymbol ? <span class="hljs-built_in">Reflect</span>.ownKeys(<span class="hljs-keyword">from</span>) : <span class="hljs-built_in">Object</span>.keys(<span class="hljs-keyword">from</span>);<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; keys.length; i++) &#123;<br>    key = keys[i];<br>    <span class="hljs-comment">// 如果属性已经被 oberved， 则直接跳过</span><br>    <span class="hljs-keyword">if</span> (key === <span class="hljs-string">"__ob__"</span>) &#123;<br>      <span class="hljs-keyword">continue</span>;<br>    &#125;<br>    toVal = to[key];<br>    fromVal = <span class="hljs-keyword">from</span>[key];<br>    <span class="hljs-comment">// 如果父项没有当前属性，则开启合并(覆盖)</span><br>    <span class="hljs-keyword">if</span> (!hasOwn(to, key)) &#123;<br>      <span class="hljs-keyword">set</span>(to, key, fromVal);<br>    &#125; else if (<br>      // 如果当前父属性和子属性都为对象且不相等，则递归合并(覆盖)<br>      toVal !== fromVal &amp;&amp;<br>      isPlainObject(toVal) &amp;&amp;<br>      isPlainObject(fromVal)<br>    ) &#123;<br>      mergeData(toVal, fromVal);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> to;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="3、声明周期钩子"><a href="#3、声明周期钩子" class="headerlink" title="3、声明周期钩子"></a>3、声明周期钩子</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs js">LIFECYCLE_HOOKS.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">hook</span>) </span>&#123;<br>  strats[hook] = mergeHook;<br>&#125;);<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeHook</span>(<span class="hljs-params">parentVal, childVal</span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> res = childVal<br>    ? parentVal<br>      ? parentVal.concat(childVal)<br>      : <span class="hljs-built_in">Array</span>.isArray(childVal)<br>      ? childVal<br>      : [childVal]<br>    : parentVal;<br>  <span class="hljs-keyword">return</span> res ? dedupeHooks(res) : res;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dedupeHooks</span>(<span class="hljs-params">hooks</span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> res = [];<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; hooks.length; i++) &#123;<br>    <span class="hljs-keyword">if</span> (res.indexOf(hooks[i]) === <span class="hljs-number">-1</span>) &#123;<br>      res.push(hooks[i]);<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> res;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>mergeHook 中 parentVal 和 childVal 处理后 res 情况如下：</p>
+<ul>
+<li>如果 childVal 存在<ul>
+<li>如果 parentVal 存在，将 childVal 合并进 parentVal 中</li>
+<li>如果 parentVal 不存在，保证 childVal 为数组或处于数组中</li>
+</ul>
+</li>
+<li>如果 childVal 不存在，则返回 parentVal</li>
+</ul>
+<p>res 可能存在重复的 hook，所以 dedupeHooks 坐了一个去重<br>mergeHook 最后返回的值就是一个包含合并后生命周期钩子的数组</p>
+<h4 id="4、components-directives-filters"><a href="#4、components-directives-filters" class="headerlink" title="4、components, directives, filters"></a>4、components, directives, filters</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">ASSET_TYPES.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">type</span>) </span>&#123;<br>  strats[type + <span class="hljs-string">"s"</span>] = mergeAssets;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>这三类都采用 mergeAssets 方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeAssets</span>(<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> res = <span class="hljs-built_in">Object</span>.create(parentVal || <span class="hljs-literal">null</span>);<br>  <span class="hljs-keyword">if</span> (childVal) &#123;<br>    assertObjectType(key, childVal, vm);<br>    <span class="hljs-keyword">return</span> extend(res, childVal);<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">return</span> res;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>只有 childVal 存在时，才会执行合并(覆盖)操作，否则只返回 parentVal 原型链下级对象</p>
+<h4 id="5、watch"><a href="#5、watch" class="headerlink" title="5、watch"></a>5、watch</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.watch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-keyword">if</span> (!childVal) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.create(parentVal || <span class="hljs-literal">null</span>);<br>  &#125;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-keyword">if</span> (!parentVal) &#123;<br>    <span class="hljs-keyword">return</span> childVal;<br>  &#125;<br>  <span class="hljs-keyword">var</span> ret = &#123;&#125;;<br>  extend(ret, parentVal);<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> childVal) &#123;<br>    <span class="hljs-keyword">var</span> parent = ret[key];<br>    <span class="hljs-keyword">var</span> child = childVal[key];<br>    <span class="hljs-keyword">if</span> (parent &amp;&amp; !<span class="hljs-built_in">Array</span>.isArray(parent)) &#123;<br>      parent = [parent];<br>    &#125;<br>    ret[key] = parent<br>      ? parent.concat(child)<br>      : <span class="hljs-built_in">Array</span>.isArray(child)<br>      ? child<br>      : [child];<br>  &#125;<br>  <span class="hljs-keyword">return</span> ret;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>watch 合并后的对象 ret 的值是数组，保证每一个 key 可以包含多个 watcher，而且 watcher 不能被覆盖，因此这里不会有去重操作</p>
+<h4 id="6、props，methods，inject、computed"><a href="#6、props，methods，inject、computed" class="headerlink" title="6、props，methods，inject、computed"></a>6、props，methods，inject、computed</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.props =<br>strats.methods =<br>strats.inject =<br>strats.computed =<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>		<span class="hljs-comment">// ...</span><br>		<span class="hljs-comment">// 如果 parentVal 不存在，直接返回 childVal</span><br>		<span class="hljs-keyword">if</span> (!parentVal) &#123;<br>			<span class="hljs-keyword">return</span> childVal;<br>		&#125;<br>		<span class="hljs-keyword">var</span> ret = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);<br>		<span class="hljs-comment">// 将 parentVal 的属性存入 ret 中</span><br>		extend(ret, parentVal);<br>		<span class="hljs-comment">// 如果 childVal 存在，将 childVal 的属性存入 ret 中</span><br>		<span class="hljs-keyword">if</span> (childVal) &#123;<br>			extend(ret, childVal);<br>		&#125;<br>		<span class="hljs-comment">// 返回 ret</span><br>		<span class="hljs-keyword">return</span> ret;<br>	&#125;;<br></code></pre></td></tr></table></figure>
+
+<h4 id="7、provide-采用-mergeDataOrFn"><a href="#7、provide-采用-mergeDataOrFn" class="headerlink" title="7、provide 采用 mergeDataOrFn"></a>7、provide 采用 mergeDataOrFn</h4><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上，我们梳理了在使用 Vue 时，它自身都做了哪些工作。并且着重解析了 options 中属性合并策略，简单总结一下：</p>
+<p>1、el、propsData</p>
+<ul>
+<li>如果 child 不存在，返回 parent，否则返回 child</li>
+</ul>
+<p>2、data、provide</p>
+<ul>
+<li>如果 child 不存在，返回 parent</li>
+<li>如果 parent 存在，遍历 child 的属性，<ul>
+<li>如果 parent 不存在该属性，则将属性赋予 parent</li>
+<li>如果 parent 存在该属性，并且 parentVal 与 childVal 同为对象且不相等，则递归合并 parentVal 与 childVal</li>
+</ul>
+</li>
+</ul>
+<p>3、components, directives, filters<br>如果 child 存在，合并 child 属性至新对象中，否则返回空对象</p>
+<p>4、props，methods，inject，computed</p>
+<ul>
+<li>如果 parent 不存在，返回 child</li>
+<li>如果 parent 存在或 child 存在，将各自的属性赋予返回的新对象中</li>
+</ul>
+<p>5、watch 和 LIFECYCLE_HOOKS<br>相同点：如果 parent 和 child 存在，保证它们都是数组形式，将 child 并入 到 parent 中<br>不同点：LIFECYCLE_HOOKS 最后的结果需要去重，而 watch 不用</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">一个简单的网络请求过程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/08/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84(%E4%B8%80)/">
+                        <span class="hidden-mobile">Vue2-总体结构(一)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+          app_key: "uSkOsleUpcvIJyb31MudM4dS",
+          placeholder: "说点啥吧~",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
