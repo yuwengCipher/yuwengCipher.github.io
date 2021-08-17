@@ -18,7 +18,7 @@
   <meta name="author" content="cipher">
   <meta name="keywords" content="">
   
-  <title>computed的[怪异]表现 - Cipher</title>
+  <title>computed 的[怪异]表现 - Cipher</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,9 +163,9 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="computed的[怪异]表现">
+            <span class="h2" id="subtitle" title="computed 的[怪异]表现">
               
-                computed的[怪异]表现
+                computed 的[怪异]表现
               
             </span>
 
@@ -235,11 +235,11 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">computed的[怪异]表现</h1>
+            <h1 style="display: none">computed 的[怪异]表现</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：2021年8月13日 下午
+                  本文最后更新于：2021年8月17日 下午
                 
               </p>
             
@@ -353,7 +353,7 @@
 <p>这一次在 mounted 钩子中不带() 使用，会触发 reversedMessage 方法执行，但是1秒之后 message 更改了，但是 reversedMessage 却没有执行。</p>
 <p>我们看上面 computed 执行流程图，_render() 执行会触发 _s(this.reverseMessage)，进而触发计算，调用方法，但是现在我没有在模板中使用，那么在 render 函数中就不会有 _s(this.reverseMessage)，也就不会有后续的计算操作了，因此 computed 方法不会执行。但是为什么在 mounted 中使用 this.reversedMessage() 会报错，而使用 this.reversedMessage 却可以正常使用？</p>
 <p>this.reversedMessage 触发 reversedMessage 的 getter，跟上面提到的执行步骤是一样的，所以会执行 reversedMessage 方法。也就是说 this.reversedMessage() 相当于是 this.reversedMessage()()，this.reversedMessage() 执行完后的值不是方法，所以后面接 () 使用就会报错。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>computed 在日常使用中，产生的诸多疑惑降低了使用它的快感，所以本文依据这些问题从源码的角度去寻求答案，了解设计背后的秘密。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>computed 在日常使用中，产生的诸多疑惑降低了使用它的快感，所以本文依据这些问题从源码的角度去寻求答案，了解设计背后的秘密。</p>
 
             </div>
             <hr>
@@ -388,9 +388,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/05/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/props%E6%98%AF%E5%A6%82%E4%BD%95%E4%BC%A0%E9%80%92%E7%9A%84/">
+                      <a href="/2021/05/01/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/props%20%E6%98%AF%E5%A6%82%E4%BD%95%E4%BC%A0%E9%80%92%E7%9A%84/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">props是如何传递的</span>
+                        <span class="hidden-mobile">props 是如何传递的</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -398,8 +398,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/04/19/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%A8%A1%E6%9D%BF%E6%80%8E%E4%B9%88%E5%8F%98%E6%88%90%E7%9C%9F%E5%AE%9EDOM/">
-                        <span class="hidden-mobile">模板怎么变成真实DOM</span>
+                      <a href="/2021/04/19/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%A8%A1%E6%9D%BF%E6%80%8E%E4%B9%88%E5%8F%98%E6%88%90%E7%9C%9F%E5%AE%9E%20DOM/">
+                        <span class="hidden-mobile">模板怎么变成真实 DOM</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

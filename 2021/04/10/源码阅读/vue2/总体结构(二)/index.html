@@ -333,7 +333,7 @@
 <p>watch 合并后的对象 ret 的值是数组，保证每一个 key 可以包含多个 watcher，而且 watcher 不能被覆盖，因此这里不会有去重操作</p>
 <h4 id="6、props，methods，inject、computed"><a href="#6、props，methods，inject、computed" class="headerlink" title="6、props，methods，inject、computed"></a>6、props，methods，inject、computed</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">strats.props =<br>strats.methods =<br>strats.inject =<br>strats.computed =<br>	<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">parentVal, childVal, vm, key</span>) </span>&#123;<br>		<span class="hljs-comment">// ...</span><br>		<span class="hljs-comment">// 如果 parentVal 不存在，直接返回 childVal</span><br>		<span class="hljs-keyword">if</span> (!parentVal) &#123;<br>			<span class="hljs-keyword">return</span> childVal;<br>		&#125;<br>		<span class="hljs-keyword">var</span> ret = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);<br>		<span class="hljs-comment">// 将 parentVal 的属性存入 ret 中</span><br>		extend(ret, parentVal);<br>		<span class="hljs-comment">// 如果 childVal 存在，将 childVal 的属性存入 ret 中</span><br>		<span class="hljs-keyword">if</span> (childVal) &#123;<br>			extend(ret, childVal);<br>		&#125;<br>		<span class="hljs-comment">// 返回 ret</span><br>		<span class="hljs-keyword">return</span> ret;<br>	&#125;;<br></code></pre></td></tr></table></figure>
 
-<h4 id="7、provide-采用-mergeDataOrFn"><a href="#7、provide-采用-mergeDataOrFn" class="headerlink" title="7、provide 采用 mergeDataOrFn"></a>7、provide 采用 mergeDataOrFn</h4><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上，我们梳理了在使用 Vue 时，它自身都做了哪些工作。并且着重解析了 options 中属性合并策略，简单总结一下：</p>
+<h4 id="7、provide-采用-mergeDataOrFn"><a href="#7、provide-采用-mergeDataOrFn" class="headerlink" title="7、provide 采用 mergeDataOrFn"></a>7、provide 采用 mergeDataOrFn</h4><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>以上，我们梳理了在使用 Vue 时，它自身都做了哪些工作。并且着重解析了 options 中属性合并策略，简单总结一下：</p>
 <p>1、el、propsData</p>
 <ul>
 <li>如果 child 不存在，返回 parent，否则返回 child</li>
@@ -388,9 +388,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/10/http%20%E5%8D%8F%E8%AE%AE%E7%AC%94%E8%AE%B0/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B/">
+                      <a href="/2021/04/16/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%90%E4%BD%9C%E7%9A%84/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">一个简单的网络请求过程</span>
+                        <span class="hidden-mobile">响应式系统是如何运作的</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
