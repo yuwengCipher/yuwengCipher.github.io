@@ -172,48 +172,50 @@
             
               <div class="mt-3">
   
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-01 00:00" pubdate>
-        2021年5月1日 凌晨
-      </time>
-    </span>
-  
+      
+        <span class="post-meta">
+          <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+          <time datetime="2021-05-01" pubdate>
+            发表于 2021-05-01
+          </time>
+        </span>
+        
 </div>
 
 <div class="mt-1">
   
     
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      4.7k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      70
-       分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- LeanCloud 统计文章PV -->
-      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="leancloud-page-views"></span> 次
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k
+             字
       </span>
-    
-  
-</div>
+      
 
+        
+          
+            <span class="post-meta mr-2">
+              <i class="iconfont icon-clock-fill"></i>
+              
+                
+                  70
+                     分钟
+            </span>
+            
+
+              
+                
+                  
+                    <!-- LeanCloud 统计文章PV -->
+                    <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+                      <i class="iconfont icon-eye" aria-hidden="true"></i>
+                      <span id="leancloud-page-views"></span>
+                         次
+                    </span>
+                    
+                        
+</div>
             
           </div>
 
@@ -236,12 +238,6 @@
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">props 是如何传递的</h1>
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：2021年8月17日 下午
-                
-              </p>
             
             <div class="markdown-body">
               <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>props 是父组件向子组件传递数据的通道。在子组件中注册一些自定义 prop，当一个值作为 prop attribute 传递给这个 prop 之后，我们在子组件实例中访问这个值就像访问 data 中的值一样。这个设计非常有趣而且简单易用，但你有没有想过底层是如何实现的？我想过而且想知道设计细节，所以这篇就是来寻找答案的！</p>

@@ -172,48 +172,50 @@
             
               <div class="mt-3">
   
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-08-25 00:00" pubdate>
-        2020年8月25日 凌晨
-      </time>
-    </span>
-  
+      
+        <span class="post-meta">
+          <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+          <time datetime="2020-08-25" pubdate>
+            发表于 2020-08-25
+          </time>
+        </span>
+        
 </div>
 
 <div class="mt-1">
   
     
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      2.6k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      39
-       分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- LeanCloud 统计文章PV -->
-      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="leancloud-page-views"></span> 次
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k
+             字
       </span>
-    
-  
-</div>
+      
 
+        
+          
+            <span class="post-meta mr-2">
+              <i class="iconfont icon-clock-fill"></i>
+              
+                
+                  39
+                     分钟
+            </span>
+            
+
+              
+                
+                  
+                    <!-- LeanCloud 统计文章PV -->
+                    <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+                      <i class="iconfont icon-eye" aria-hidden="true"></i>
+                      <span id="leancloud-page-views"></span>
+                         次
+                    </span>
+                    
+                        
+</div>
             
           </div>
 
@@ -236,12 +238,6 @@
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">浅析 generator 与 async 原理</h1>
-            
-              <p class="note note-info">
-                
-                  本文最后更新于：2021年8月17日 下午
-                
-              </p>
             
             <div class="markdown-body">
               <h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h2><p>geneartor 和 async 都是 js 处理异步操作发展历程的产物，它们让异步编程越来越像同步编程。但是由于采用新的语法、关键字，它们是如何做到“类同步”操作的，我们不得而知，因此这篇文章将会窥探内部的秘密。</p>
