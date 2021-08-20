@@ -175,8 +175,8 @@
       
         <span class="post-meta">
           <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-          <time datetime="2021-05-01" pubdate>
-            发表于 2021-05-01
+          <time datetime="2021-05-23" pubdate>
+            发表于 2021-05-23
           </time>
         </span>
         
@@ -333,7 +333,7 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br><span class="hljs-keyword">with</span>(<span class="hljs-keyword">this</span>)&#123;<span class="hljs-keyword">return</span> _c(<span class="hljs-string">'p'</span>,[_v(<span class="hljs-string">"parentMessage is ï¼š"</span>+_s(parentMessage))])&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
 
 <p>当使用 parentMessage 这个属性时，会触发 vm.prototype.parentMessage 的 get 方法，拿到 ‘Hello’，那么 ‘Hello’ 就可以被渲染到页面中了。也就实现了 parentMessage 从父组件传递，到子组件接收，再到子组件渲染的这样一个过程。用一张图来表示一下整个流程：</p>
-<p><img src="props%E6%98%AF%E5%A6%82%E4%BD%95%E4%BC%A0%E9%80%92%E7%9A%84.assets/props%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="props传递流程图"></p>
+<p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/props%E4%BC%A0%E9%80%92%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="props传递流程图"></p>
 <h2 id="为什么-props-的值会跟着父组件改变"><a href="#为什么-props-的值会跟着父组件改变" class="headerlink" title="为什么 props 的值会跟着父组件改变"></a>为什么 props 的值会跟着父组件改变</h2><p>message 会在1秒之后变成 cipher，而 parentMessage is：Hello 也会显示为 parentMessage is：cipher，为什么 props 的值会跟着父组件改变？</p>
 <p>在 <a href="https://djacipher.cn/2021/04/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/computed%E7%9A%84%5B%E6%80%AA%E5%BC%82%5D%E8%A1%A8%E7%8E%B0/" target="_blank" rel="noopener">computed的[怪异]表现</a> 中已经讲过，message 的改变会触发父组件的重新渲染，那么就会将我们上面说到的流程重新走一遍，而这次传进来的 message 是 cipher，所以也就会显示 cipher。</p>
 <h2 id="子组件如何更改-prop"><a href="#子组件如何更改-prop" class="headerlink" title="子组件如何更改 prop"></a>子组件如何更改 prop</h2><p>在 initProps 中为 prop 绑定数据劫持时，会传入一个 customSetter 方法，当我们试图改变 props 时，就会执行这个方法，提示不能在直接在子组件更改属性，需要父组件去更改，然后子组件来更新。官方给出的方案是 .sync 修饰符。我们将 demo 改成如下所示：</p>
@@ -402,6 +402,7 @@
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>本文依据父组件传递、子组件接收、子组件渲染这样一个流程讲解了 props 渲染过程。也解析了通过特定的语法，可以在子组件内触发父组件属性的更新，进而更新 prop 的原理。</p>
 
             </div>
+            <div>👀 文中如有错误，还请留言指出，谢谢！❤</div>
             <hr>
             <div>
               <div class="post-metas mb-3">
@@ -434,7 +435,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/05/03/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/Vue%20%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E9%99%90%E5%88%B6%E5%8F%8A%E7%9B%B8%E5%BA%94%E5%A4%84%E7%90%86%E5%8A%9E%E6%B3%95/">
+                      <a href="/2021/06/07/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/Vue%20%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E9%99%90%E5%88%B6%E5%8F%8A%E7%9B%B8%E5%BA%94%E5%A4%84%E7%90%86%E5%8A%9E%E6%B3%95/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Vue 检测变化的限制及相应处理办法</span>
                         <span class="visible-mobile">上一篇</span>
@@ -444,7 +445,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/04/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/computed%20%E7%9A%84%5B%E6%80%AA%E5%BC%82%5D%E8%A1%A8%E7%8E%B0/">
+                      <a href="/2021/05/12/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/computed%20%E7%9A%84%5B%E6%80%AA%E5%BC%82%5D%E8%A1%A8%E7%8E%B0/">
                         <span class="hidden-mobile">computed 的[怪异]表现</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>

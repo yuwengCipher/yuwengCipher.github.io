@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  
+  <title>简单说说 Vue diff 算法 - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/docsmall/wallhaven-md6q29.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="简单说说 Vue diff 算法">
+              
+                简单说说 Vue diff 算法
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+      
+        <span class="post-meta">
+          <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+          <time datetime="2021-06-25" pubdate>
+            发表于 2021-06-25
+          </time>
+        </span>
+        
+</div>
+
+<div class="mt-1">
+  
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k
+             字
+      </span>
+      
+
+        
+          
+            <span class="post-meta mr-2">
+              <i class="iconfont icon-clock-fill"></i>
+              
+                
+                  35
+                     分钟
+            </span>
+            
+
+              
+                
+                  
+                    <!-- LeanCloud 统计文章PV -->
+                    <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+                      <i class="iconfont icon-eye" aria-hidden="true"></i>
+                      <span id="leancloud-page-views"></span>
+                         次
+                    </span>
+                    
+                        
+</div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">简单说说 Vue diff 算法</h1>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>diff 针对的目标是 vnode 即 virtual dom。那为什么需要 vnode 呢？根本目的不是为了节约 DOM 操作的性能开销，而是可以多端使用。如果根标签下只有一个文本，我直接使用原生方法去操作 DOM 肯定是要比使用 vnode 更好的，因此说 vnode 节约性能开销还是会需要基于内容多少去谈。vnode 是字符串模板经过 AST 转换，再到 render 函数转换，最后由 render 函数生成的，那么就可以用于服务端，由服务端去创建 html 并返回给客服端使用。</p>
+<p>在<a href="https://djacipher.cn/2021/04/19/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%A8%A1%E6%9D%BF%E6%80%8E%E4%B9%88%E5%8F%98%E6%88%90%E7%9C%9F%E5%AE%9EDOM/" target="_blank" rel="noopener">模板怎么变成真实DOM</a>篇中，我们将侧重点放在了整个渲染流程，关注的是初始渲染。那这一篇就来看看当页面更新渲染时发生的 patchVnode，以及涉及到的 diff 算法。</p>
+<p>修改 demo 如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// html</span><br>&lt;div id=<span class="hljs-string">"demo"</span>&gt;<br>	&lt;ul&gt;<br>		&lt;li v-<span class="hljs-keyword">for</span>=<span class="hljs-string">"(branch, index) in branches"</span>&gt;&#123;&#123;branch&#125;&#125;&lt;<span class="hljs-regexp">/li&gt;</span><br><span class="hljs-regexp">	&lt;/u</span>l&gt;<br>&lt;<span class="hljs-regexp">/div&gt;</span><br><span class="hljs-regexp"></span><br><span class="hljs-regexp">/</span><span class="hljs-regexp">/ js</span><br><span class="hljs-regexp">data: &#123;</span><br><span class="hljs-regexp">	branches: ['A', 'B', 'C', 'D'],</span><br><span class="hljs-regexp">&#125;,</span><br><span class="hljs-regexp">mounted () &#123;</span><br><span class="hljs-regexp">	setTimeout(() =&gt; &#123;</span><br><span class="hljs-regexp">		this.branches = ['A', 'E', 'B', 'F', 'C', 'D']</span><br><span class="hljs-regexp">	&#125;, 1000)</span><br><span class="hljs-regexp">&#125;,</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="patchVnode"><a href="#patchVnode" class="headerlink" title="patchVnode"></a>patchVnode</h2><p>跟初次渲染走 createElm 分支不同的是，更新渲染执行的是 patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">patchVnode</span> (<span class="hljs-params">oldVnode, vnode, insertedVnodeQueue, ownerArray, index, removeOnly</span>) </span>&#123;<br>	<span class="hljs-comment">// 省略</span><br>	<span class="hljs-keyword">var</span> oldCh = oldVnode.children;<br>	<span class="hljs-keyword">var</span> ch = vnode.children;<br>	<span class="hljs-keyword">if</span> (isUndef(vnode.text)) &#123;<br>		<span class="hljs-keyword">if</span> (isDef(oldCh) &amp;&amp; isDef(ch)) &#123;<br>			<span class="hljs-keyword">if</span> (oldCh !== ch) &#123; updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly); &#125;<br>		&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isDef(ch)) &#123;<br>			&#123;<br>				checkDuplicateKeys(ch);<br>			&#125;<br>			<span class="hljs-keyword">if</span> (isDef(oldVnode.text)) &#123; nodeOps.setTextContent(elm, <span class="hljs-string">''</span>); &#125;<br>			addVnodes(elm, <span class="hljs-literal">null</span>, ch, <span class="hljs-number">0</span>, ch.length - <span class="hljs-number">1</span>, insertedVnodeQueue);<br>		&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isDef(oldCh)) &#123;<br>			removeVnodes(oldCh, <span class="hljs-number">0</span>, oldCh.length - <span class="hljs-number">1</span>);<br>		&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isDef(oldVnode.text)) &#123;<br>			nodeOps.setTextContent(elm, <span class="hljs-string">''</span>);<br>		&#125;<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (oldVnode.text !== vnode.text) &#123;<br>		nodeOps.setTextContent(elm, vnode.text);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们省略掉不重要的处理之后，剩下的就是需要关注的重点。</p>
+<p>依据新 vnode.text 是否存在分为两种情况进行处理。如果存在 vnode.text 意味着当前 vnode 就是文本类型，那么只需在判断 oldVnode 与 vnode 文本不相等之后重新更新 text 就行。如果 vnode.text 不存在又分为多种情况。</p>
+<p>第一种：oldCh 与 ch 都存在并且它们不相等，调用 updateChildren 处理 oldCh 与 ch。<br>第二种：只存在 ch，说明是新增加的 child。</p>
+<ul>
+<li>首先检查 child 的 children 的 key 是否重复</li>
+<li>如果 oldVnode.text 存在，则需将 elm 的文本内容赋值为空字符串</li>
+<li>最后调用 addVnodes 将 ch 添加到 elm 中<br>第三种：只存在 oldCh, 说明该 oldCh 需要被删除掉，所以调用 removeVnodes 执行删除操作<br>第四种：oldCh 与 ch 都不存在，但是 oldVnode.text 存在，那么也是会将 elm 的文本内容赋值为空字符串</li>
+</ul>
+<p>接下来我们来看看 updateChildren 是如何处理 children 的。</p>
+<h2 id="diff"><a href="#diff" class="headerlink" title="diff"></a>diff</h2><p>当 newVnode 拥有 children 并且当 oldCh 和 ch 不相等时，这时就会执行 updateChildren 对 oldCh 和 ch 进行 diff 操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateChildren</span> (<span class="hljs-params">parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly</span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> oldStartIdx = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">var</span> newStartIdx = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">var</span> oldEndIdx = oldCh.length - <span class="hljs-number">1</span>;<br>	<span class="hljs-keyword">var</span> oldStartVnode = oldCh[<span class="hljs-number">0</span>];<br>	<span class="hljs-keyword">var</span> oldEndVnode = oldCh[oldEndIdx];<br>	<span class="hljs-keyword">var</span> newEndIdx = newCh.length - <span class="hljs-number">1</span>;<br>	<span class="hljs-keyword">var</span> newStartVnode = newCh[<span class="hljs-number">0</span>];<br>	<span class="hljs-keyword">var</span> newEndVnode = newCh[newEndIdx];<br>	<span class="hljs-keyword">var</span> oldKeyToIdx, idxInOld, vnodeToMove, refElm;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这部分是 diff 操作的准备工作。对于新旧 vnode，分别有各自的 startIdx、endIdx、startVnode、endVnode。</p>
+<p>然后就开始真正的 diff 过程。通过 while 循环来按照一定的规则比对新旧 vnode，最后执行新增、更新或者移除操作。比对的顺序是从两端向中间移动，这些规则分为7种情况。</p>
+<p>另外为了表述的简洁，我在这里将 startIdx 向右移动一位并且 startVnode 重新指向这个 vnode 称为 startVnode 右进一位，将 endIdx 向左移动一位并且 endVnode 重新指向这个 vnode 称为 endVnode 左进一位。</p>
+<h3 id="diff-情形"><a href="#diff-情形" class="headerlink" title="diff 情形"></a>diff 情形</h3><h4 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (isUndef(oldStartVnode)) &#123;<br>	oldStartVnode = oldCh[++oldStartIdx];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 oldStartVnode 不存在，oldStartVnode 右进一位。</p>
+<h4 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (isUndef(oldEndVnode)) &#123;<br>	oldEndVnode = oldCh[--oldEndIdx];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 oldEndVnode 不存在，oldEndVnode 左进一位。</p>
+<h4 id="第三种"><a href="#第三种" class="headerlink" title="第三种"></a>第三种</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (sameVnode(oldStartVnode, newStartVnode)) &#123;<br>	patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx);<br>	oldStartVnode = oldCh[++oldStartIdx];<br>	newStartVnode = newCh[++newStartIdx];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>进入这一分支，说明 oldStartVnode 和 newStartVnode 都存在，那么就会比较他们是否是同一个 vnode。那什么情况是 sameVnode 呢？看看它是如何判断的吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sameVnode</span> (<span class="hljs-params">a, b</span>) </span>&#123;<br>	<span class="hljs-keyword">return</span> (<br>		a.key === b.key &amp;&amp;<br>		a.asyncFactory === b.asyncFactory &amp;&amp; (<br>			(<br>				a.tag === b.tag &amp;&amp;<br>				a.isComment === b.isComment &amp;&amp;<br>				isDef(a.data) === isDef(b.data) &amp;&amp;<br>				sameInputType(a, b)<br>			) || (<br>				isTrue(a.isAsyncPlaceholder) &amp;&amp;<br>				isUndef(b.asyncFactory.error)<br>			)<br>		)<br>	)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以里面涉及到许多属性的判断，在这里就不具体去说了。为了便于理解，依据我们当前 demo 来说，就是判断 key 是否相等。</p>
+<p>由于我们没有设置 key 属性，因此这里的以及后面的 sameVnode 判断都默认为 true。</p>
+<p>判断通过后，就调用 patchVnode 处理 oldStartVnode 和 newStartVnode。处理完成后，oldStartVnode 和 newStartVnode 都右进一位。</p>
+<h4 id="第四种"><a href="#第四种" class="headerlink" title="第四种"></a>第四种</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (sameVnode(oldEndVnode, newEndVnode)) &#123;<br>	patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx);<br>	oldEndVnode = oldCh[--oldEndIdx];<br>	newEndVnode = newCh[--newEndIdx];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 oldEndVnode 和 newEndVnode 是同一个 vnode，同样使用 patchVnode 处理它们，完成后 oldEndVnode 和 newEndVnode 都左进一位。</p>
+<h4 id="第五种"><a href="#第五种" class="headerlink" title="第五种"></a>第五种</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (sameVnode(oldStartVnode, newEndVnode)) &#123;<br>	patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx);<br>	canMove &amp;&amp; nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm));<br>	oldStartVnode = oldCh[++oldStartIdx];<br>	newEndVnode = newCh[--newEndIdx];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>进入这一分支，说明 oldStartVnode 与 newStartVnode 不相等并且 oldEndVnode 与 newEndVnode 也不相等。那么此时需要将 oldStartVnode 与 newEndVnode 进行比较，这样比较的原因是考虑到一种情况，那就是原来旧 vnode 中的某一项在新 node 树中位置向右移动了，那么就不用进行移除和新增 dom，而只需要移动 dom 就行，节约了移除和新增的新能开销。</p>
+<p>处理完成后，oldStartVnode 向右进一位，newEndVnode 向左进一位。</p>
+<h4 id="第六种"><a href="#第六种" class="headerlink" title="第六种"></a>第六种</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (sameVnode(oldEndVnode, newStartVnode)) &#123;<br>	patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx);<br>	canMove &amp;&amp; nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm);<br>	oldEndVnode = oldCh[--oldEndIdx];<br>	newStartVnode = newCh[++newStartIdx];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这一种与上面说的情况相反，考虑的是原来旧 vnode 中的某一项在新 node 树中位置向左移动了，因此处理 oldEndVnode 和 newStartVnode。</p>
+<p>处理完成后，newStartVnode 向右进一位，oldEndVnode 向左进一位。</p>
+<h4 id="第七种"><a href="#第七种" class="headerlink" title="第七种"></a>第七种</h4><p>进入这个分支，说明新旧 vnode 树前后都不相等。我们来看看它是如何处理这种情况的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (isUndef(oldKeyToIdx)) &#123; oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx); &#125;<br>idxInOld = isDef(newStartVnode.key)<br>	? oldKeyToIdx[newStartVnode.key]<br>	: findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx);<br></code></pre></td></tr></table></figure>
+
+<p>oldKeyToIdx 是未处理 oldVnode 在 oldCh 中的位置信息，比如说现在就剩 B 没有处理，并且都设置了 key 为自身，如下所示</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">"(branch, index) in branches"</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">"branch"</span>&gt;</span>&#123;&#123;branch&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>那么 oldKeyToIdx 就像这样</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">oldKeyToIdx = &#123;<br>	B: <span class="hljs-number">1</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对象集合中的 key 是 Vnode.key，value 是在 oldCh 中的下标。</p>
+<p>然后就是获取 newStartVnode 在 oldCh 里的位置下标，分为两种情况。一是如果 newStartVnode.key 存在，那么就拿这个 key 去 oldKeyToIdx 匹配；二是 newStartVnode.key 不存在，调用 findIdxInOld 去寻找下标。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (isUndef(idxInOld)) &#123;<br>	createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, <span class="hljs-literal">false</span>, newCh, newStartIdx);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>	vnodeToMove = oldCh[idxInOld];<br>	<span class="hljs-keyword">if</span> (sameVnode(vnodeToMove, newStartVnode)) &#123;<br>		patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue, newCh, newStartIdx);<br>		oldCh[idxInOld] = <span class="hljs-literal">undefined</span>;<br>		canMove &amp;&amp; nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, <span class="hljs-literal">false</span>, newCh, newStartIdx);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>到这里就可以拿到 idxInOld 了。接下来就分两种情况进行操作了：</p>
+<ul>
+<li>如果 idxInOld 不存在，说明 newStartVnode 是新增的，那么就调用 createElm 创建新 DOM 并插入 DOM；</li>
+<li>如果 idxInOld 存在，就在 oldCh 中找到这个下标的 vnode，赋值给 vnodeToMove。<ul>
+<li>如果 vnodeToMove 与 newStartVnode 相等，则调用 patchVnode 处理它们。处理完成后，将 oldCh[idxInOld] 赋值为 undefined，然后执行移动操作。</li>
+<li>如果不相等，说明它们的 key 相同，但由于是不同的 elm，那么也还是按照新增处理，调用 createElm 方法。</li>
+</ul>
+</li>
+</ul>
+<p>上面的处理完成后，newStartVnode 向右进一位。</p>
+<h4 id="新增或是移除"><a href="#新增或是移除" class="headerlink" title="新增或是移除"></a>新增或是移除</h4><p>两棵 vnode tree 如下：</p>
+<p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/patch_tree.png" srcset="/img/loading.gif" lazyload alt="patch_tree"></p>
+<p>理想状态是经过上述7种情况的处理，如果新旧 vnode 的数量是一样的，那么 oldCh 和 ch 都会同时处理完成。但是按照文章开头设置的 dmeo 来执行的话，最后会剩下 C、D 两个节点没有处理，那么就会执行新增操作。如果将例子相反设置，那么 E、F 就会被执行移除操作。</p>
+<p>相信你发现了一个问题，那就是处理 C、D 的新增操作其实是不必要的，因为它们本来就在 oldCh 中存在，我们只需要复用就行了。那是什么原因导致没有按照设想的步骤来执行的呢？</p>
+<h3 id="diff-过程"><a href="#diff-过程" class="headerlink" title="diff 过程"></a>diff 过程</h3><p>在上面的 demo 中，我们在用 v-for 渲染列表时并没有添加 key 属性。也就是因为没有设置 key，在比较 sameVnode 时 由于 undefined === undefined，sameVnode() 一直为 true，所以才会一直执行第三种情况，自始至终都是都是从头向尾进行 patch。</p>
+<p>由于 oldCh 长度大于 ch，当 ch 处理完之后，oldCh 还剩两项，进入下一轮比较时，oldStartIndx(4) &gt; oldEndIndx(3)，就会跳出循环，执行 addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)。其中 newStartIdx = 3，newEndIdx = 5，它们的中间就是 C 和 D 所对应的 li vnode，那么这两个 vnode 就会被拿去创建成 DOM。</p>
+<p>我们都知道官方提醒我们在使用 v-for 渲染列表时要给每一项都设置独一无二的 key，这是为什么呢？因为独一无二的 key 可以匹配真正相同的 vnode，过滤假的相同。这句话怎么理解呢？</p>
+<p>我们先给每一项都设置 key 为 index，如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">"(branch, index) in branches"</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">"index"</span>&gt;</span>&#123;&#123;branch&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>按理说一个列表中的 index 是不可能相等的，但是如果按照 sameVnode 的判断逻辑来说，B 所对应的 li 与 E 所对应的 li 依然还是相同的，因为它们所处的位置下标都是1，那么 key 都是 1，因此 key 设置成 index 是无效的。</p>
+<p>如果我们把 key 设置成 branch，B 和 E 是不可能相等的，那么就过滤掉了这个假相同，达到了我们的目的。因此我们平时在写业务代码时可以把 key 设置成 id。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">"(branch, index) in branches"</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">"branch"</span>&gt;</span>&#123;&#123;branch&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>按照前后顺序进行处理，当新旧树中相同部分的 A、C、D 被处理结束后，就剩如下所示：</p>
+<p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/diff_1.png" srcset="/img/loading.gif" lazyload alt="步骤"></p>
+<p>此时就会进入第七种情况处理 E。去获取 E 在 oldCh 中的下标，因为 oldCh 不存在 E，所以 idxInOld = undefined，那么就当做新 elm，做新增处理，它在 ch 中的位置下标为 1，那么就会插入到下标为1的位置。</p>
+<p>然后进入第三种情况处理 B。处理完之后只剩下 F，又会被当做新 elm，做新增处理，它在 ch 中的位置下标为 3，插入到下标为3的位置。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这篇文章从源码的角度简单讲述了 Vue diff 的过程，目的是对 diff 原理有一个大框架上的理解。</p>
+
+            </div>
+            <div>👀 文中如有错误，还请留言指出，谢谢！❤</div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/07/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/Vue%20%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E9%99%90%E5%88%B6%E5%8F%8A%E7%9B%B8%E5%BA%94%E5%A4%84%E7%90%86%E5%8A%9E%E6%B3%95/">
+                        <span class="hidden-mobile">Vue 检测变化的限制及相应处理办法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+          app_key: "uSkOsleUpcvIJyb31MudM4dS",
+          placeholder: "说点啥吧~",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
