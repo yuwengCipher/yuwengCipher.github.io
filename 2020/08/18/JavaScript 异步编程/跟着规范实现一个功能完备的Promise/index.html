@@ -340,8 +340,7 @@
 <p>#在代码里加上这段</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js">MyPromise.deferred = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">const</span> defer = &#123;&#125;;<br>    defer.promise = <span class="hljs-keyword">new</span> MyPromise(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;<br>        defer.resolve = resolve;<br>        defer.reject = reject;<br>    &#125;)<br>    <span class="hljs-keyword">return</span> defer;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>#最后</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">promises-aplus-tests promise.js<br></code></pre></td></tr></table></figure>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">promises-aplus-tests promise.js<br></code></pre></td></tr></table></figure>
 
 <p>有一点需要注意：我在实现 promise 内部异步执行时采用的是 setTimeout，而 promise 的 then 方法是一个微任务这与实际有出入。不过用于理解其中的异步理念已经足够了。追求完美的同学可自行实现不同的版本。</p>
 <p>完整代码地址：<a href="https://github.com/yuwengCipher/MyPromise" target="_blank" rel="noopener">https://github.com/yuwengCipher/MyPromise</a></p>

@@ -188,7 +188,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.7k
+          2.8k
              字
       </span>
       
@@ -199,7 +199,7 @@
               <i class="iconfont icon-clock-fill"></i>
               
                 
-                  35
+                  36
                      分钟
             </span>
             
@@ -329,7 +329,11 @@
 <p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/diff_1.png" srcset="/img/loading.gif" lazyload alt="步骤"></p>
 <p>此时就会进入第七种情况处理 E。去获取 E 在 oldCh 中的下标，因为 oldCh 不存在 E，所以 idxInOld = undefined，那么就当做新 elm，做新增处理，它在 ch 中的位置下标为 1，那么就会插入到下标为1的位置。</p>
 <p>然后进入第三种情况处理 B。处理完之后只剩下 F，又会被当做新 elm，做新增处理，它在 ch 中的位置下标为 3，插入到下标为3的位置。</p>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这篇文章从源码的角度简单讲述了 Vue diff 的过程，目的是对 diff 原理有一个大框架上的理解。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>这篇文章从源码的角度简单讲述了 Vue diff 的过程，目的是对 diff 原理有一个大框架上的理解。简单总结一下：</p>
+<ol>
+<li>diff 采用的策略是从两头往中间进行 diff patch</li>
+<li>新旧树中存在多个相同 vnode，只是位置不同时，设置独一无二的 key 有助于减少创建 DOM 带来的性能消耗</li>
+</ol>
 
             </div>
             <div>👀 文中如有错误，还请留言指出，谢谢！❤</div>
@@ -364,6 +368,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/07/18/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%8E%A2%E5%AF%BB%20slot%20%E7%9A%84%E5%A5%A5%E7%A7%98/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">探寻 slot 的奥秘</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

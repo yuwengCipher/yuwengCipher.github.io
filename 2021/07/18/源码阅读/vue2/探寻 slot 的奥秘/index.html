@@ -1,0 +1,664 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  
+  <title>探寻 slot 的奥秘 - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/docsmall/wallhaven-md6q29.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="探寻 slot 的奥秘">
+              
+                探寻 slot 的奥秘
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+      
+        <span class="post-meta">
+          <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+          <time datetime="2021-07-18" pubdate>
+            发表于 2021-07-18
+          </time>
+        </span>
+        
+</div>
+
+<div class="mt-1">
+  
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k
+             字
+      </span>
+      
+
+        
+          
+            <span class="post-meta mr-2">
+              <i class="iconfont icon-clock-fill"></i>
+              
+                
+                  60
+                     分钟
+            </span>
+            
+
+              
+                
+                  
+                    <!-- LeanCloud 统计文章PV -->
+                    <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+                      <i class="iconfont icon-eye" aria-hidden="true"></i>
+                      <span id="leancloud-page-views"></span>
+                         次
+                    </span>
+                    
+                        
+</div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">探寻 slot 的奥秘</h1>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>slot 思想借鉴于 Web Component，使用 <slot> 为内容提供一个占位符，然后我们就可以往里面填充自定义内容。slot 有不同的用法形式，官方文档也有详细说明，因此本篇不是来讲解用法的，我们的任务是弄明白 slot 工作的原理。</p>
+<p>由于 slot 的用法有很多种，每一种涉及的情形和处理也不同，但基本原理是相同的，所以本篇只会讲解 具名插槽 named slots 和 作用域插槽 scoped slots。</p>
+<p>开始之前，需提前查看 <a href="https://djacipher.cn/2021/04/19/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%A8%A1%E6%9D%BF%E6%80%8E%E4%B9%88%E5%8F%98%E6%88%90%E7%9C%9F%E5%AE%9EDOM/" target="_blank" rel="noopener">模板怎么变成真实DOM</a> 了解 Vue 大致的渲染流程，在这篇中，transform 步骤讲的是 AST 如何转变为 render 字符串，涉及到的 genELement 方法中会使用 genSlot 处理 slot。</p>
+<h2 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a>具名插槽</h2><p>我们将 demo 修改为如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// html</span><br>&lt;div id=<span class="hljs-string">"demo"</span>&gt;<br>	&lt;Child&gt;<br>		&lt;template v-slot:<span class="hljs-keyword">default</span>&gt;&#123;&#123;branches[<span class="hljs-number">0</span>]&#125;&#125;&lt;<span class="hljs-regexp">/template&gt;</span><br><span class="hljs-regexp">	&lt;/</span>Child&gt;<br>&lt;<span class="hljs-regexp">/div&gt;</span><br><span class="hljs-regexp"></span><br><span class="hljs-regexp">/</span><span class="hljs-regexp">/ js</span><br><span class="hljs-regexp">Vue.component("Child", &#123;</span><br><span class="hljs-regexp">	template: '&lt;p&gt;&lt;slot&gt;&lt;/</span>slot&gt;&lt;<span class="hljs-regexp">/p&gt;'</span><br><span class="hljs-regexp">&#125;)</span><br><span class="hljs-regexp">new Vue(&#123;</span><br><span class="hljs-regexp">	data: &#123;</span><br><span class="hljs-regexp">		branches: ['A', 'B']</span><br><span class="hljs-regexp">	&#125;</span><br><span class="hljs-regexp">&#125;)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="genSlot"><a href="#genSlot" class="headerlink" title="genSlot"></a>genSlot</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">genSlot</span> (<span class="hljs-params">el, state</span>) </span>&#123;<br>	<span class="hljs-comment">// 获取 slotName，默认为 default</span><br>	<span class="hljs-keyword">var</span> slotName = el.slotName || <span class="hljs-string">'"default"'</span>;<br>	<span class="hljs-keyword">var</span> children = genChildren(el, state);<br>	<span class="hljs-keyword">var</span> res = <span class="hljs-string">"_t("</span> + slotName + (children ? (<span class="hljs-string">",function()&#123;return "</span> + children + <span class="hljs-string">"&#125;"</span>) : <span class="hljs-string">''</span>);<br>	<span class="hljs-comment">// 省略</span><br>	<span class="hljs-keyword">return</span> res + <span class="hljs-string">')'</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>genSlot 就是将 AST 中的 slot 属性包装成 render 字符串，render 函数中使用 _t 方法渲染 slot 属性。此 demo 的 render 函数字符串为</p>
+<blockquote>
+<p>_t(“default”)</p>
+</blockquote>
+<p>_t 指向 renderSlot 方法，它最终返回 vnodes。</p>
+<h3 id="renderSlot"><a href="#renderSlot" class="headerlink" title="renderSlot"></a>renderSlot</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderSlot</span> (<span class="hljs-params">name, fallbackRender, props, bindObject</span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> scopedSlotFn = <span class="hljs-keyword">this</span>.$scopedSlots[name];<br>	<span class="hljs-comment">// 省略</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里面需要用到 this.$scopedSlots，而 this.$scopedSlots 是在 Vue.prototype._render 函数内部执行 normalizeScopedSlots() 得到的</p>
+<h3 id="normalizeScopedSlots"><a href="#normalizeScopedSlots" class="headerlink" title="normalizeScopedSlots"></a>normalizeScopedSlots</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">this</span>;<br><span class="hljs-keyword">var</span> ref = vm.$options;<br><span class="hljs-keyword">var</span> render = ref.render;<br><span class="hljs-keyword">var</span> _parentVnode = ref._parentVnode;<br><br><span class="hljs-keyword">if</span> (_parentVnode) &#123;<br>	vm.$scopedSlots = normalizeScopedSlots(<br>		_parentVnode.data.scopedSlots,<br>		vm.$slots,<br>		vm.$scopedSlots<br>	);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里面又涉及到几个属性，在说明之前，需要搞清楚子组件一个大概的处理流程：</p>
+<p>首先在父组件页面，对 Child 组件使用 _c 方法处理，会创建它的 vnode，创建代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> vnode = <span class="hljs-keyword">new</span> VNode(<br>	(<span class="hljs-string">"vue-component-"</span> + (Ctor.cid) + (name ? (<span class="hljs-string">"-"</span> + name) : <span class="hljs-string">''</span>)),<br>	data, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, context,<br>	&#123; <span class="hljs-attr">Ctor</span>: Ctor, <span class="hljs-attr">propsData</span>: propsData, <span class="hljs-attr">listeners</span>: listeners, <span class="hljs-attr">tag</span>: tag, <span class="hljs-attr">children</span>: children &#125;,<br>	asyncFactory<br>)<br></code></pre></td></tr></table></figure>
+
+<p>最后一个对象会作为 componentOptions 传入，Ctor 是构造函数 VueComponent ，children 是 {{branches[0]}}。</p>
+<p>然后就需要渲染子组件本身了，调用的方法就是创建组件的构造函数，也就是执行 new vnode.componentOptions.Ctor(options)，然后在内部就会调用 _init(options)。入参 options 如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> options = &#123;<br>	_isComponent: <span class="hljs-literal">true</span>,<br>	_parentVnode: vnode,<br>	parent: parent<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>options._parentVnode 就是 Child vnode。</p>
+<p>知道了这个处理流程后，下面逐个说明 normalizeScopedSlots 入参：</p>
+<ul>
+<li>_parentVnode 就是 Child vnode，那 data.scopedSlots 是被 Child 组件包裹的 slot 属性，这个后面会具体说。</li>
+<li>另外两个参数 vm.$slots 和 vm.$scopedSlots 初始定义在 initRender 方法里。</li>
+</ul>
+<h3 id="initRender"><a href="#initRender" class="headerlink" title="initRender"></a>initRender</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 省略</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initRender</span> (<span class="hljs-params">vm</span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> options = vm.$options;<br>	<span class="hljs-comment">// parentVnode 就是子组件在父组件中的占位符，也就是 Child 组件</span><br>	<span class="hljs-keyword">var</span> parentVnode = vm.$vnode = options._parentVnode;<br>	<span class="hljs-comment">// context 就是 vue</span><br>	<span class="hljs-keyword">var</span> renderContext = parentVnode &amp;&amp; parentVnode.context;<br>	vm.$slots = resolveSlots(options._renderChildren, renderContext);<br>	vm.$scopedSlots = emptyObject;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>vm.$scopedSlots 默认是一个空对象。vm.$slots 是执行 resolveSlots 方法得到的。这里需要弄清楚 _renderChildren 是什么</p>
+<p>由于 Child 是 component，所以在调用 _init(options) 初始化时执行的是 initInternalComponent(vm, options)，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// initInternalComponent</span><br><span class="hljs-comment">// 省略</span><br><span class="hljs-keyword">var</span> opts = vm.$options = <span class="hljs-built_in">Object</span>.create(vm.constructor.options);<br><span class="hljs-keyword">var</span> parentVnode = options._parentVnode;<br><span class="hljs-keyword">var</span> vnodeComponentOptions = parentVnode.componentOptions;<br>opts._renderChildren = vnodeComponentOptions.children;<br></code></pre></td></tr></table></figure>
+
+<p>vnodeComponentOptions.children 指的是 Child 组件在父组件中得占位 vnode，在这里就是  所对应的 vnode。</p>
+<p>那现在我们来看看 resolveSlots([vnode], vm) 的执行结果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveSlots</span> (<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params">	children,</span></span><br><span class="hljs-function"><span class="hljs-params">	context</span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (!children || !children.length) &#123;<br>		<span class="hljs-keyword">return</span> &#123;&#125;<br>	&#125;<br>	<span class="hljs-keyword">var</span> slots = &#123;&#125;;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, l = children.length; i &lt; l; i++) &#123;<br>		<span class="hljs-keyword">var</span> child = children[i];<br>		<span class="hljs-keyword">var</span> data = child.data;<br>		<span class="hljs-keyword">if</span> (data &amp;&amp; data.attrs &amp;&amp; data.attrs.slot) &#123;<br>			<span class="hljs-keyword">delete</span> data.attrs.slot;<br>		&#125;<br>		<span class="hljs-keyword">if</span> ((child.context === context || child.fnContext === context) &amp;&amp;<br>			data &amp;&amp; data.slot != <span class="hljs-literal">null</span><br>		) &#123;<br>			<span class="hljs-keyword">var</span> name = data.slot;<br>			<span class="hljs-keyword">var</span> slot = (slots[name] || (slots[name] = []));<br>			<span class="hljs-keyword">if</span> (child.tag === <span class="hljs-string">'template'</span>) &#123;<br>				slot.push.apply(slot, child.children || []);<br>			&#125; <span class="hljs-keyword">else</span> &#123;<br>				slot.push(child);<br>			&#125;<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			(slots.default || (slots.default = [])).push(child);<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> slots<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先创建一个声明式对象 slots，如果 children 存在，那么就会去遍历 children</p>
+<ul>
+<li>如果 child vnode 是作为 slot，那么就要删除 data.attrs.slot</li>
+<li>如果 存在多个 named slot，只有与 Child 组件存在于同一个上下文才会去将 child 存入 slots[name] 中</li>
+<li>否则就将 child 存入 slots[default] 中</li>
+</ul>
+<p>由于文本 vnode 不存在 data 属性，因此这里会进入最后一个分支，为 slots 添加 default 数组并将 vnode 存入，即 slots = {default: [vnode]}</p>
+<p>弄明白了这些之后，我们再回过头来看看 normalizeScopedSlots。</p>
+<p>它有三个参数，第一个 slots 是上面的 _parentVnode.data.scopedSlots，值是 undefined；第二个 normalSlots 是 resolveSlots() 的值 slots；第三个参数 vm.$scopedSlots 是一个空对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">normalizeScopedSlots</span> (<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params">	slots,</span></span><br><span class="hljs-function"><span class="hljs-params">	normalSlots,</span></span><br><span class="hljs-function"><span class="hljs-params">	prevSlots</span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> res;<br>	<span class="hljs-keyword">var</span> hasNormalSlots = <span class="hljs-built_in">Object</span>.keys(normalSlots).length &gt; <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">var</span> isStable = slots ? !!slots.$stable : !hasNormalSlots;<br>	<span class="hljs-keyword">var</span> key = slots &amp;&amp; slots.$key;<br>	<span class="hljs-keyword">if</span> (!slots) &#123;<br>		res = &#123;&#125;;<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (slots._normalized) &#123;<br>		<span class="hljs-keyword">return</span> slots._normalized<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<br>		isStable &amp;&amp;<br>		prevSlots &amp;&amp;<br>		prevSlots !== emptyObject &amp;&amp;<br>		key === prevSlots.$key &amp;&amp;<br>		!hasNormalSlots &amp;&amp;<br>		!prevSlots.$hasNormal<br>	) &#123;<br>		<span class="hljs-keyword">return</span> prevSlots<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		res = &#123;&#125;;<br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key$<span class="hljs-number">1</span> <span class="hljs-keyword">in</span> slots) &#123;<br>			<span class="hljs-keyword">if</span> (slots[key$<span class="hljs-number">1</span>] &amp;&amp; key$<span class="hljs-number">1</span>[<span class="hljs-number">0</span>] !== <span class="hljs-string">'$'</span>) &#123;<br>				res[key$<span class="hljs-number">1</span>] = normalizeScopedSlot(normalSlots, key$<span class="hljs-number">1</span>, slots[key$<span class="hljs-number">1</span>]);<br>			&#125;<br>		&#125;<br>	&#125;<br>	<span class="hljs-comment">// expose normal slots on scopedSlots</span><br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key$<span class="hljs-number">2</span> <span class="hljs-keyword">in</span> normalSlots) &#123;<br>		<span class="hljs-keyword">if</span> (!(key$<span class="hljs-number">2</span> <span class="hljs-keyword">in</span> res)) &#123;<br>			res[key$<span class="hljs-number">2</span>] = proxyNormalSlot(normalSlots, key$<span class="hljs-number">2</span>);<br>		&#125;<br>	&#125;<br>	def(res, <span class="hljs-string">'$stable'</span>, isStable);<br>	def(res, <span class="hljs-string">'$key'</span>, key);<br>	def(res, <span class="hljs-string">'$hasNormal'</span>, hasNormalSlots);<br>	<span class="hljs-keyword">return</span> res<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>由于 slots 不存在，那么 res = {}，然后遍历 normalSlots，为 res 添加 slot 属性：key 是 ‘default’，value 方法 proxyNormalSlot。最后是给 res 添加三个属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">proxyNormalSlot</span> (<span class="hljs-params">slots, key</span>) </span>&#123;<br>	<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-keyword">return</span> slots[key]; &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>返回的也是一个方法，这个方法执行结果就是返回对应 slotName 的 vnode，在这里就是 return slots[‘default’]。</p>
+<p>也就是说 $scopedSlots 是如下对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js">$scopedSlots = &#123;<br>	<span class="hljs-keyword">default</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; <span class="hljs-keyword">return</span> vnode&#125;,<br>	$stable: isStable,<br>	$key: key,<br>	$hasNormal: hasNormalSlots,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在 $scopedSlots 对象拿到了，那么在 renderSlot 内就可以通过 this.$scopedSlots[‘default’] 拿到对应的 vnode，后面就是进入正常的 DOM 创建流程了。</p>
+<p>以上，我们关注重点信息，梳理了 slot 内容是如何填充的过程，可以结合下图进行查看：</p>
+<p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/render%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload alt="render流程"></p>
+<h2 id="同名插槽"><a href="#同名插槽" class="headerlink" title="同名插槽"></a>同名插槽</h2><p>上面的例子中只有一个 default slot，假如存在多个同名插槽，会是一个什么样的结果呢？。</p>
+<p>将例子稍微改动如下：有2个相同的 default 和 b 插槽。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;div id=<span class="hljs-string">"demo"</span>&gt;<br>	&lt;Child&gt;<br>		&lt;template&gt;<span class="hljs-keyword">default</span>: &#123;&#123;branches[<span class="hljs-number">0</span>]&#125;&#125;&lt;<span class="hljs-regexp">/template&gt;&lt;br&gt;</span><br><span class="hljs-regexp">		&lt;template&gt;default: &#123;&#123;branches[1]&#125;&#125;&lt;/</span>template&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">br</span>&gt;</span></span><br>		&lt;template v-slot:b&gt;b: &#123;&#123;branches[1]&#125;&#125;&lt;/template&gt;&lt;br&gt;<br>		&lt;template v-slot:b&gt;b: &#123;&#123;branches[0]&#125;&#125;&lt;/template&gt;<br><span class="xml">	<span class="hljs-tag">&lt;/<span class="hljs-name">Child</span>&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><br><span class="hljs-comment">// js</span><br>Vue.component(<span class="hljs-string">"Child"</span>, &#123;<br>	template: <span class="hljs-string">'&lt;p&gt;&lt;slot&gt;&lt;/slot&gt;&lt;slot name="b"&gt;&lt;/slot&gt;&lt;/p&gt;'</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>经过 normalizeScopedSlots 处理之后，可以看到 $scopedSlots 是这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">$scopedSlots = &#123;<br>	b: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; <span class="hljs-keyword">return</span> vnode&#125;,<br>	<span class="hljs-keyword">default</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; <span class="hljs-keyword">return</span> vnode&#125;,<br>	$stable: isStable,<br>	$key: key,<br>	$hasNormal: hasNormalSlots,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但是页面显示为:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">default</span>: A<br><span class="hljs-keyword">default</span>: B<br><br>b: A<br></code></pre></td></tr></table></figure>
+
+<p>父组件的 AST 处理生成的 render 函数如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br><span class="hljs-keyword">with</span>(<span class="hljs-keyword">this</span>)&#123;<span class="hljs-keyword">return</span> _c(<span class="hljs-string">'div'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"demo"</span>&#125;&#125;,[_c(<span class="hljs-string">'child'</span>,&#123;<span class="hljs-attr">scopedSlots</span>:_u([&#123;<span class="hljs-attr">key</span>:<span class="hljs-string">"b"</span>,<span class="hljs-attr">fn</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-keyword">return</span> [_v(_s(branches[<span class="hljs-number">0</span>]))]&#125;,<span class="hljs-attr">proxy</span>:<span class="hljs-literal">true</span>&#125;])&#125;,[[_v(_s(branches[<span class="hljs-number">0</span>]))],_c(<span class="hljs-string">'br'</span>),_v(<span class="hljs-string">" "</span>),[_v(_s(branches[<span class="hljs-number">1</span>]))],_c(<span class="hljs-string">'br'</span>),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'br'</span>)],<span class="hljs-number">2</span>)],<span class="hljs-number">1</span>)&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>假如再修改成下面这样：为默认 template 添加了一个 v-slot:default</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;template&gt;<span class="hljs-keyword">default</span>: &#123;&#123;branches[<span class="hljs-number">0</span>]&#125;&#125;&lt;<span class="hljs-regexp">/template&gt;&lt;br&gt;</span><br><span class="hljs-regexp">&lt;template v-slot:default&gt;default: &#123;&#123;branches[1]&#125;&#125;&lt;/</span>template&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">br</span>&gt;</span></span><br>&lt;template v-slot:b&gt;b: &#123;&#123;branches[1]&#125;&#125;&lt;/template&gt;&lt;br&gt;<br>&lt;template v-slot:b&gt;b: &#123;&#123;branches[0]&#125;&#125;&lt;/template&gt;<br></code></pre></td></tr></table></figure>
+
+<p>页面显示为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">default</span>: Bb: A<br></code></pre></td></tr></table></figure>
+
+<p>父组件的 AST 处理生成的 render 函数如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br><span class="hljs-keyword">with</span>(<span class="hljs-keyword">this</span>)&#123;<span class="hljs-keyword">return</span> _c(<span class="hljs-string">'div'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"demo"</span>&#125;&#125;,[_c(<span class="hljs-string">'child'</span>,&#123;<span class="hljs-attr">scopedSlots</span>:_u([&#123;<span class="hljs-attr">key</span>:<span class="hljs-string">"default"</span>,<span class="hljs-attr">fn</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-keyword">return</span> [_v(<span class="hljs-string">"default: "</span>+_s(branches[<span class="hljs-number">1</span>]))]&#125;,<span class="hljs-attr">proxy</span>:<span class="hljs-literal">true</span>&#125;,&#123;<span class="hljs-attr">key</span>:<span class="hljs-string">"b"</span>,<span class="hljs-attr">fn</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-keyword">return</span> [_v(<span class="hljs-string">"b: "</span>+_s(branches[<span class="hljs-number">0</span>]))]&#125;,<span class="hljs-attr">proxy</span>:<span class="hljs-literal">true</span>&#125;])&#125;,[[_v(<span class="hljs-string">"default: "</span>+_s(branches[<span class="hljs-number">0</span>]))],_c(<span class="hljs-string">'br'</span>),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'br'</span>),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'br'</span>)],<span class="hljs-number">2</span>)],<span class="hljs-number">1</span>)&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>结合以上例子的不同结果，可以得出一个结论：默认插槽多个内容会合并显示，具名插槽会以最后一个内容显示，并且如果存在具名 default，那么默认插槽的内容就会被舍弃。</p>
+<p>那现在有两个问题，一个是同名具名插槽为什么会只保留最有一个？另一个是具名 default 为什么会导致默认 default 内容丢失？</p>
+<p>接下来我们先看看第一个问题。</p>
+<p>可以看到 Child 组件中具名插槽这一部分被当做 scopedSlots 存入 data 中进行处理，处理的方法是 _u，也就是 resolveScopedSlots。其他的则存入 children 中正常处理。那我们继续往前查看 AST tree。</p>
+<p>开始之前，需要了解一点，模板字符串是以标签为单位进行分隔处理的，每一对标签处理结束时会调用 closeElement 方法处理。</p>
+<p>步骤一：首先会执行 processElement 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (!inVPre &amp;&amp; !element.processed) &#123;<br>	element = processElement(element, options);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在它的内部执行 processSlotContent(element) 处理 slot，因为我们使用的新语法，所以只看下面这部分：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (el.tag === <span class="hljs-string">'template'</span>) &#123;<br>	<span class="hljs-keyword">var</span> slotBinding = getAndRemoveAttrByRegex(el, slotRE);<br>	<span class="hljs-keyword">if</span> (slotBinding) &#123;<br>		&#123;<br>			<span class="hljs-keyword">if</span> (el.slotTarget || el.slotScope) &#123;<br>				warn$<span class="hljs-number">2</span>(<br>					<span class="hljs-string">"Unexpected mixed usage of different slot syntaxes."</span>,<br>					el<br>				);<br>			&#125;<br>			<span class="hljs-keyword">if</span> (el.parent &amp;&amp; !maybeComponent(el.parent)) &#123;<br>				warn$<span class="hljs-number">2</span>(<br>					<span class="hljs-string">"&lt;template v-slot&gt; can only appear at the root level inside "</span> +<br>					<span class="hljs-string">"the receiving component"</span>,<br>					el<br>				);<br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">var</span> ref = getSlotName(slotBinding);<br>		<span class="hljs-keyword">var</span> name = ref.name;<br>		<span class="hljs-keyword">var</span> dynamic = ref.dynamic;<br>		el.slotTarget = name;<br>		el.slotTargetDynamic = dynamic;<br>		el.slotScope = slotBinding.value || emptySlotScopeToken;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在模板中的标签被处理时，标签上的属性会被存进 AST 中的 attrList 中，那么 v-slot 属性就会被存进去。getAndRemoveAttrByRegex(el, slotRE) 就是取出 slot 属性对象，然后就是为自身 AST 添加 slot 相关的 slotTarget、slotScope 等属性</p>
+<p>步骤二：为父 AST 添加 scopedSlots 属性。</p>
+<p>processElement 处理完成后，接着会执行下面这段逻辑：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (currentParent &amp;&amp; !element.forbidden) &#123;<br>	<span class="hljs-keyword">if</span> (element.elseif || element.else) &#123;<br>		processIfConditions(element, currentParent);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-keyword">if</span> (element.slotScope) &#123;<br>			<span class="hljs-keyword">var</span> name = element.slotTarget || <span class="hljs-string">'"default"'</span><br>				; (currentParent.scopedSlots || (currentParent.scopedSlots = &#123;&#125;))[name] = element;<br>		&#125;<br>		<span class="hljs-comment">// 省略</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>currentParent 是 Child，而且 template 标签中不存在 v-if 等指令，那么就会进入第二分支。</p>
+<p>element.slotScope 和 element.slotTarget 在 processElement 处理时已经加上了。首先将 element.slotTarget 也就是 slot 的名称赋值给 name。然后就是对 currentParent.scopedSlots 的处理，如果不存在声明为对象；如果它存在，那么就为它添加一个 scopedSlots 属性，比如说这种：</p>
+<blockquote>
+<p>currentParent.scopedSlots[‘b’] = bAST</p>
+</blockquote>
+<p>概括来说，步骤一是为 AST 添加 slotTarget 和 slotScope 等属性，步骤二是将 AST 存入父组件的 scopedSlots 对象中。经过第二个步骤的处理，同名插槽会覆盖前面的内容，也就是说同名插槽只保留最后一个的内容。</p>
+<p>现在来看第二个问题。</p>
+<p>我们知道 render 函数中的 _u 就是 resolveScopedSlots</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveScopedSlots</span> (<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params">	fns,</span></span><br><span class="hljs-function"><span class="hljs-params">	res,</span></span><br><span class="hljs-function"><span class="hljs-params">	hasDynamicKeys,</span></span><br><span class="hljs-function"><span class="hljs-params">	contentHashKey</span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br>	res = res || &#123; <span class="hljs-attr">$stable</span>: !hasDynamicKeys &#125;;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; fns.length; i++) &#123;<br>		<span class="hljs-keyword">var</span> slot = fns[i];<br>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(slot)) &#123;<br>			resolveScopedSlots(slot, res, hasDynamicKeys);<br>		&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (slot) &#123;<br>			<span class="hljs-keyword">if</span> (slot.proxy) &#123;<br>				slot.fn.proxy = <span class="hljs-literal">true</span>;<br>			&#125;<br>			res[slot.key] = slot.fn;<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">if</span> (contentHashKey) &#123;<br>		(res).$key = contentHashKey;<br>	&#125;<br>	<span class="hljs-keyword">return</span> res<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>它的第一个参数是一个数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">[&#123;<span class="hljs-attr">key</span>:<span class="hljs-string">"default"</span>,<span class="hljs-attr">fn</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-keyword">return</span> [_v(<span class="hljs-string">"default: "</span>+_s(branches[<span class="hljs-number">1</span>]))]&#125;,<span class="hljs-attr">proxy</span>:<span class="hljs-literal">true</span>&#125;,&#123;<span class="hljs-attr">key</span>:<span class="hljs-string">"b"</span>,<span class="hljs-attr">fn</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-keyword">return</span> [_v(<span class="hljs-string">"b: "</span>+_s(branches[<span class="hljs-number">0</span>]))]&#125;,<span class="hljs-attr">proxy</span>:<span class="hljs-literal">true</span>&#125;]<br></code></pre></td></tr></table></figure>
+
+<p>最终会进入第二个分支，执行 res[slot.key] = slot.fn，那么 res 就拥有了名称为 b 和 default 的方法。也就是说在执行 _c(‘child’) 时， Child vnode 的 scopedSlots 是一个拥有2个方法的对象。</p>
+<p>我们再回到 Child 组件内部的 slot 处理方法 normalizeScopedSlots，我们看一下重点部分，简化后如下所示</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js">res = &#123;&#125;;<br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key$<span class="hljs-number">1</span> <span class="hljs-keyword">in</span> slots) &#123;<br>	<span class="hljs-keyword">if</span> (slots[key$<span class="hljs-number">1</span>] &amp;&amp; key$<span class="hljs-number">1</span>[<span class="hljs-number">0</span>] !== <span class="hljs-string">'$'</span>) &#123;<br>		res[key$<span class="hljs-number">1</span>] = normalizeScopedSlot(normalSlots, key$<span class="hljs-number">1</span>, slots[key$<span class="hljs-number">1</span>]);<br>	&#125;<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key$<span class="hljs-number">2</span> <span class="hljs-keyword">in</span> normalSlots) &#123;<br>	<span class="hljs-keyword">if</span> (!(key$<span class="hljs-number">2</span> <span class="hljs-keyword">in</span> res)) &#123;<br>		res[key$<span class="hljs-number">2</span>] = proxyNormalSlot(normalSlots, key$<span class="hljs-number">2</span>);<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里的 slots 就是 _parentVnode.data.scopedSlots，是拥有返回 b 和 default vnode 的方法；normalSlots 是被 Child 组件包裹的 vnode。</p>
+<p>第一个循环里，是对 normalSlots 的处理</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">normalizeScopedSlot</span> (<span class="hljs-params">normalSlots, key, fn</span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> normalized = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>		<span class="hljs-keyword">var</span> res = <span class="hljs-built_in">arguments</span>.length ? fn.apply(<span class="hljs-literal">null</span>, <span class="hljs-built_in">arguments</span>) : fn(&#123;&#125;);<br>		res = res &amp;&amp; <span class="hljs-keyword">typeof</span> res === <span class="hljs-string">'object'</span> &amp;&amp; !<span class="hljs-built_in">Array</span>.isArray(res)<br>			? [res]<br>			: normalizeChildren(res);<br>		<span class="hljs-keyword">var</span> vnode = res &amp;&amp; res[<span class="hljs-number">0</span>];<br>		<span class="hljs-keyword">return</span> res &amp;&amp; (<br>			!vnode ||<br>			(res.length === <span class="hljs-number">1</span> &amp;&amp; vnode.isComment &amp;&amp; !isAsyncPlaceholder(vnode))<br>		) ? <span class="hljs-literal">undefined</span><br>			: res<br>	&#125;;<br>	<span class="hljs-keyword">if</span> (fn.proxy) &#123;<br>		<span class="hljs-built_in">Object</span>.defineProperty(normalSlots, key, &#123;<br>			<span class="hljs-keyword">get</span>: normalized,<br>			enumerable: true,<br>			configurable: true<br>		&#125;);<br>	&#125;<br>	return normalized<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>normalizeScopedSlot 实际上就是返回一个方法，也就是每遍历一个 vnode，就会为 res 添加一个方法，那么如果遇到同名的，就会覆盖掉原有的。另外还重写了 normalSlots，它本来是 Child 包裹的 vnode，但是现在将它变成拥有 b 和 default 方法的对象。也就是说默认 default 的内容被去除了。</p>
+<h2 id="作用域插槽"><a href="#作用域插槽" class="headerlink" title="作用域插槽"></a>作用域插槽</h2><p>简单来说，作用域插槽使父组件能够获取到子组件里的属性。</p>
+<p>我们将 demo 改成如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;Child&gt;<br>	&lt;template v-slot:<span class="hljs-keyword">default</span>=<span class="hljs-string">"slotProps"</span>&gt;change <span class="hljs-keyword">in</span> parent: &#123;&#123;slotProps.branchesInChild[<span class="hljs-number">1</span>]&#125;&#125;&lt;<span class="hljs-regexp">/template&gt;&lt;br&gt;</span><br><span class="hljs-regexp">&lt;/</span>Child&gt;<br><br>Vue.component(<span class="hljs-string">"Child"</span>, &#123;<br>	data () &#123;<br>		<span class="hljs-keyword">return</span> &#123;<br>			branchesInChild: [<span class="hljs-string">'A'</span>, <span class="hljs-string">'B'</span>],<br>		&#125;<br>	&#125;,<br>	template: <span class="hljs-string">'&lt;p&gt;&lt;slot v-bind:branchesInChild="branchesInChild"&gt;render in child: &#123;&#123;branchesInChild[0]&#125;&#125;&lt;/slot&gt;&lt;/p&gt;'</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>Child 组件默认应该会渲染成 render in child: A，但是我们做了修改如父组件中所示，页面会被渲染成 change in parent: B。</p>
+<p>说明可以在父组件层面拿到子组件提供的信息去决定 Child 组件的渲染。这在日常工作中经常遇到，也非常有用，比如说需要将 table 组件中的某一个 column 渲染的信息自定义。</p>
+<p>接下来就以此为例看看这是如何实现的吧。</p>
+<p>首先看 processSlotContent(element) 处理 template 标签中的 slot 属性（上面有罗列代码，这里不重复了）：</p>
+<p>它通过 getAndRemoveAttrByRegex 拿到 slotBinding，其中就包括我们绑定的 default=slotProps，name 是 ‘default’，value 是 ‘slotProps’。将 ‘default’ 赋值给 element.slotTarget、 ‘slotProps’ 赋值给 element.slotScope。</p>
+<p>我们来看看 parnet 组件的 render 函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br><span class="hljs-keyword">with</span>(<span class="hljs-keyword">this</span>)&#123;<span class="hljs-keyword">return</span> _c(<span class="hljs-string">'div'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"demo"</span>&#125;&#125;,[_c(<span class="hljs-string">'child'</span>,&#123;<span class="hljs-attr">scopedSlots</span>:_u([&#123;<span class="hljs-attr">key</span>:<span class="hljs-string">"default"</span>,<span class="hljs-attr">fn</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">slotProps</span>)</span>&#123;<span class="hljs-keyword">return</span> [_v(<span class="hljs-string">"change in parent: "</span>+_s(slotProps.branchesInChild[<span class="hljs-number">1</span>]))]&#125;&#125;])&#125;,[_c(<span class="hljs-string">'br'</span>)])],<span class="hljs-number">1</span>)&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>可以看到 scopedSlots 中的处置方法现在需要接收 slotProps 对象用作渲染指定属性，而且渲染的就是我们在父组件中设置的值 change in parent: 。</p>
+<p>依据上面 normalizeScopedSlots 方法的解析我们知道，vm.$scopedSlots.default 就会是封装这个 fn 的 normalized 方法。它在内部会接收参数，作为入参调用 fn。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> res = <span class="hljs-built_in">arguments</span>.length ? fn.apply(<span class="hljs-literal">null</span>, <span class="hljs-built_in">arguments</span>) : fn(&#123;&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>那现在就需要看看这个 slotProps 对象是如何传进去的。</p>
+<p>先看看 Child 组件内部的 render 函数</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br><span class="hljs-keyword">with</span>(<span class="hljs-keyword">this</span>)&#123;<span class="hljs-keyword">return</span> _c(<span class="hljs-string">'p'</span>,[_t(<span class="hljs-string">"default"</span>,<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-keyword">return</span> [_v(<span class="hljs-string">"render in child: "</span>+_s(branchesInChild[<span class="hljs-number">0</span>]))]&#125;,&#123;<span class="hljs-string">"branchesInChild"</span>:branchesInChild&#125;)],<span class="hljs-number">2</span>)&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>_t 是 renderSlot，三个参数分别是 fnKey、fnVal 和 {“branchesInChild”:branchesInChild}。这里的重点就是多了一个 {“branchesInChild”:branchesInChild} 这个对象，它会作为 props 传入 renderSlot 中，用于 this.$scopedSlots 中的方法获取 vnodes。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">renderSlot</span> (<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params">	name,</span></span><br><span class="hljs-function"><span class="hljs-params">	fallbackRender,</span></span><br><span class="hljs-function"><span class="hljs-params">	props,</span></span><br><span class="hljs-function"><span class="hljs-params">	bindObject</span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> scopedSlotFn = <span class="hljs-keyword">this</span>.$scopedSlots[name];<br>	<span class="hljs-keyword">var</span> nodes;<br>	<span class="hljs-keyword">if</span> (scopedSlotFn) &#123;<br>		props = props || &#123;&#125;;<br>		<span class="hljs-keyword">if</span> (bindObject) &#123;<br>			<span class="hljs-keyword">if</span> (!isObject(bindObject)) &#123;<br>				warn(<span class="hljs-string">'slot v-bind without argument expects an Object'</span>, <span class="hljs-keyword">this</span>);<br>			&#125;<br>			props = extend(extend(&#123;&#125;, bindObject), props);<br>		&#125;<br>		nodes =<br>			scopedSlotFn(props) ||<br>			(<span class="hljs-keyword">typeof</span> fallbackRender === <span class="hljs-string">'function'</span> ? fallbackRender() : fallbackRender);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		nodes =<br>			<span class="hljs-keyword">this</span>.$slots[name] ||<br>			(<span class="hljs-keyword">typeof</span> fallbackRender === <span class="hljs-string">'function'</span> ? fallbackRender() : fallbackRender);<br>	&#125;<br><br>	<span class="hljs-keyword">var</span> target = props &amp;&amp; props.slot;<br>	<span class="hljs-keyword">if</span> (target) &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$createElement(<span class="hljs-string">'template'</span>, &#123; <span class="hljs-attr">slot</span>: target &#125;, nodes)<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-keyword">return</span> nodes<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>简单梳理一下处理逻辑：</p>
+<ul>
+<li>首先获取到 vm.$scopedSlots[‘default’] 方法。这个是存在的，进入第一个分支。<ul>
+<li>props 就是第三个对象参数，bindObject 不存在，那么就直接执行 scopedSlotFn(props)，将 branchesInChild 传入了 default 方法中去获取 vnodes，赋值给 nodes</li>
+</ul>
+</li>
+<li>props.slot 不存在，直接返回 nodes。</li>
+</ul>
+<p>就这样在 renderSlot 方法内部将 branchesInChild 信息作为入参，使用 vm.$scopedSlots[‘default’] 方法获取到了 Child 组件包裹的 vnodes，然后将 vnodes 创建为 DOM 渲染到了页面上，实现了在父组件拿到子组件指定的信息，然后渲染自定义信息的功能。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>本篇主要了解了 slot 渲染的原理以及 scoped slot 实现的原理，总结如下：</p>
+<ol>
+<li>默认插槽其实跟一般的具名插槽一样，因为它会被默认为 default 插槽</li>
+<li>父组件针对 template 上的插槽名称会创建对应方法存于 scopedSlots，执行这个方法就会返回被 template 包裹的内容 vnodes。如果存在同名的，只会保留后一个的内容。然后子组件内部渲染时会去找插槽名对应的方法去渲染。</li>
+<li>父组件中 template 的 v-slot:default=”slotProps” 在被转成 render 字符串时会给方法添加一个可以接收的参数 slotProps;子组件中 slot 的 v-bind:branchesInChild=”branchesInChild” 在被转成 render 字符串时会给 _t 方法添加一个 props 参数 {“branchesInChild”:branchesInChild}。这样就可以将 props 传入方法中去获取 vnodes。</li>
+</ol>
+
+            </div>
+            <div>👀 文中如有错误，还请留言指出，谢谢！❤</div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E7%AE%80%E5%8D%95%E8%AF%B4%E8%AF%B4%20Vue%20diff%20%E7%AE%97%E6%B3%95/">
+                        <span class="hidden-mobile">简单说说 Vue diff 算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+          app_key: "uSkOsleUpcvIJyb31MudM4dS",
+          placeholder: "说点啥吧~",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

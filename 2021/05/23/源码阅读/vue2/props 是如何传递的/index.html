@@ -188,7 +188,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.7k
+          4.8k
              字
       </span>
       
@@ -328,7 +328,7 @@
 
 <p>由上可知，proxy 的作用就是为 target[key] 添加响应式属性 get/set。这里就是为 VueComponent.prototype[parentMessage] 添加属性，get 方法获取的是 vm._props.parentMessage。这里相当于使用 props 需要通过两层代理：</p>
 <p>第一层：vm.prototype.parentMessage ——&gt; vm.prototype.parentMessage.get() ——&gt; return vm._props.parentMessage<br>第二层：vm._props.parentMessage ——&gt; vm._props.parentMessage.get() ——&gt; return ‘Hello’</p>
-<p>串起来就是 vm.prototype.parentMessage = vm._props.parentMessage。</p>
+<p>串起来就是 vm.prototype.parentMessage ——&gt; vm._props.parentMessage。</p>
 <h2 id="最后的渲染"><a href="#最后的渲染" class="headerlink" title="最后的渲染"></a>最后的渲染</h2><p>组件实例创建完成后，调用 child.$mount() 开始进行 child 组件的 parse、transform、patch 处理过程。其中生成的 render 函数如下所示：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br><span class="hljs-keyword">with</span>(<span class="hljs-keyword">this</span>)&#123;<span class="hljs-keyword">return</span> _c(<span class="hljs-string">'p'</span>,[_v(<span class="hljs-string">"parentMessage is ï¼š"</span>+_s(parentMessage))])&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
 

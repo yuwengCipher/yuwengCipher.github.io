@@ -296,7 +296,7 @@
 <p>也就是说第一个 await 没有阻塞 console.log(a) 的执行。因此 async 对 await 后面的表达式又两种处理方式：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-number">1.</span> promise<br>   <span class="hljs-keyword">async</span> 会执行表达式并等待有返回值才会继续往下执行代码<br><span class="hljs-number">2.</span> 非 promise<br>   <span class="hljs-keyword">async</span> 执行表达式并立刻获取返回值，如果没有则为 <span class="hljs-literal">undefined</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>js 处理异步的方法经历了 回调函数、promise、generator、async 这四个阶段，每一种新方法都是对前方法的改善，主要处理的点有两点：</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>js 处理异步的方法经历了 回调函数、promise、generator、async 这四个阶段，每一种新方法都是对前方法的改善，主要处理的点有两点：</p>
 <ol>
 <li>可读性更强</li>
 <li>流程控制更清晰</li>

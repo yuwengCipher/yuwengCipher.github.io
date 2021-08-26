@@ -178,6 +178,63 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/07/18/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%8E%A2%E5%AF%BB%20slot%20%E7%9A%84%E5%A5%A5%E7%A7%98/" target="_self">
+          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="探寻 slot 的奥秘">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/18/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%8E%A2%E5%AF%BB%20slot%20%E7%9A%84%E5%A5%A5%E7%A7%98/" target="_self">
+          探寻 slot 的奥秘
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/18/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%8E%A2%E5%AF%BB%20slot%20%E7%9A%84%E5%A5%A5%E7%A7%98/" target="_self">
+          
+          
+            
+          
+          前言slot 思想借鉴于 Web Component，使用  为内容提供一个占位符，然后我们就可以往里面填充自定义内容。slot 有不同的用法形式，官方文档也有详细说明，因此本篇不是来讲解用法的，我们的任务是弄明白 slot 工作的原理。
+由于 slot 的用法有很多种，每一种涉及的情形和处理也不同，但基本原理是相同的，所以本篇只会讲解 具名插槽 named slots 和 作用域插槽 scope
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-18 00:00" pubdate>
+              2021-07-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Vue/">Vue</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Vue/">Vue</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/06/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E7%AE%80%E5%8D%95%E8%AF%B4%E8%AF%B4%20Vue%20diff%20%E7%AE%97%E6%B3%95/" target="_self">
           <img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/thumbnail/简单说说Vue-diff算法.jpg" srcset="/img/loading.gif" lazyload alt="简单说说 Vue diff 算法">
         </a>
@@ -698,64 +755,6 @@ app.js 里调用了 Vue 构造函数，所以从这里开始吧。
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Axios/">Axios</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" target="_self">
-          <img src="/img/cover-article.png" srcset="/img/loading.gif" lazyload alt="弄懂 event loop">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" target="_self">
-          弄懂 event loop
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/03/JavaScript%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/%E5%BC%84%E6%87%82%20event%20loop/" target="_self">
-          
-          
-            
-          
-          什么是 event loop简单来说，event loop 就是 JavaScript 宿主处理事件执行的一种机制。
-js 以前是专门用来处理浏览器交互的，比如说 DOM 点击事件等，因此被设计成单线程，所谓单线程，就是同一时间只能处理一件事情，这也就保证了页面中一次只能处理一个事件，避免造成交互混乱的问题。
-开始之前，需要明确的是 JavaScript引擎是单线程的，但是 js 运行环境是多线程
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-03 00:00" pubdate>
-              2020-10-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/JS/">JS</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Event-Loop/">Event Loop</a>
             
           </div>
         
