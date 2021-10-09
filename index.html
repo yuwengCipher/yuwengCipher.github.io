@@ -178,6 +178,63 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/07/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E5%BD%BB%E5%BA%95%E5%BC%84%E6%87%82%20VueRouter%20%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" target="_self">
+          <img src="/img/docsmall/cover-article.jpg" srcset="/img/loading.gif" lazyload alt="彻底弄懂 VueRouter 工作原理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/07/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E5%BD%BB%E5%BA%95%E5%BC%84%E6%87%82%20VueRouter%20%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" target="_self">
+          彻底弄懂 VueRouter 工作原理
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/07/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E5%BD%BB%E5%BA%95%E5%BC%84%E6%87%82%20VueRouter%20%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" target="_self">
+          
+          
+            
+          
+          前言作为 Vue 生态的一部分，VueRouter 其实跟 Vuex 一样，是作为一个插件存在的。有了它，我们就拥有了前端路由，就可以使用 Vue 创建 SPA，然后 SPA 带给我们的是不刷新页面就可以更新内容的良好体验，可以说 VueRouter 给 Vue 添上了一对翅膀。这一篇就是通过例子结合源码的方式做的一些总结。
+实现路由的基础SPA 应用可以理解成由一个中枢管理多个 route——&
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-25 00:00" pubdate>
+              2021-07-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Vue/">Vue</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/VueRouter/">VueRouter</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/07/18/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%8E%A2%E5%AF%BB%20slot%20%E7%9A%84%E5%A5%A5%E7%A7%98/" target="_self">
           <img src="/img/docsmall/cover-article.jpg" srcset="/img/loading.gif" lazyload alt="探寻 slot 的奥秘">
         </a>
@@ -690,71 +747,6 @@ app.js 里调用了 Vue 构造函数，所以从这里开始吧。
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Vue/">Vue</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/12/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
-          <img src="/img/docsmall/cover-article.jpg" srcset="/img/loading.gif" lazyload alt="axios-总体结构">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/10/12/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
-          axios-总体结构
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/10/12/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/axios/%E6%80%BB%E4%BD%93%E7%BB%93%E6%9E%84/" target="_self">
-          
-          
-            
-          
-          
-本文基于 axios 版本 0.21.1
-
-入口在根目录下找到 index.js，里面只有一句代码，将 axios 进行导出。
-1module.exports = require('./lib/axios');
-
-找到 lib 下的 axios.js 文件
-
-首先引入了相关文件
-12345678910// 工具函数库var utils = require('./utils');// bind 方
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-12 00:00" pubdate>
-              2020-10-12
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Axios/">Axios</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Axios/">Axios</a>
             
           </div>
         

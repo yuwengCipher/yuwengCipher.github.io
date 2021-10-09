@@ -1,0 +1,620 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  
+  <title>彻底弄懂 VueRouter 工作原理 - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/docsmall/post-banner.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="彻底弄懂 VueRouter 工作原理">
+              
+                彻底弄懂 VueRouter 工作原理
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+      
+        <span class="post-meta">
+          <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+          <time datetime="2021-07-25" pubdate>
+            发表于 2021-07-25
+          </time>
+        </span>
+        
+</div>
+
+<div class="mt-1">
+  
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k
+             字
+      </span>
+      
+
+        
+          
+            <span class="post-meta mr-2">
+              <i class="iconfont icon-clock-fill"></i>
+              
+                
+                  59
+                     分钟
+            </span>
+            
+
+              
+                
+                  
+                    <!-- LeanCloud 统计文章PV -->
+                    <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+                      <i class="iconfont icon-eye" aria-hidden="true"></i>
+                      <span id="leancloud-page-views"></span>
+                         次
+                    </span>
+                    
+                        
+</div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">彻底弄懂 VueRouter 工作原理</h1>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为 Vue 生态的一部分，VueRouter 其实跟 Vuex 一样，是作为一个插件存在的。有了它，我们就拥有了前端路由，就可以使用 Vue 创建 SPA，然后 SPA 带给我们的是不刷新页面就可以更新内容的良好体验，可以说 VueRouter 给 Vue 添上了一对翅膀。这一篇就是通过例子结合源码的方式做的一些总结。</p>
+<h2 id="实现路由的基础"><a href="#实现路由的基础" class="headerlink" title="实现路由的基础"></a>实现路由的基础</h2><p>SPA 应用可以理解成由一个中枢管理多个 route——&gt;UI 映射集合的工作的程序。这里就涉及到两个因素，一个是 route 的变化，一个是 UI 的更新。如何监控 route 改变以及更新 UI 就是重点。</p>
+<p>我们在实例化 VueRouter 时，会配置路由模式，官方提供 hash 和 history 两种。相对应的，浏览器也有它的接口来处理这两种情况。先来了解一下浏览器会如何处理 route 的变化。</p>
+<h3 id="url-历史记录管理"><a href="#url-历史记录管理" class="headerlink" title="url 历史记录管理"></a>url 历史记录管理</h3><p>按我的理解，浏览器设有一个栈和一个队列来管理 url 历史记录，当点击后退按钮，当前 url 会被弹出栈，此时不会被销毁，而是从队列头部进入进行存储；当点击前进按钮就会从队列中取出第一个 url 进栈显示。但是每当新的 url 键入地址栏中时，这个 url 就会入栈，并且队列里的 url 都会被销毁。如果队列中没有记录，前进按钮是置灰不能点击的。</p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>在 hash 模式下，地址栏的 url 会显示为类似 <a href="http://xxxxx/#/foo" target="_blank" rel="noopener">http://xxxxx/#/foo</a> 这种，#/foo 这部分称为 url 的片段标识符，也就是 hash，它发生变化时浏览器不会刷新。通过浏览器前进、后退按钮会改变 hash 值，使用 window.onhashchange 可以监听这个改变动作。</p>
+<h3 id="history"><a href="#history" class="headerlink" title="history"></a>history</h3><p>window.history 提供了 pushState、replaceState、go、back、forward 方法去改变 url；使用 popstate 可以监听 url 变化。其中 popstate 无法监听到 pushState 和 repalceState。</p>
+<h2 id="路由实例挂载"><a href="#路由实例挂载" class="headerlink" title="路由实例挂载"></a>路由实例挂载</h2><p>我们在应用中使用 router 时，通常会先按下面步骤执行：</p>
+<ul>
+<li>Vue.use(VueRouter)</li>
+<li>const router = new VueRouter({})</li>
+<li>new Vue({router})</li>
+</ul>
+<p>执行完这三个步骤，VueRouter 就融入到 Vue 中，然后我们就可以按照既定的路径去浏览应用。那么接下来就看看每一步所做的工作。</p>
+<h3 id="Vue-use-VueRouter"><a href="#Vue-use-VueRouter" class="headerlink" title="Vue.use(VueRouter)"></a>Vue.use(VueRouter)</h3><p>Vue.use 是 Vue 加载插件的通用方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js">Vue.use = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">plugin</span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> installedPlugins = (<span class="hljs-keyword">this</span>._installedPlugins || (<span class="hljs-keyword">this</span>._installedPlugins = []));<br>	<span class="hljs-keyword">if</span> (installedPlugins.indexOf(plugin) &gt; <span class="hljs-number">-1</span>) &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>	&#125;<br><br>	<span class="hljs-keyword">var</span> args = toArray(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);<br>	args.unshift(<span class="hljs-keyword">this</span>);<br>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> plugin.install === <span class="hljs-string">'function'</span>) &#123;<br>		plugin.install.apply(plugin, args);<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> plugin === <span class="hljs-string">'function'</span>) &#123;<br>		plugin.apply(<span class="hljs-literal">null</span>, args);<br>	&#125;<br>	installedPlugins.push(plugin);<br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>Vue 内部会使用 _installedPlugins 来维护已经加载过的插件，多次 use 同一个插件，它会从这个栈中找到这个插件并返回。</p>
+<p>对于初次加载的插件，则会优先去插件内部去调用它的安装方法即 install，如果插件本身是一个函数，那么就调用它本身。而传入的参数 args 是包括 vue 和 插件的数组。</p>
+<p>调用完成后，说明这个插件已经加载完了，它就会被存进栈中维护起来。</p>
+<p>VueRouter 的 install 方法如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> _Vue;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">install</span> (<span class="hljs-params">Vue</span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (install.installed &amp;&amp; _Vue === Vue) &#123; <span class="hljs-keyword">return</span> &#125;<br>	install.installed = <span class="hljs-literal">true</span>;<br><br>	_Vue = Vue;<br><br>	<span class="hljs-keyword">var</span> isDef = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">v</span>) </span>&#123; <span class="hljs-keyword">return</span> v !== <span class="hljs-literal">undefined</span>; &#125;;<br><br>	<span class="hljs-keyword">var</span> registerInstance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">vm, callVal</span>) </span>&#123;<br>		<span class="hljs-keyword">var</span> i = vm.$options._parentVnode;<br>		<span class="hljs-keyword">if</span> (isDef(i) &amp;&amp; isDef(i = i.data) &amp;&amp; isDef(i = i.registerRouteInstance)) &#123;<br>			i(vm, callVal);<br>		&#125;<br>	&#125;;<br><br>	Vue.mixin(&#123;<br>		beforeCreate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">beforeCreate</span> (<span class="hljs-params"></span>) </span>&#123;<br>			<span class="hljs-keyword">if</span> (isDef(<span class="hljs-keyword">this</span>.$options.router)) &#123;<br>				<span class="hljs-keyword">this</span>._routerRoot = <span class="hljs-keyword">this</span>;<br>				<span class="hljs-keyword">this</span>._router = <span class="hljs-keyword">this</span>.$options.router;<br>				<span class="hljs-keyword">this</span>._router.init(<span class="hljs-keyword">this</span>);<br>				Vue.util.defineReactive(<span class="hljs-keyword">this</span>, <span class="hljs-string">'_route'</span>, <span class="hljs-keyword">this</span>._router.history.current);<br>			&#125; <span class="hljs-keyword">else</span> &#123;<br>				<span class="hljs-keyword">this</span>._routerRoot = (<span class="hljs-keyword">this</span>.$parent &amp;&amp; <span class="hljs-keyword">this</span>.$parent._routerRoot) || <span class="hljs-keyword">this</span>;<br>			&#125;<br>			registerInstance(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>);<br>		&#125;,<br>		destroyed: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">destroyed</span> (<span class="hljs-params"></span>) </span>&#123;<br>			registerInstance(<span class="hljs-keyword">this</span>);<br>		&#125;<br>	&#125;);<br><br>	<span class="hljs-built_in">Object</span>.defineProperty(Vue.prototype, <span class="hljs-string">'$router'</span>, &#123;<br>		<span class="hljs-keyword">get</span>: function <span class="hljs-keyword">get</span> () &#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._routerRoot._router &#125;<br>	&#125;);<br><br>	<span class="hljs-built_in">Object</span>.defineProperty(Vue.prototype, <span class="hljs-string">'$route'</span>, &#123;<br>		<span class="hljs-keyword">get</span>: function <span class="hljs-keyword">get</span> () &#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._routerRoot._route &#125;<br>	&#125;);<br><br>	Vue.component(<span class="hljs-string">'RouterView'</span>, View);<br>	Vue.component(<span class="hljs-string">'RouterLink'</span>, Link);<br><br>	<span class="hljs-keyword">var</span> strats = Vue.config.optionMergeStrategies;<br>	strats.beforeRouteEnter = strats.beforeRouteLeave = strats.beforeRouteUpdate = strats.created;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 install 方法里会在加载完成时为它自身添加 installed 属性，并且对 VueRouter 的 _Vue 赋值，这两个属性标识它是否已经被 Vue 加载过。</p>
+<p>接着是使用 Vue.mixin 向 Vue 组件混入 beforeCreate、destroyed 这两个生命周期钩子，意思就是在组件创建之前注册路由实例，组件销毁之后销毁路由实例。至于怎么注册以及销毁我们后面再说。</p>
+<p>然后就是为 Vue.prototype 添加 $router 和 $route 属性，分别对应全局路由实例和当前路由信息对象。另外就是注册 RouterView 和 RouterLink 组件，之后我们就可以这样使用： <router-view></router-view> 和 <router-link></router-link>。</p>
+<p>最后是将路由生命周期钩子函数的合并策略统一成 Vue 组件声明周期钩子合并策略。</p>
+<h3 id="new-VueRouter"><a href="#new-VueRouter" class="headerlink" title="new VueRouter({})"></a>new VueRouter({})</h3><p>这一步是创建路由实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> VueRouter = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">VueRouter</span> (<span class="hljs-params">options</span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (options === <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>) options = &#123;&#125;;<br><br>	<span class="hljs-comment">// app 即 Vue </span><br>	<span class="hljs-keyword">this</span>.app = <span class="hljs-literal">null</span>;<br>	<span class="hljs-keyword">this</span>.apps = [];<br>	<span class="hljs-keyword">this</span>.options = options;<br>	<span class="hljs-comment">// 这三个会存放在路由钩子执行的回调，</span><br>	<span class="hljs-comment">// 分别对应 beforeEach、beforeResolve、afterEach</span><br>	<span class="hljs-keyword">this</span>.beforeHooks = [];<br>	<span class="hljs-keyword">this</span>.resolveHooks = [];<br>	<span class="hljs-keyword">this</span>.afterHooks = [];<br>	<span class="hljs-comment">// 根据 routes 去创建针对 routes 的操作方法，比如匹配，添加等。</span><br>	<span class="hljs-keyword">this</span>.matcher = createMatcher(options.routes || [], <span class="hljs-keyword">this</span>);<br><br>	<span class="hljs-keyword">var</span> mode = options.mode || <span class="hljs-string">'hash'</span>;<br>	<span class="hljs-keyword">this</span>.fallback =<br>		mode === <span class="hljs-string">'history'</span> &amp;&amp; !supportsPushState &amp;&amp; options.fallback !== <span class="hljs-literal">false</span>;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.fallback) &#123;<br>		mode = <span class="hljs-string">'hash'</span>;<br>	&#125;<br>	<span class="hljs-keyword">if</span> (!inBrowser) &#123;<br>		mode = <span class="hljs-string">'abstract'</span>;<br>	&#125;<br>	<span class="hljs-keyword">this</span>.mode = mode;<br><br>	<span class="hljs-keyword">switch</span> (mode) &#123;<br>		<span class="hljs-keyword">case</span> <span class="hljs-string">'history'</span>:<br>			<span class="hljs-keyword">this</span>.history = <span class="hljs-keyword">new</span> HTML5History(<span class="hljs-keyword">this</span>, options.base);<br>			<span class="hljs-keyword">break</span><br>		<span class="hljs-keyword">case</span> <span class="hljs-string">'hash'</span>:<br>			<span class="hljs-keyword">this</span>.history = <span class="hljs-keyword">new</span> HashHistory(<span class="hljs-keyword">this</span>, options.base, <span class="hljs-keyword">this</span>.fallback);<br>			<span class="hljs-keyword">break</span><br>		<span class="hljs-keyword">case</span> <span class="hljs-string">'abstract'</span>:<br>			<span class="hljs-keyword">this</span>.history = <span class="hljs-keyword">new</span> AbstractHistory(<span class="hljs-keyword">this</span>, options.base);<br>			<span class="hljs-keyword">break</span><br>		<span class="hljs-keyword">default</span>:<br>			&#123;<br>				assert(<span class="hljs-literal">false</span>, (<span class="hljs-string">"invalid mode: "</span> + mode));<br>			&#125;<br>	&#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>通过构造函数可以看出，路由模式默认为 hash。并且根据不同的模式，会初始化不同的 History 实例。HTML5History 和 HashHistory 大致结构一样，内部都是继承自 History，只是各自拥有方法的处理细节不同，下面以 HashHistory 为例简单讲讲。</p>
+<p>首先了解一下 History 的基本组成构造。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> History = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">History</span> (<span class="hljs-params">router, base</span>) </span>&#123;<br>	<span class="hljs-comment">// 全局路由对象信息</span><br>	<span class="hljs-keyword">this</span>.router = router;<br>	<span class="hljs-keyword">this</span>.base = normalizeBase(base);<br>	<span class="hljs-comment">// 当前的路由对象，默认为不指向任何地方</span><br>	<span class="hljs-keyword">this</span>.current = START;<br>	<span class="hljs-keyword">this</span>.pending = <span class="hljs-literal">null</span>;<br>	<span class="hljs-keyword">this</span>.ready = <span class="hljs-literal">false</span>;<br>	<span class="hljs-keyword">this</span>.readyCbs = [];<br>	<span class="hljs-keyword">this</span>.readyErrorCbs = [];<br>	<span class="hljs-keyword">this</span>.errorCbs = [];<br>	<span class="hljs-keyword">this</span>.listeners = [];<br>&#125;;<br><span class="hljs-comment">// 添加回调</span><br>History.prototype.listen = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">listen</span> (<span class="hljs-params">cb</span>) </span>&#123;&#125;;<br>History.prototype.onReady = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onReady</span> (<span class="hljs-params">cb, errorCb</span>) </span>&#123;&#125;;<br>History.prototype.onError = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onError</span> (<span class="hljs-params">errorCb</span>) </span>&#123;&#125;;<br><span class="hljs-comment">// 路由跳转</span><br>History.prototype.transitionTo = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transitionTo</span> (<span class="hljs-params"></span>) </span>&#123;&#125;;<br><span class="hljs-comment">// transitionTo 内部会调用的方法</span><br>History.prototype.confirmTransition = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">confirmTransition</span> (<span class="hljs-params">route, onComplete, onAbort</span>) </span>&#123;&#125;;<br><span class="hljs-comment">// 更新路由信息</span><br>History.prototype.updateRoute = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateRoute</span> (<span class="hljs-params">route</span>) </span>&#123;&#125;;<br><span class="hljs-comment">// 路由发生改变执行的回调</span><br>History.prototype.setupListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setupListeners</span> (<span class="hljs-params"></span>) </span>&#123;&#125;;<br><span class="hljs-comment">// 组件销毁时去重置 history</span><br>History.prototype.teardown = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">teardown</span> (<span class="hljs-params"></span>) </span>&#123;&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>现在就来看看 HashHistory。它其实跟 History 组成类似，就是构造函数 + 原型方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">HashHistory</span> (<span class="hljs-params">router, base, fallback</span>) </span>&#123;<br>	History.call(<span class="hljs-keyword">this</span>, router, base);<br>	<span class="hljs-comment">// check history fallback deeplinking</span><br>	<span class="hljs-keyword">if</span> (fallback &amp;&amp; checkFallback(<span class="hljs-keyword">this</span>.base)) &#123;<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	ensureSlash();<br>&#125;<br><br><span class="hljs-keyword">if</span> (History) HashHistory.__proto__ = History;<br>HashHistory.prototype = <span class="hljs-built_in">Object</span>.create(History &amp;&amp; History.prototype);<br>HashHistory.prototype.constructor = HashHistory;<br></code></pre></td></tr></table></figure>
+
+<p>首先是对 History 常规的继承处理。其中的 ensureSlash 是为了确保 “#” 后面第一个字符是 “/“。<br>而重点是它的原型方法，这里只罗列两个常用的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 路由对象发生改变时会执行的方法</span><br>HashHistory.prototype.setupListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setupListeners</span> (<span class="hljs-params"></span>) </span>&#123;&#125;<br><span class="hljs-comment">// 我们执行 this.$router.push() 实际上执行的方法</span><br>HashHistory.prototype.push = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">push</span> (<span class="hljs-params">location, onComplete, onAbort</span>) </span>&#123;&#125;<br><span class="hljs-comment">// 我们执行 this.$router.replace() 实际上执行的方法</span><br>HashHistory.prototype.replace = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">replace</span> (<span class="hljs-params">location, onComplete, onAbort</span>) </span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>创建完成的 history 实例就包括了 History 函数的属性和方法以及 HashHistory 的方法。</p>
+<h3 id="new-Vue-router"><a href="#new-Vue-router" class="headerlink" title="new Vue({router})"></a>new Vue({router})</h3><p>到这里开始创建 Vue 实例、挂载组件。传入的 router 实例对象被存放在 vue.$options.router 中。上面有提到过一点：在 VueRouter 的 install 方法中向 Vue 混入了 beforeCreate、destroyed 钩子函数。组件在创建时都会去执行 beforeCreate 这个钩子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js">beforeCreate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">beforeCreate</span> (<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (isDef(<span class="hljs-keyword">this</span>.$options.router)) &#123;<br>		<span class="hljs-keyword">this</span>._routerRoot = <span class="hljs-keyword">this</span>;<br>		<span class="hljs-keyword">this</span>._router = <span class="hljs-keyword">this</span>.$options.router;<br>		<span class="hljs-keyword">this</span>._router.init(<span class="hljs-keyword">this</span>);<br>		Vue.util.defineReactive(<span class="hljs-keyword">this</span>, <span class="hljs-string">'_route'</span>, <span class="hljs-keyword">this</span>._router.history.current);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-keyword">this</span>._routerRoot = (<span class="hljs-keyword">this</span>.$parent &amp;&amp; <span class="hljs-keyword">this</span>.$parent._routerRoot) || <span class="hljs-keyword">this</span>;<br>	&#125;<br>	registerInstance(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们知道父子组件中 beforeCreate 的执行顺序是 父beforeCreate——&gt;子beforeCreate，因此会首先执行根组件的 beforeCreate。此时 this.$options.router 是存在的，执行 VueRouter 的 init 方法去初始化。</p>
+<p>其中还将 _routerRoot 指定为根组件自身，这个非常关键，子组件不存在 this.$options.router，那么就会进入第二个分支，优先将父组件的 _routerRoot 赋值给自身的 _routerRoot，然后子组件也可以像根组件一样通过 this.$router 获取 router 对象了。也就是通过这种方式将 router 对象层层注入到全局组件，所有组件使用同一个 router。</p>
+<p>另外就是通过 defineReactive 为所有组件添加 _route 属性，指向当前路由对象，结合 install 方法中对 Vue.prototype 的数据劫持，所有组件也就能通过 this.$route 获取当前路由对象。</p>
+<p>接下来继续看下 router 的初始化方法 init，简化之后如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> history = <span class="hljs-keyword">this</span>.history;<br><br><span class="hljs-keyword">if</span> (history <span class="hljs-keyword">instanceof</span> HTML5History || history <span class="hljs-keyword">instanceof</span> HashHistory) &#123;<br>	<span class="hljs-comment">// 用于控制页面展示时 scroll 的位置</span><br>	<span class="hljs-keyword">var</span> handleInitialScroll = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">routeOrError</span>) </span>&#123;<br>		<span class="hljs-keyword">var</span> <span class="hljs-keyword">from</span> = history.current;<br>		<span class="hljs-keyword">var</span> expectScroll = <span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1.</span>options.scrollBehavior;<br>		<span class="hljs-keyword">var</span> supportsScroll = supportsPushState &amp;&amp; expectScroll;<br><br>		<span class="hljs-keyword">if</span> (supportsScroll &amp;&amp; <span class="hljs-string">'fullPath'</span> <span class="hljs-keyword">in</span> routeOrError) &#123;<br>			handleScroll(<span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1</span>, routeOrError, <span class="hljs-keyword">from</span>, <span class="hljs-literal">false</span>);<br>		&#125;<br>	&#125;;<br>	<span class="hljs-comment">// 路由更改执行的方法</span><br>	<span class="hljs-keyword">var</span> setupListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">routeOrError</span>) </span>&#123;<br>		history.setupListeners();<br>		handleInitialScroll(routeOrError);<br>	&#125;;<br>	history.transitionTo(<br>		history.getCurrentLocation(),<br>		setupListeners,<br>		setupListeners<br>	);<br>&#125;<br><br>history.listen(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">route</span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1.</span>apps.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">app</span>) </span>&#123;<br>		app._route = route;<br>	&#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>这里实际上只有两个操作：一个是执行 history.transitionTo() 去更改路由；一个是执行 history.listen 添加一个回调，在 history 路由更改完成后去更新 Vue 的 _route。</p>
+<p>transitionTo 接收三个参数，分别是需要跳转的路由信息、操作成功执行的回调和操作失败执行的回调。这里的两个回调是同一个函数，它的内部会执行 history.setupListeners()。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js">HashHistory.prototype.setupListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setupListeners</span> (<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">var</span> <span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1</span> = <span class="hljs-keyword">this</span>;<br><br>	<span class="hljs-comment">// 省略</span><br><br>	<span class="hljs-keyword">var</span> handleRoutingEvent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>		<span class="hljs-keyword">var</span> current = <span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1.</span>current;<br>		<span class="hljs-keyword">if</span> (!ensureSlash()) &#123;<br>			<span class="hljs-keyword">return</span><br>		&#125;<br>		<span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1.</span>transitionTo(getHash(), <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">route</span>) </span>&#123;<br>			<span class="hljs-keyword">if</span> (supportsScroll) &#123;<br>				handleScroll(<span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1.</span>router, route, current, <span class="hljs-literal">true</span>);<br>			&#125;<br>			<span class="hljs-keyword">if</span> (!supportsPushState) &#123;<br>				replaceHash(route.fullPath);<br>			&#125;<br>		&#125;);<br>	&#125;;<br>	<span class="hljs-keyword">var</span> eventType = supportsPushState ? <span class="hljs-string">'popstate'</span> : <span class="hljs-string">'hashchange'</span>;<br>	<span class="hljs-built_in">window</span>.addEventListener(<br>		eventType,<br>		handleRoutingEvent<br>	);<br>	<span class="hljs-keyword">this</span>.listeners.push(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>		<span class="hljs-built_in">window</span>.removeEventListener(eventType, handleRoutingEvent);<br>	&#125;);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>虽然路由模式是 hash，但还是优先使用 popstate 事件去监听路由的变化。回调函数内部会执行 transition 方法。在文章开头我们说过 popstate 可以监听浏览器的 back、forward 事件，也就是说当我们点击浏览器的前进、后退按钮，会触发监听的事件去执行 transition 更改路由。</p>
+<h2 id="路由变化方式"><a href="#路由变化方式" class="headerlink" title="路由变化方式"></a>路由变化方式</h2><p>SPA 页面的切换其实主要由三个步骤组成：</p>
+<ul>
+<li>地址栏 url 变化</li>
+<li>history 路由信息更换</li>
+<li>component 切换</li>
+</ul>
+<p>执行完这三个步骤，页面的显示就可以从一个组件切换到另一个组件。</p>
+<p>这一小节主要来说说前两个步骤在 Vue 中的表现形式。</p>
+<p>上面讲到了通过 popstate 去监听浏览器的前进后退事件，前进后退是改变路由的一种方式， 除此之外，Vue 中路由变化的方式主要有如下几种：</p>
+<blockquote>
+<p>this.$router.push()<br>this.$router.replace()<br>this.$router.go();<br>this.$router.back();<br>this.$router.forward();<br>router-link</p>
+</blockquote>
+<p>上面方法对应如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs js">VueRouter.prototype.push = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">push</span> (<span class="hljs-params">location, onComplete, onAbort</span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.history.push(location, onComplete, onAbort);<br>&#125;<br><br>VueRouter.prototype.replace = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">push</span> (<span class="hljs-params">location, onComplete, onAbort</span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.history.replace(location, onComplete, onAbort);<br>&#125;<br><br>VueRouter.prototype.go = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">go</span> (<span class="hljs-params">n</span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.history.go(n);<br>&#125;;<br><br>VueRouter.prototype.back = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">back</span> (<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.go(<span class="hljs-number">-1</span>);<br>&#125;;<br><br>VueRouter.prototype.forward = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forward</span> (<span class="hljs-params"></span>) </span>&#123;<br>	<span class="hljs-keyword">this</span>.go(<span class="hljs-number">1</span>);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到内部其实都是执行 history 的方法。</p>
+<p>其中 push 和 replace 内部会去执行 history.transitionTo，以 push 为例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js">HashHistory.prototype.push = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">push</span> (<span class="hljs-params">location, onComplete, onAbort</span>) </span>&#123;<br>	<span class="hljs-comment">// 省略</span><br>	<span class="hljs-keyword">this</span>.transitionTo(<br>		location,<br>		<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">route</span>) </span>&#123;<br>			pushHash(route.fullPath);<br>			<span class="hljs-comment">//省略</span><br>			onComplete &amp;&amp; onComplete(route);<br>		&#125;,<br>		onAbort<br>	);<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pushHash</span> (<span class="hljs-params">path</span>) </span>&#123;<br>	<span class="hljs-keyword">if</span> (supportsPushState) &#123;<br>		pushState(getUrl(path));<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-built_in">window</span>.location.hash = path;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>transitionTo 更改路由信息，在成功回调内会去执行 pushHash 方法去更换地址栏 url。</p>
+<p>而 go 实际上是会去调用 window.history.go 方法改变地址栏 url，而且这个方法会触发上面监听的 popstate 方法去调用 history.transitionTo 改变路由信息。back、forward 同理。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">HashHistory.prototype.go = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">go</span> (<span class="hljs-params">n</span>) </span>&#123;<br>	<span class="hljs-built_in">window</span>.history.go(n);<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>最后就来说说 RouterLink 组件了。它的用法如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;router-link to=<span class="hljs-string">"/foo"</span>&gt;<span class="hljs-regexp">/foo&lt;/</span>router-link&gt;<br></code></pre></td></tr></table></figure>
+
+<p>当点击这个组件时，就会执行类似于 $router.push 去切换路由。它是一个内部组件，拥有自身的 render 函数，简化后如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> Link = &#123;<br>	props: &#123;<br>		to: &#123;<br>			type: toTypes,<br>			required: <span class="hljs-literal">true</span><br>		&#125;,<br>		tag: &#123;<br>			type: <span class="hljs-built_in">String</span>,<br>			<span class="hljs-keyword">default</span>: <span class="hljs-string">'a'</span><br>		&#125;,<br>		replace: <span class="hljs-built_in">Boolean</span>,<br>	&#125;,<br>	render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>		<span class="hljs-keyword">var</span> handler = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;<br>			<span class="hljs-keyword">if</span> (guardEvent(e)) &#123;<br>				<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>$<span class="hljs-number">1</span>$<span class="hljs-number">1.</span>replace) &#123;<br>					router.replace(location, noop);<br>				&#125; <span class="hljs-keyword">else</span> &#123;<br>					router.push(location, noop);<br>				&#125;<br>			&#125;<br>		&#125;;<br><br>		<span class="hljs-keyword">var</span> on = &#123; <span class="hljs-attr">click</span>: guardEvent &#125;;<br>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-keyword">this</span>.event)) &#123;<br>			<span class="hljs-keyword">this</span>.event.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;<br>				on[e] = handler;<br>			&#125;);<br>		&#125; <span class="hljs-keyword">else</span> &#123;<br>			on[<span class="hljs-keyword">this</span>.event] = handler;<br>		&#125;<br>		<span class="hljs-keyword">return</span> h(<span class="hljs-keyword">this</span>.tag, data, <span class="hljs-keyword">this</span>.$slots.default)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个组件默认会被渲染成 a 标签，还会给自身添加上点击事件，触发回调事件为 handler。如果组件上注明了 replace 属性，那么就调用 router.replace()，否则执行 router.push()。也就是说 RouterLink 的执行原理与上面说到的一样。</p>
+<h2 id="RouterView"><a href="#RouterView" class="headerlink" title="RouterView"></a>RouterView</h2><p>跟路由相关的内置指令还有 RouterView，但跟 RouterLink 不一样的是它不会渲染成某个标签，而是渲染成匹配到的组件，那何为匹配到的组件呢？路由是可以嵌套的，那么就会按照嵌套的层级进行分层，每一层的组件会被一个 RouterView 所维护渲染，默认只有一个根 RouterView。具体可查看<a href="https://router.vuejs.org/zh/" target="_blank" rel="noopener">Vue Router</a>。下面具体看看 RouterView 是如何渲染匹配组件吧。</p>
+<p>上面提到的路由实例挂载步骤第二步中，对根组件混入了 beforeCreate 钩子，其中在执行 router 的初始化方法时会默认调用一次 history.transitionTo 方法，而在该方法内部会确定当前的 route。</p>
+<p>第三步就是创建 Vue 实例，然后进行挂载。此过程在 <a href="https://djacipher.cn/2021/05/02/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%A8%A1%E6%9D%BF%E6%80%8E%E4%B9%88%E5%8F%98%E6%88%90%E7%9C%9F%E5%AE%9E%20DOM/" target="_blank" rel="noopener">模板怎么变成真实DOM</a> 这篇文章中已经讲过，不在重复。我们在这里只需关注 render 方法（render 方法来自于例子 basic）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span></span><br><span class="hljs-function"><span class="hljs-params"></span>) </span>&#123;<br><span class="hljs-keyword">with</span>(<span class="hljs-keyword">this</span>)&#123;<span class="hljs-keyword">return</span> _c(<span class="hljs-string">'div'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"app"</span>&#125;&#125;,[_c(<span class="hljs-string">'h1'</span>,[_v(<span class="hljs-string">"Basic"</span>)]),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'ul'</span>,[_c(<span class="hljs-string">'li'</span>,[_c(<span class="hljs-string">'router-link'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"to"</span>:<span class="hljs-string">"/"</span>&#125;&#125;,[_v(<span class="hljs-string">"/"</span>)])],<span class="hljs-number">1</span>),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'li'</span>,[_c(<span class="hljs-string">'router-link'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"to"</span>:<span class="hljs-string">"/foo"</span>&#125;&#125;,[_v(<span class="hljs-string">"/foo"</span>)])],<span class="hljs-number">1</span>),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'li'</span>,[_c(<span class="hljs-string">'router-link'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"to"</span>:<span class="hljs-string">"/bar"</span>&#125;&#125;,[_v(<span class="hljs-string">"/bar"</span>)])],<span class="hljs-number">1</span>)]),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'button'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"navigate-btn"</span>&#125;,<span class="hljs-attr">on</span>:&#123;<span class="hljs-string">"click"</span>:navigateAndIncrement&#125;&#125;,[_v(<span class="hljs-string">"On Success"</span>)]),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'pre'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"counter"</span>&#125;&#125;,[_v(_s(n))]),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'pre'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"query-t"</span>&#125;&#125;,[_v(_s($route.query.t))]),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'pre'</span>,&#123;<span class="hljs-attr">attrs</span>:&#123;<span class="hljs-string">"id"</span>:<span class="hljs-string">"hash"</span>&#125;&#125;,[_v(_s($route.hash))]),_v(<span class="hljs-string">" "</span>),_c(<span class="hljs-string">'router-view'</span>,&#123;<span class="hljs-attr">staticClass</span>:<span class="hljs-string">"view"</span>&#125;)],<span class="hljs-number">1</span>)&#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>跟路由相关的主要有三处：</p>
+<ul>
+<li>_s($route.query.t)</li>
+<li>_s($route.hash)</li>
+<li>_c(‘router-view’,{staticClass:”view”})</li>
+</ul>
+<p>其中前两块儿有一个共同的作用，那就是帮助 _route 完成依赖收集。</p>
+<p>首先 VueRouter.install 做了两件事，一个是为 Vue.prototype 添加 $route 属性，并且为其添加 get 方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">Object</span>.defineProperty(Vue.prototype, <span class="hljs-string">'$route'</span>, &#123;<br>	<span class="hljs-keyword">get</span>: function <span class="hljs-keyword">get</span> () &#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._routerRoot._route &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>另一个是在 beforeCreate 中通过 Vue.util.defineReactive(this, ‘_route’, this._router.history.current) 为 _route 添加数据劫持。<br>而使用 Vue.$route 实际上是使用 this._routerRoot._route，那么也就会触发 _route 的 get 方法。</p>
+<p>知道这样一个关系之后，我们就可以知道当执行 _s($route.query.t) 时会触发 _route 的 get 方法，此时的 dep.target 就是 render watcher，那么 render watcher 就会被收集到它的依赖中，每当 _route 改变的时候，render watcher 的表达式就会执行，也就会重新执行 render 方法。</p>
+<p>那 _c(‘router-view’,{staticClass:”view”}) 做了些什么呢？</p>
+<p>_c 实际是执行 createComponent，对于 router-view 会执行 createFunctionalComponent 创建组件，原因就在于 router-view 组件指明了自身为 functional 为 true。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> View = &#123;<br>	name: <span class="hljs-string">'RouterView'</span>,<br>	functional: <span class="hljs-literal">true</span>,<br>	props: &#123;<br>		name: &#123;<br>			type: <span class="hljs-built_in">String</span>,<br>			<span class="hljs-keyword">default</span>: <span class="hljs-string">'default'</span><br>		&#125;<br>	&#125;,<br>	render: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span> (<span class="hljs-params">_, ref</span>) </span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 createFunctionalComponent 内部会执行 var vnode = options.render.call(null, renderContext._c, renderContext) 这一段代码获取 vnode，那也就是执行 RouterView 自带的 render 方法，简化如下所示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js">render: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">render</span> (<span class="hljs-params">_, ref</span>) </span>&#123;<br>  <span class="hljs-keyword">var</span> parent = ref.parent;<br>	<span class="hljs-keyword">var</span> h = parent.$createElement;<br>	<span class="hljs-keyword">var</span> name = props.name;<br>	<span class="hljs-keyword">var</span> route = parent.$route;<br>	<span class="hljs-keyword">var</span> cache = parent._routerViewCache || (parent._routerViewCache = &#123;&#125;);<br><br>  <span class="hljs-keyword">var</span> depth = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">var</span> matched = route.matched[depth];<br>	<span class="hljs-keyword">var</span> component = matched &amp;&amp; matched.components[name];<br><br>	<span class="hljs-keyword">if</span> (!matched || !component) &#123;<br>		cache[name] = <span class="hljs-literal">null</span>;<br>		<span class="hljs-keyword">return</span> h()<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> h(component, data, children)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>ref 就是 RouterView 组件对象，这个例子中的 RouterView 处于根组件内，因此 ref.parent 就是根组件，并且路由层级为0，通过 route.matched[depth] 拿到该层级当前的路由信息，然后通过路由名称去拿到路由对应的组件，这里的名称默认为 default。如果成功拿到了组件，就使用父组件的 createElement 渲染该组件，否则渲染空组件。</p>
+<p>完成初次渲染之后，_route 也完成了 render watcher 的收集，之后不论是以哪一种方式去改变路由，都会触发 render，进而重新显示对应的组件。</p>
+<p><img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/RouterView.png" srcset="/img/loading.gif" lazyload alt="RouterView"></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><ul>
+<li>浏览器提供的原生接口是实现前端路由的基石</li>
+<li>将 Router 放入 Vue 中总的来说需要三个步骤，前两个步骤就是初始化 Router 实例及 History 对象，后一个步骤是正常的实例化 Vue 对象实现组件的挂载</li>
+<li>由于前两个步骤做了前置动作，组件在渲染时会执行混入的钩子函数，初始化路由对象并完成路由的初次 transitionTo。然后就是组件正常的渲染，在执行 render 方法时完成对 render watcher 的依赖收集，这样之后，每当 route 改变，render watcher 的 expression 就会执行去更新页面，也就可以渲染显示新路由对应的组件，简单来说就是 route 改变 ——&gt; render ——&gt; 渲染 router-view。</li>
+</ul>
+
+            </div>
+            <div>👀 文中如有错误，还请留言指出，谢谢！❤</div>
+            <a href="https://djacipher.cn/" target="_blank" rel="noopener" style="display: inline-block; margin-top: 20px;">个人博客地址在这儿🎉</a>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/VueRouter/">VueRouter</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/18/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E6%8E%A2%E5%AF%BB%20slot%20%E7%9A%84%E5%A5%A5%E7%A7%98/">
+                        <span class="hidden-mobile">探寻 slot 的奥秘</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+          app_key: "uSkOsleUpcvIJyb31MudM4dS",
+          placeholder: "说点啥吧~",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> <p>备案号：<a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener"><span>鄂ICP备18015655号-1</span></a></p> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
