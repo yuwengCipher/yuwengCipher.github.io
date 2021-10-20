@@ -243,7 +243,7 @@
               <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="为什么要读-Vue"><a href="#为什么要读-Vue" class="headerlink" title="为什么要读 Vue"></a>为什么要读 Vue</h3><p>Vue 是目前项目正在使用的框架，阅读学习源码能让我更好的使用框架所提供的功能，也可以解答使用过程中所产生的困惑。有人可能会问，Vue2 相关的源码解析文章在网上一大堆，何必要自己去写呢？我只想说，纸上得来终觉浅，绝知此事要躬行。通过看别人的文章确实能在短期去记住，但是时间久了就会忘了，而如果是自己根据问题疑惑去调试 demo，然后去理解原理，最后总结成文章表达出来，那种记忆是最深的。</p>
 <h3 id="Vue3-已经出来了，为什么依然读-Vue2"><a href="#Vue3-已经出来了，为什么依然读-Vue2" class="headerlink" title="Vue3 已经出来了，为什么依然读 Vue2"></a>Vue3 已经出来了，为什么依然读 Vue2</h3><p>原因一是很久以前就读过一点点 Vue2 的源码，理解了基本的原理，但是后来没有坚持去深入，也就荒废了，心里多少还是有点不甘。因此这次相当于从新来过，也是准备出一个系列，既是读源码的记录整理，也是日后问题查询之处。原因二是虽然新版本的语法形式与旧版不同，但最核心的思想是没变的，吃透旧版之后，有机会也会去读读 Vue3，而这也是必须的。活到老，学到老。</p>
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>源码基于 version 2.6.14 of Vue</p>
-<p>本系列暂分为8章，当前章节主要是对后续章节做辅助准备。<br>初次阅读源码时，我就时常陷入各种属性方法名之中，我不知道这个属性是在哪儿声明的，它的作用是什么。虽然说读源码最忌讳深入细枝末节，但无穷的属性让我很恐惧，所以本章会理清楚整体的一个逻辑走向，而第一部分主要是罗列跟 Vue 相关的属性和方法。</p>
+<p>当前章节主要是对后续章节做辅助准备。<br>初次阅读源码时，我就时常陷入各种属性方法名之中，我不知道这个属性是在哪儿声明的，它的作用是什么。虽然说读源码最忌讳深入细枝末节，但无穷的属性让我很恐惧，所以本章会理清楚整体的一个逻辑走向，而第一部分主要是罗列跟 Vue 相关的属性和方法。</p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h3><p>Vue 这种框架核心文件都是在 src 文件里，但是入口在 package.json 中可以找到。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-string">"dev"</span>: <span class="hljs-string">"rollup -w -c scripts/config.js --environment TARGET:web-full-dev"</span><br></code></pre></td></tr></table></figure>
 
