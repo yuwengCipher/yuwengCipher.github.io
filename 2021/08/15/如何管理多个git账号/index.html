@@ -1,0 +1,604 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cipher.ico">
+  <link rel="icon" href="/img/cipher.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="cipher">
+  <meta name="keywords" content="">
+  
+  <title>如何管理多个 git 账号 - Cipher</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.10","typing":{"enable":false,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Cipher</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/docsmall/post-banner.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="如何管理多个 git 账号">
+              
+                如何管理多个 git 账号
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+      
+        <span class="post-meta">
+          <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+          <time datetime="2021-08-15" pubdate>
+            发表于 2021-08-15
+          </time>
+        </span>
+        
+</div>
+
+<div class="mt-1">
+  
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k
+             字
+      </span>
+      
+
+        
+          
+            <span class="post-meta mr-2">
+              <i class="iconfont icon-clock-fill"></i>
+              
+                
+                  24
+                     分钟
+            </span>
+            
+
+              
+                
+                  
+                    <!-- LeanCloud 统计文章PV -->
+                    <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+                      <i class="iconfont icon-eye" aria-hidden="true"></i>
+                      <span id="leancloud-page-views"></span>
+                         次
+                    </span>
+                    
+                        
+</div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">如何管理多个 git 账号</h1>
+            
+            <div class="markdown-body">
+              <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一般来说，在公司做项目用的 git 账号是公司分配的，而我们维护自己的 github 使用的是自己的 git 账号，并且项目所存放的平台是不一样的，因此当我们在同一台电脑上进行操作时，如果配置不正确，就会产生冲突，甚至无法提交修改记录。</p>
+<p>git 可以使用四种不同的协议来传输资料，最常用的就是 HTTPS 和 SSH，接下来会分别说明。</p>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><p>使用 HTTPS 去 clone 一个仓库是没有限制的，这也是一般开源项目推荐的方式。虽然说拉取下来没有限制，但是在 push 时会让我们输入用户名和密码以验证权限，而且每次 push 都需要输一遍用户名和密码，像这样：<img src="https://coding-pages-bucket-3560923-8733773-16868-593524-1259394930.cos-website.ap-hongkong.myqcloud.com/blogImgs/git-push-username.png" srcset="/img/loading.gif" lazyload alt="git-push-username"></p>
+<p>这种操作很繁琐，原因是提交的时候没有自动将身份信息交给服务器去验证，需要我们手动去做，所以我们要做的就是做一些配置，能够使得这个验证步骤在后台自动去完成。</p>
+<p>git 提供了一个命令，可以让我们把用户名和密码存储在本地，减少我们输入用户名和密码的次数。</p>
+<blockquote>
+<p>git config credential.helper ‘store [<options>]’</p>
+</blockquote>
+<p>options 中可以使用 –file 指定需要存储的位置，如果没有指定，则默认存储在 ~/.git-credentials。需要注意的是密码是未加密的方式存储，需要保管好。</p>
+<p>在仓库根目录执行完上述命令后，我们继续 push 操作，依然会让我们输入用户名和密码，如果提交成功，那么此次输入的用户名和密码就会存在上面指定的位置，下次 push 时会去存储位置查询用户名和密码进行验证，也就不需要输入用户名和密码了。</p>
+<p>如果使用的是 github 仓库，在 push 时有可能会遇到如下错误：</p>
+<blockquote>
+<p>Support for password authentication was removed on August 13, 2021. Please use a personal access token instead<br>Please see <a href="https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/" target="_blank" rel="noopener">https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/</a> for more information</p>
+</blockquote>
+<p>意思就是从 2021年8月13号开始，上述密码验证的方式被移除了，取代的是使用 token 验证，具体通过上述链接进入官网查看。总的来说， token 验证方式更接近 SSH。</p>
+<h2 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h2><p>相较于 SSH，HTTPS 的方式会有如下缺点：</p>
+<ul>
+<li>需要输入用户名和密码</li>
+<li>保存在本地的密码是未加密的</li>
+<li>由于网络的原因，操作经常会报 443 time out 等问题</li>
+</ul>
+<p>但使用 SSH 依然需要一个验证过程，用到的是 SSH key，它是一对密钥包括公钥和私钥，私钥保存在本地，公钥配置在远程仓库。因此在拉取代码之前就需要将配置好公钥，以便拉取的时候进行验证。</p>
+<p>首先使用 ssh-keygen 创建密钥对</p>
+<blockquote>
+<p>ssh-keygen -t rsa -C “<a href="mailto:your_email@example.com">your_email@example.com</a>“</p>
+</blockquote>
+<ul>
+<li>-t rsa 意思是使用 rsa 算法来创建</li>
+<li>-C “<a href="mailto:your_email@example.com">your_email@example.com</a>“ 就是将一个字符串添加为签名，通常为邮箱</li>
+</ul>
+<p>一路回车之后，默认会在 “/c/Users/Administrator/.ssh/“ 位置生成两个文件，id_rsa 和 id_rsa.pub，分别是私钥和公钥。</p>
+<p>然后就需要将私钥添加到 ssh-agent</p>
+<p>第一步启动</p>
+<blockquote>
+<p>eval “$(ssh-agent -s)”</p>
+</blockquote>
+<p>第二步添加</p>
+<blockquote>
+<p>ssh-add ~/.ssh/id_rsa</p>
+</blockquote>
+<p>添加完成之后，就可以将公钥配置在 github 或其他平台。可以参考<a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account" target="_blank" rel="noopener">github 公钥配置</a>。</p>
+<p>到这里大功告成，可以使用 SSH 协议拉取代码，推送修改了。</p>
+<h3 id="添加新账号"><a href="#添加新账号" class="headerlink" title="添加新账号"></a>添加新账号</h3><p>因为公司最近决定从 svn 切换到 git 去管理公司代码，在内网搭建的 gitlab 服务器，并且分配了邮箱。此时我需要管理两个 git 账号：</p>
+<ul>
+<li>存在全局的，用于我自己 github</li>
+<li>公司分配的，用于某一个项目</li>
+</ul>
+<p>当我第一次给公司项目推送修改时，我看到我个人 git 用户名出现在 commit 里（这个项目应该是没有做权限），当时就觉得事情不对，按正常逻辑来讲，这个推送应该是要被驳回的，问题提示应该是这样：</p>
+<blockquote>
+<p>Permission to user1/example.git denied to user2</p>
+</blockquote>
+<p>意思是我在做 push 操作时使用的是 user2，但是 user2 没有 user1/example.git 这个仓库的权限。只不过该没有设置权限，直接给通过了。那就算没有设置权限，也不能使用个人的账号，所以我就在公司项目根目录配置了分配的账号，那后面的推送就是使用公司分配的名称，需要注意的是这里不加上 –global，代表当前仓库。</p>
+<blockquote>
+<p>git config user.name “xxx”<br>git config user.email “<a href="mailto:xxx@hc.com">xxx@hc.com</a>“</p>
+</blockquote>
+<p>可以在仓库的 config 文件中查看</p>
+<p>这个问题算是解决了，但是病根并没有解除，那就是多账号冲突的问题。解决办法也很简单，那就是按上面步骤用这个新账号创建新的 SSH key。<br>唯一不同的是在询问密钥存放位置的时候，需要设置成新的，例如可以这样：</p>
+<blockquote>
+<p>Enter file in which to save the key (/c/Users/Administrator/.ssh/id_rsa): /c/Users/Administrator/.ssh/xxx_hc_rsa</p>
+</blockquote>
+<p>意思就是创建新的密钥对 xxx_hc_rsa 和 xxx_hc_rsa.pub，添加私钥和公钥依然跟上面的操作一样。</p>
+<p>现在就存在多个私钥进行管理，需要在 “/c/Users/Administrator/.ssh/“ 配置 config 文件，如果没有就创建一个，配置如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"># user2<br>Host github.com<br>HostName github.com<br>PreferredAuthentications publickey<br>IdentityFile C:<span class="hljs-regexp">/Users/</span>Administrator/.ssh/id_rsa<br>User user2@qq.com<br><br># xxx_hc<br>Host gitlab.com<br>HostName gitlab.com<br>PreferredAuthentications publickey<br>IdentityFile C:<span class="hljs-regexp">/Users/</span>Administrator/.ssh/xxx_hc_rsa<br>User xxx@hc.com<br></code></pre></td></tr></table></figure>
+
+<p>配置完成之后，每次操作，不同域名仓库会从这个文件中拿到对应的私钥进行加密验证。</p>
+<h3 id="两个-github-账号"><a href="#两个-github-账号" class="headerlink" title="两个 github 账号"></a>两个 github 账号</h3><p>但万万没想到，我还有一个 github 账号，这个账号是专门用来做测试的，从来没有在这电脑上使用。当我在这个电脑上进行测试时，就出现了上面提到的那个错误：</p>
+<blockquote>
+<p>Permission to user1/example.git denied to user2</p>
+</blockquote>
+<p>按照上面说的，无非就是再加一个 git 账号，于是依然按照上面的步骤进行操作，最后我的 config 文件变成这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs js"># user2<br>Host github.com<br>HostName github.com<br>PreferredAuthentications publickey<br>IdentityFile C:<span class="hljs-regexp">/Users/</span>Administrator/.ssh/id_rsa<br>User user2@qq.com<br><br># xxx_hc<br>Host gitlab.com<br>HostName gitlab.com<br>PreferredAuthentications publickey<br>IdentityFile C:<span class="hljs-regexp">/Users/</span>Administrator/.ssh/xxx_hc_rsa<br>User xxx@hc.com<br><br># user1 // 不同点                                   <br>Host github.com<br>HostName github.com<br>PreferredAuthentications publickey<br>IdentityFile C:<span class="hljs-regexp">/Users/</span>Administrator/.ssh/id_rsa_user1 <span class="hljs-comment">// 不同点</span><br>User user1@qq.com <span class="hljs-comment">// 不同点</span><br></code></pre></td></tr></table></figure>
+
+<p>配置完成之后，我再次操作，依然还是提示上述问题。创建密钥，添加密钥这些步骤都是固定的，肯定没什么问题，仔细检查这个 config 文件会发现，两个 github 账号使用的 Host 都是 github.com，前面有说过不同域的仓库会从中拿到对应的私钥，会不会存在匹配到了第一个，然后使用的第一个私钥呢？于是我将 user1 这个配置移动到文件顶部，发现果然通过了，看来确实是这个问题导致的。</p>
+<p>但是 github.com 这个域名是固定的，怎么做一下区分呢？</p>
+<p>这里的解决办法是添加子域名，我们可以将 github 里的，每个仓库它属于 github 哪个子域名下，也就是将第三个配置做以下修改：</p>
+<blockquote>
+<p>Host user1.github.com</p>
+</blockquote>
+<p>config 做修改之后，还需要修改仓库里的配置，将 origin 修改成 config 中一样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js">[remote <span class="hljs-string">"origin"</span>]<br>	url = git@github.com:user1/blog.git<br></code></pre></td></tr></table></figure>
+
+<p>改成：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js">[remote <span class="hljs-string">"origin"</span>]<br>	url = git@user1.github.com:user1/blog.git<br></code></pre></td></tr></table></figure>
+
+<p>这样处理之后，按照不同域获取不同的私钥就不会拿错了。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><ol>
+<li>通常会使用 HTTPS 和 SSH 这两种协议关联远程仓库，HTTPS 使用用户名和密码去验证，而 SSH 通过密钥对验证。</li>
+<li>HTTPS 的方式管理一个和多个账号方式是一样的，但是 SSH 则需要注意以下几点：<ul>
+<li>私钥存放本地，公钥配置在代码托管平台</li>
+<li>需要将私钥添加到 ssh-agent 中</li>
+<li>不同的代码托管平台配置不同的 Host</li>
+<li>相同的 Host 可以添加子域名以作区分</li>
+</ul>
+</li>
+</ol>
+<p>参考文献：</p>
+<p><a href="https://qastack.cn/programming/3225862/multiple-github-accounts-ssh-config" target="_blank" rel="noopener">https://qastack.cn/programming/3225862/multiple-github-accounts-ssh-config</a></p>
+<p><a href="https://blog.csdn.net/PeipeiQ/article/details/80702514" target="_blank" rel="noopener">https://blog.csdn.net/PeipeiQ/article/details/80702514</a></p>
+
+            </div>
+            <div>👀 文中如有错误，还请留言指出，谢谢！❤</div>
+            <a href="https://djacipher.cn/" target="_blank" rel="noopener" style="display: inline-block; margin-top: 20px;">个人博客地址在这儿🎉</a>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Git/">Git</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Git/">Git</a>
+                    
+                      <a class="hover-with-bg" href="/tags/SSH/">SSH</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/25/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/vue2/%E5%BD%BB%E5%BA%95%E5%BC%84%E6%87%82%20VueRouter%20%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
+                        <span class="hidden-mobile">彻底弄懂 VueRouter 工作原理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "FBUJNXRSiPJYpLSHlMBK61Cc-gzGzoHsz",
+          app_key: "uSkOsleUpcvIJyb31MudM4dS",
+          placeholder: "说点啥吧~",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="javascript:;" rel="nofollow noopener"><span>DJA</span></a> <i class="iconfont icon-love"></i> <a href="javascript:;" rel="nofollow noopener"><span>YZT</span></a> <p>备案号：<a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener"><span>鄂ICP备18015655号-1</span></a></p> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
